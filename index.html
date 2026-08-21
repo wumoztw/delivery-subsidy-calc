@@ -365,14 +365,22 @@
                 <span :class="getTierBadgeClass(t)" class="text-[9px] px-1.5 py-0.2 rounded font-bold">
                   {{ getTierLabel(t) }}
                 </span>
-                <!-- 疊單型態切換 -->
-                <button @click="cycleStacks(t)" class="text-[9px] px-1.5 py-0.2 rounded font-mono bg-cyan-950/80 text-cyan-300 border border-cyan-500/30">
-                  {{ t.stacks || 1 }} 疊 ({{ (t.stacks === 3 ? 2.5 : (t.stacks === 2 ? 1.75 : 1.0)) }}x 工時)
-                </button>
               </div>
               <button @click="trips.splice(idx, 1)" class="text-rose-400 active:text-rose-300 text-xs px-2 py-0.5 rounded bg-rose-500/10">
                 刪除
               </button>
+            </div>
+
+            <!-- 🛵 疊單數量一鍵修改選擇器 -->
+            <div class="flex items-center justify-between bg-slate-900/90 px-2.5 py-1.5 rounded-lg border border-slate-800 text-[11px]">
+              <span class="text-slate-400 flex items-center gap-1 font-bold">
+                <span>🛵</span> 疊單數量：
+              </span>
+              <div class="flex items-center gap-1 font-mono">
+                <button @click="t.stacks = 1" :class="(t.stacks === 1 || !t.stacks) ? 'bg-cyan-500/30 text-cyan-300 border-cyan-400 font-bold' : 'bg-slate-950 text-slate-400 border-slate-800'" class="px-2 py-0.5 rounded border text-[10px] transition">1單 (1.0x)</button>
+                <button @click="t.stacks = 2" :class="t.stacks === 2 ? 'bg-amber-500/30 text-amber-300 border-amber-400 font-bold' : 'bg-slate-950 text-slate-400 border-slate-800'" class="px-2 py-0.5 rounded border text-[10px] transition">2疊 (1.75x)</button>
+                <button @click="t.stacks = 3" :class="t.stacks === 3 ? 'bg-purple-500/30 text-purple-300 border-purple-400 font-bold' : 'bg-slate-950 text-slate-400 border-slate-800'" class="px-2 py-0.5 rounded border text-[10px] transition">3疊 (2.5x)</button>
+              </div>
             </div>
             
             <div class="grid grid-cols-4 gap-1.5 text-center text-xs">
@@ -496,9 +504,12 @@
               <tr v-for="(t, idx) in trips" :key="idx" class="hover:bg-slate-800/40 transition">
                 <td class="p-3 text-slate-500 font-sans">{{ idx + 1 }}</td>
                 <td class="p-3">
-                  <button @click="cycleStacks(t)" class="text-[10px] px-2 py-0.5 rounded font-mono bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700">
-                    {{ t.stacks || 1 }} 疊 ({{ (t.stacks === 3 ? 2.5 : (t.stacks === 2 ? 1.75 : 1.0)) }}x)
-                  </button>
+                  <select v-model.number="t.stacks" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-cyan-300 font-mono text-xs focus:outline-none focus:border-cyan-400 cursor-pointer">
+                    <option :value="1">1 單 (1.00x)</option>
+                    <option :value="2">2 疊 (1.75x)</option>
+                    <option :value="3">3 疊 (2.50x)</option>
+                    <option :value="4">4 疊 (3.25x)</option>
+                  </select>
                 </td>
                 <td class="p-3">
                   <div class="flex items-center gap-1">
@@ -1524,6 +1535,7 @@
   "basePay": 行程費用合計 (數字，例如 113),
   "tips": 顧客小費 (數字，若無則為 0),
   "points": 賺取點數 (數字，例如 2, 4, 6, 8),
+  "stacks": 疊單單數 (請仔細觀察截圖中是否有送達2個地點/2份訂單/2趟交付/4點，雙單填2，三單填3，單單填1),
   "merchant": "商家名稱 (例如 連鎖鍋物)"
 }`;
 
@@ -1546,8 +1558,7 @@
                   ]
                 }
               ],
-              temperature: 0.1,
-              max_tokens: 512
+              temperature: 0.1
             })
           });
 
@@ -1564,9 +1575,12 @@
           // 1. 精確計算服務時間 (分鐘 + 秒/60)
           const duration = parseDurationToMins(parsed.raw_duration || parsed.duration, parsed.duration_minutes, parsed.duration_seconds);
 
-          // 2. 純點數判定疊單數：stacks = 點數 / 2 (2點=1單, 4點=2疊, 6點=3疊)
+          // 2. 雙重判定疊單數：結合「截圖送達單數」與「點數 ÷ 2」
           const pts = Number(parsed.points) || 2;
-          const stacks = Math.max(1, Math.floor(pts / 2));
+          let stacks = Number(parsed.stacks) || Math.max(1, Math.floor(pts / 2));
+          if (pts >= 6 || stacks >= 3) stacks = 3;
+          else if (pts >= 4 || stacks >= 2) stacks = 2;
+          else stacks = 1;
 
           // 3. 費用拆解
           const bFare = Number(parsed.baseFare) || 0;
