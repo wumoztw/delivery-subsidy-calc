@@ -21,15 +21,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Inject OpenRouter API Key
+      - name: Inject NVIDIA AI API Key
         env:
-          OPENROUTER_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          NVIDIA_KEY: ${{ secrets.NVIDIA_API_KEY || secrets.OPENROUTER_API_KEY }}
         run: |
-          if [ -n "$OPENROUTER_KEY" ]; then
-            echo "Successfully found OPENROUTER_API_KEY! Injecting into index.html..."
-            sed -i "s|__OPENROUTER_API_KEY__|$OPENROUTER_KEY|g" index.html
+          if [ -n "$NVIDIA_KEY" ]; then
+            echo "Successfully found NVIDIA_API_KEY! Injecting into index.html..."
+            sed -i "s|__NVIDIA_API_KEY__|$NVIDIA_KEY|g" index.html
+            sed -i "s|__OPENROUTER_API_KEY__|$NVIDIA_KEY|g" index.html
           else
-            echo "::warning::OPENROUTER_API_KEY secret is not set or empty in GitHub Secrets."
+            echo "::warning::NVIDIA_API_KEY secret is not set in GitHub Secrets."
           fi
 
       - name: Setup Pages
