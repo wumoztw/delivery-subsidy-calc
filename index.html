@@ -525,7 +525,7 @@
 
           <div>
             <div class="flex justify-between text-xs mb-1.5">
-              <span class="text-slate-400">每單平均服務時間 (T_i)</span>
+              <span class="text-slate-400">每單平均服務時間</span>
               <span class="text-cyan-400 font-bold font-mono">{{ simAvgTripMins }} 分鐘</span>
             </div>
             <input type="range" min="10" max="60" step="1" v-model.number="simAvgTripMins" class="w-full accent-cyan-500 h-2">
@@ -538,13 +538,13 @@
 
           <div>
             <div class="flex justify-between text-xs mb-1.5">
-              <span class="text-slate-400">實際物理鐘點耗時 (T_physical)</span>
+              <span class="text-slate-400">實際跑單耗時 (物理工時)</span>
               <span class="text-teal-400 font-bold font-mono">{{ simPhysicalMins }} 分鐘</span>
             </div>
             <input type="range" min="15" max="90" step="5" v-model.number="simPhysicalMins" class="w-full accent-teal-500 h-2">
             <div class="flex justify-between text-[10px] text-slate-500 font-mono mt-1">
               <span>15分</span>
-              <span>60分 (1h)</span>
+              <span>60分 (1小時)</span>
               <span>90分</span>
             </div>
           </div>
@@ -557,7 +557,7 @@
             <div class="text-xl sm:text-2xl font-black font-mono text-cyan-300 mt-1">
               {{ (simOrders * simAvgTripMins) }} <span class="text-xs font-normal text-slate-400">分鐘</span>
             </div>
-            <span class="text-[10px] text-slate-500">{{ simOrders }} 單 × {{ simAvgTripMins }} 分</span>
+            <span class="text-[10px] text-slate-500 font-sans">{{ simOrders }} 單 × {{ simAvgTripMins }} 分鐘 ＝ {{ simOrders * simAvgTripMins }} 分鐘</span>
           </div>
 
           <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
@@ -565,16 +565,24 @@
             <div class="text-xl sm:text-2xl font-black font-mono text-amber-300 mt-1">
               {{ simMultiplier.toFixed(2) }} <span class="text-xs font-normal text-slate-400">倍</span>
             </div>
-            <span class="text-[10px] text-slate-500">法定工時 ÷ 物理耗時</span>
+            <span class="text-[10px] text-slate-500 font-sans">法定工時 ÷ 實際耗時 ＝ {{ simMultiplier.toFixed(2) }} 倍</span>
           </div>
 
           <div class="bg-emerald-950/50 p-3.5 rounded-xl border border-emerald-500/30">
             <span class="text-[11px] text-emerald-400 font-bold block">模擬實質產值時薪</span>
             <div class="text-xl sm:text-2xl font-black font-mono text-emerald-300 mt-1">
-              NT$ {{ Math.round(simRealHourlyWage).toLocaleString() }} <span class="text-xs font-normal text-slate-400">/ hr</span>
+              NT$ {{ Math.round(simRealHourlyWage).toLocaleString() }} <span class="text-xs font-normal text-slate-400">/ 小時</span>
             </div>
-            <span class="text-[10px] text-emerald-500/80">{{ simMultiplier.toFixed(2) }}x × ${{ rate }}/h</span>
+            <span class="text-[10px] text-emerald-500/80 font-sans">{{ simMultiplier.toFixed(2) }} 倍 × NT${{ rate }} ＝ NT${{ Math.round(simRealHourlyWage) }}/時</span>
           </div>
+        </div>
+
+        <!-- 純文字計算公式速覽 -->
+        <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 text-[11px] text-slate-400 space-y-1">
+          <div class="text-emerald-400 font-bold text-xs mb-1">📐 純文字計算公式說明：</div>
+          <div>• <strong>法定申報工時</strong> ＝ 疊單數 × 每單平均服務時間（每筆訂單各自獨立計時）</div>
+          <div>• <strong>工時放大倍數</strong> ＝ 法定申報總工時 ÷ 實際跑單物理耗時</div>
+          <div>• <strong>實質產值時薪</strong> ＝ 工時放大倍數 × 法定保障時薪費率</div>
         </div>
 
       </div>
@@ -590,11 +598,11 @@
           <ul class="text-xs text-slate-300 space-y-2">
             <li class="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
               <strong class="text-emerald-300">2 疊單標準：</strong>
-              <div class="text-slate-400 mt-0.5 text-[11px]">總里程 $\le 2.5\text{ km}$、耗時 $\le 20\text{ 分鐘}$、等餐 $5 \sim 8\text{ 分鐘}$（雙倍計時最佳區）。</div>
+              <div class="text-slate-400 mt-0.5 text-[11px]">總里程 2.5 公里以內、耗時 20 分鐘以內、等餐 5～8 分鐘（雙倍計時最佳區）。</div>
             </li>
             <li class="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
               <strong class="text-emerald-300">3 疊單標準：</strong>
-              <div class="text-slate-400 mt-0.5 text-[11px]">總里程 $\le 3.5\text{ km}$、耗時 $\le 30\text{ 分鐘}$、等餐 $8 \sim 12\text{ 分鐘}$（超高工時產值區）。</div>
+              <div class="text-slate-400 mt-0.5 text-[11px]">總里程 3.5 公里以內、耗時 30 分鐘以內、等餐 8～12 分鐘（超高工時產值區）。</div>
             </li>
           </ul>
         </div>
@@ -607,11 +615,11 @@
           <ul class="text-xs text-slate-300 space-y-2">
             <li class="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
               <strong class="text-rose-300">2 疊單紅線：</strong>
-              <div class="text-slate-400 mt-0.5 text-[11px]">總里程超過 $3.0\text{ km}$ 建議果斷拒接（避免里程過長拉低時薪）。</div>
+              <div class="text-slate-400 mt-0.5 text-[11px]">總里程超過 3.0 公里建議果斷拒接（避免里程過長拉低時薪）。</div>
             </li>
             <li class="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
               <strong class="text-rose-300">3 疊單紅線：</strong>
-              <div class="text-slate-400 mt-0.5 text-[11px]">總里程超過 $4.0\text{ km}$ 或送達點脫離核心熱區之訂單一律拒接。</div>
+              <div class="text-slate-400 mt-0.5 text-[11px]">總里程超過 4.0 公里或送達點脫離核心熱區之訂單一律拒接。</div>
             </li>
           </ul>
         </div>
@@ -683,34 +691,34 @@
 
       <!-- 1. 核心結算三大基本公式 -->
       <section class="space-y-2.5 bg-slate-950 p-3.5 sm:p-4 rounded-xl border border-slate-800">
-        <h3 class="text-xs sm:text-sm font-bold text-slate-100">1. 核心結算三大基本公式</h3>
+        <h3 class="text-xs sm:text-sm font-bold text-slate-100">1. 核心結算三大基本公式（純文字版）</h3>
         
         <div class="space-y-1.5">
-          <div class="font-mono text-emerald-300 bg-slate-900 p-2 rounded border border-slate-800 text-[11px] overflow-x-auto">
-            1.1 外送總工時：T_total = ∑(T_i) = T_1 + T_2 + ... + T_n
+          <div class="font-bold text-emerald-300 bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
+            1.1 外送總工時 ＝ 第 1 單服務時間 ＋ 第 2 單服務時間 ＋ ... ＋ 第 n 單服務時間
           </div>
           <p class="text-slate-400 text-[11px] pl-1">
-            • <strong>T_i 定義</strong>：自「接受派單」起至「送達交付」為止之完整服務時間（秒級獨立累加）。<br>
-            • <strong>疊單累加</strong>：多筆訂單時間重疊時，各自獨立累加計入法定工時（雙單約放大 1.75x，三單約放大 2.5x）。
+            • <strong>單筆定義</strong>：每筆訂單自「接受派單」起至「送達交付」為止之完整服務時間（秒級獨立累加）。<br>
+            • <strong>疊單累加</strong>：多筆訂單時間重疊時，每筆訂單之服務時間各自獨立累加計入法定工時（雙單約放大 1.75 倍，三單約放大 2.5 倍）。
           </p>
         </div>
 
         <div class="space-y-1.5">
-          <div class="font-mono text-emerald-300 bg-slate-900 p-2 rounded border border-slate-800 text-[11px] overflow-x-auto">
-            1.2 法定基本總額：Total_legal = T_total × P_rate
+          <div class="font-bold text-emerald-300 bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
+            1.2 法定最低保障 ＝ 外送總工時 (小時) × 法定保障時薪費率
           </div>
           <p class="text-slate-400 text-[11px] pl-1">
-            • <strong>P_rate</strong>：法定保障時薪（專法底線：$245 元 / 小時；實務平均：約 $293.90 ～ $305.50 元 / 小時）。
+            • <strong>保障時薪</strong>：法定保障時薪（專法底線：NT$ 245 元 / 小時；實務平均：約 NT$ 293.90 ～ 305.50 元 / 小時）。
           </p>
         </div>
 
         <div class="space-y-1.5">
-          <div class="font-mono text-emerald-300 bg-slate-900 p-2 rounded border border-slate-800 text-[11px] overflow-x-auto">
-            1.3 基本報酬差額補貼：ΔR = max(0, Total_legal - R_base)
+          <div class="font-bold text-emerald-300 bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
+            1.3 基本差額補貼 ＝ 法定最低保障 － 實領行程費用總額（若大於 0 則全額補發）
           </div>
           <p class="text-slate-400 text-[11px] pl-1">
-            • <strong>R_base</strong>：雙週週期內實領之基本報酬（淨行程費 + 基本加成）。<br>
-            • <strong>排除項目</strong>：顧客小費與活動獎勵不計入 R_base。
+            • <strong>實領費用</strong>：雙週週期內實領之基本報酬（淨行程費 ＋ 基本加成）。<br>
+            • <strong>排除項目</strong>：顧客小費與活動獎勵屬於免扣抵淨利，不計入實領費用抵扣。
           </p>
         </div>
       </section>
@@ -718,8 +726,8 @@
       <!-- 2. 跑單實質時薪產值模型 -->
       <section class="space-y-2.5 bg-slate-950 p-3.5 sm:p-4 rounded-xl border border-slate-800">
         <h3 class="text-xs sm:text-sm font-bold text-slate-100">2. 跑單實質時薪產值模型與對照表</h3>
-        <div class="font-mono text-teal-300 bg-slate-900 p-2 rounded border border-slate-800 text-[11px] overflow-x-auto">
-          Hourly_Wage_real = (∑(T_i) / T_physical) × P_rate
+        <div class="font-bold text-teal-300 bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
+          實質產值時薪 ＝（法定申報工時 ÷ 實際跑單耗時）× 法定保障時薪費率
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left font-mono text-[11px]">
