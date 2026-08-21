@@ -2,7 +2,7 @@
 <html lang="zh-TW" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>外送專法與疊單收益精算系統 | Uber Eats 實質時薪與差額補貼精算</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -34,272 +34,336 @@
   </script>
   <style>
     [v-cloak] { display: none; }
-    /* Custom scrollbar */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    /* Prevent iOS input zoom by ensuring minimum 16px font or touch manipulation */
+    input, button, select { touch-action: manipulation; }
+    /* Safe area padding for mobile iPhone notches / home bars */
+    .pb-safe { padding-bottom: env(safe-area-inset-bottom, 1rem); }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-emerald-500 selection:text-white">
-  <div id="app" v-cloak class="max-w-6xl mx-auto px-4 py-6 sm:py-8 space-y-6">
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-emerald-500 selection:text-white pb-24 sm:pb-8">
+  <div id="app" v-cloak class="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-6">
     
-    <!-- 頂部導航列與系統狀態 -->
-    <header class="bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-slate-950 font-black text-xl">
-          ⚡
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h1 class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
-              外送專法與疊單收益精算系統
-            </h1>
-            <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">v2.0 最佳化版</span>
+    <!-- 頂部導航列與系統狀態 (手機自適應) -->
+    <header class="bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-xl flex flex-col gap-3.5">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5 sm:gap-3">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-slate-950 font-black text-lg sm:text-xl shrink-0">
+            ⚡
           </div>
-          <p class="text-xs text-slate-400 mt-0.5">專法兩週差額補貼精算 × 疊單工時產值放大模型 × OCR 智慧解析</p>
+          <div>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <h1 class="text-base sm:text-2xl font-bold bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent leading-tight">
+                外送專法與疊單精算
+              </h1>
+              <span class="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">v2.0</span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5 line-clamp-1">雙週差額補貼 × 疊單工時產值放大 × OCR 智慧解析</p>
+          </div>
         </div>
       </div>
 
-      <!-- 費率快速切換與自訂 -->
-      <div class="flex flex-wrap items-center gap-3 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
-        <div class="text-xs text-slate-400 flex items-center gap-1.5">
-          <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>法定保障時薪 (P_rate):</span>
+      <!-- 費率快速切換與自訂 (手機自適應按鈕群) -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-950/70 p-2 sm:p-2.5 rounded-xl border border-slate-800/80 text-xs">
+        <div class="text-slate-400 flex items-center justify-between sm:justify-start gap-1.5">
+          <div class="flex items-center gap-1.5">
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>法定時薪 (P_rate):</span>
+          </div>
+          <span class="text-emerald-300 font-mono font-bold sm:hidden">NT$ {{ rate }} / hr</span>
         </div>
-        <div class="flex items-center gap-1">
-          <button @click="rate = 245" :class="rate === 245 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-slate-800 text-slate-400 border-slate-700'" class="text-xs px-2 py-1 rounded border transition font-mono">$245 (法定底線)</button>
-          <button @click="rate = 295" :class="rate === 295 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-slate-800 text-slate-400 border-slate-700'" class="text-xs px-2 py-1 rounded border transition font-mono">$295 (實務平均)</button>
-          <button @click="rate = 305.5" :class="rate === 305.5 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-slate-800 text-slate-400 border-slate-700'" class="text-xs px-2 py-1 rounded border transition font-mono">$305.5 (高階加成)</button>
-        </div>
-        <div class="flex items-center gap-1 border-l border-slate-800 pl-2">
-          <span class="text-xs text-slate-500">NT$</span>
-          <input type="number" v-model.number="rate" step="0.5" class="w-16 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-emerald-300 text-xs focus:outline-none focus:border-emerald-500">
+        <div class="flex items-center justify-between gap-1 overflow-x-auto no-scrollbar">
+          <div class="flex items-center gap-1 shrink-0">
+            <button @click="rate = 245" :class="rate === 245 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold' : 'bg-slate-800 text-slate-400 border-slate-700'" class="text-[11px] sm:text-xs px-2 sm:px-2.5 py-1 rounded-lg border transition font-mono">$245 底線</button>
+            <button @click="rate = 295" :class="rate === 295 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold' : 'bg-slate-800 text-slate-400 border-slate-700'" class="text-[11px] sm:text-xs px-2 sm:px-2.5 py-1 rounded-lg border transition font-mono">$295 實務</button>
+            <button @click="rate = 305.5" :class="rate === 305.5 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold' : 'bg-slate-800 text-slate-400 border-slate-700'" class="text-[11px] sm:text-xs px-2 sm:px-2.5 py-1 rounded-lg border transition font-mono">$305.5 加成</button>
+          </div>
+          <div class="flex items-center gap-1 border-l border-slate-800 pl-1.5 shrink-0">
+            <span class="text-[10px] text-slate-500">NT$</span>
+            <input type="number" v-model.number="rate" step="0.5" class="w-14 bg-slate-900 border border-slate-700 rounded px-1 py-0.5 text-right font-mono text-emerald-300 text-xs focus:outline-none focus:border-emerald-500">
+          </div>
         </div>
       </div>
     </header>
 
-    <!-- 主選單分頁切換 -->
-    <nav class="flex border-b border-slate-800 gap-2 sm:gap-4 text-sm font-medium">
-      <button @click="activeTab = 'dashboard'" :class="activeTab === 'dashboard' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/5' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-4 border-b-2 transition flex items-center gap-2 rounded-t-lg">
-        <span>📊</span> 週期結算儀表板
-      </button>
-      <button @click="activeTab = 'trips'" :class="activeTab === 'trips' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/5' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-4 border-b-2 transition flex items-center gap-2 rounded-t-lg">
-        <span>📋</span> 訂單明細與匯入
-        <span v-if="trips.length > 0" class="text-xs px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 font-mono">{{ trips.length }}</span>
-      </button>
-      <button @click="activeTab = 'tactics'" :class="activeTab === 'tactics' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/5' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-4 border-b-2 transition flex items-center gap-2 rounded-t-lg">
-        <span>⚡</span> 疊單產值與作戰模擬
-      </button>
-      <button @click="activeTab = 'rules'" :class="activeTab === 'rules' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/5' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-4 border-b-2 transition flex items-center gap-2 rounded-t-lg">
-        <span>📖</span> 專法公式與作戰守則
-      </button>
-    </nav>
+    <!-- 主選單分頁切換 (支援手機橫向滑動與觸控) -->
+    <div class="overflow-x-auto no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0">
+      <nav class="flex border-b border-slate-800 gap-1 sm:gap-4 text-xs sm:text-sm font-medium min-w-max">
+        <button @click="activeTab = 'dashboard'" :class="activeTab === 'dashboard' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/10' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
+          <span>📊</span> 結算儀表板
+        </button>
+        <button @click="activeTab = 'trips'" :class="activeTab === 'trips' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/10' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
+          <span>📋</span> 訂單明細
+          <span v-if="trips.length > 0" class="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-emerald-300 font-mono">{{ trips.length }}</span>
+        </button>
+        <button @click="activeTab = 'tactics'" :class="activeTab === 'tactics' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/10' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
+          <span>⚡</span> 疊單作戰模擬
+        </button>
+        <button @click="activeTab = 'rules'" :class="activeTab === 'rules' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/10' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
+          <span>📖</span> 專法準則
+        </button>
+      </nav>
+    </div>
 
     <!-- 分頁 1: 週期結算儀表板 -->
-    <div v-show="activeTab === 'dashboard'" class="space-y-6">
+    <div v-show="activeTab === 'dashboard'" class="space-y-4 sm:space-y-6">
       
-      <!-- 核心指標四宮格 -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- 核心指標四宮格 (手機 2x2 排版，字體自動適應不折行) -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         
         <!-- 1. 累計服務總工時 (T_total) -->
-        <div class="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 relative overflow-hidden shadow-lg group hover:border-cyan-500/40 transition">
-          <div class="absolute -top-6 -right-6 w-20 h-20 bg-cyan-500/10 rounded-full blur-xl group-hover:bg-cyan-500/20 transition"></div>
+        <div class="bg-slate-900/90 p-3.5 sm:p-5 rounded-2xl border border-slate-800 relative overflow-hidden shadow-md flex flex-col justify-between">
           <div class="flex items-center justify-between">
-            <span class="text-xs text-slate-400 font-medium">累計服務總工時 (T_total)</span>
-            <span class="text-xs bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded font-mono">獨立疊加</span>
+            <span class="text-[11px] sm:text-xs text-slate-400">累計總工時 (T)</span>
+            <span class="text-[9px] sm:text-[10px] bg-cyan-500/10 text-cyan-400 px-1.5 py-0.5 rounded font-mono">獨立疊加</span>
           </div>
-          <div class="text-3xl font-black font-mono text-cyan-300 mt-2">
-            {{ totalHours.toFixed(2) }} <span class="text-sm font-normal text-slate-400">小時</span>
+          <div class="text-xl sm:text-3xl font-black font-mono text-cyan-300 my-1 sm:my-2">
+            {{ totalHours.toFixed(2) }} <span class="text-xs font-normal text-slate-400">hr</span>
           </div>
-          <div class="mt-2 text-xs text-slate-500 flex justify-between">
-            <span>累計 {{ totalMins }} 分鐘</span>
-            <span>共 {{ trips.length }} 筆訂單</span>
+          <div class="text-[10px] sm:text-xs text-slate-500 flex justify-between">
+            <span>{{ totalMins }} 分鐘</span>
+            <span>{{ trips.length }} 筆</span>
           </div>
         </div>
 
-        <!-- 2. 法定基本外送總額 (Total_legal) -->
-        <div class="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 relative overflow-hidden shadow-lg group hover:border-slate-700 transition">
+        <!-- 2. 法定最低保底 (Total_legal) -->
+        <div class="bg-slate-900/90 p-3.5 sm:p-5 rounded-2xl border border-slate-800 relative overflow-hidden shadow-md flex flex-col justify-between">
           <div class="flex items-center justify-between">
-            <span class="text-xs text-slate-400 font-medium">法定最低保底 (Total_legal)</span>
-            <span class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono">@ ${{ rate }}/h</span>
+            <span class="text-[11px] sm:text-xs text-slate-400">法定最低保底</span>
+            <span class="text-[9px] sm:text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded font-mono">@${{ rate }}</span>
           </div>
-          <div class="text-3xl font-black font-mono text-slate-100 mt-2">
-            NT$ {{ Math.round(totalLegal).toLocaleString() }}
+          <div class="text-xl sm:text-3xl font-black font-mono text-slate-100 my-1 sm:my-2">
+            ${{ Math.round(totalLegal).toLocaleString() }}
           </div>
-          <div class="mt-2 text-xs text-slate-500">
-            公式：{{ totalHours.toFixed(2) }}h × NT${{ rate }}
+          <div class="text-[10px] sm:text-xs text-slate-500 truncate">
+            {{ totalHours.toFixed(1) }}h × NT${{ rate }}
           </div>
         </div>
 
         <!-- 3. 實領基本報酬 (R_base) -->
-        <div class="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 relative overflow-hidden shadow-lg group hover:border-slate-700 transition">
+        <div class="bg-slate-900/90 p-3.5 sm:p-5 rounded-2xl border border-slate-800 relative overflow-hidden shadow-md flex flex-col justify-between">
           <div class="flex items-center justify-between">
-            <span class="text-xs text-slate-400 font-medium">實領基本報酬 (R_base)</span>
-            <span class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono">淨行程+基本加成</span>
+            <span class="text-[11px] sm:text-xs text-slate-400">實領基本報酬</span>
+            <span :class="subsidy > 0 ? 'bg-amber-500/10 text-amber-400' : 'bg-emerald-500/10 text-emerald-400'" class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded font-mono">
+              {{ subsidy > 0 ? '未達標' : '已達標' }}
+            </span>
           </div>
-          <div class="text-3xl font-black font-mono text-slate-100 mt-2">
-            NT$ {{ Math.round(totalBasePay).toLocaleString() }}
+          <div class="text-xl sm:text-3xl font-black font-mono text-slate-100 my-1 sm:my-2">
+            ${{ Math.round(totalBasePay).toLocaleString() }}
           </div>
-          <div class="mt-2 text-xs text-slate-500 flex justify-between">
-            <span>平均每單 NT$ {{ avgBasePay.toFixed(1) }}</span>
-            <span :class="subsidy > 0 ? 'text-amber-400' : 'text-emerald-400'">{{ subsidy > 0 ? '未達保底' : '已達保底' }}</span>
+          <div class="text-[10px] sm:text-xs text-slate-500">
+            均單 NT$ {{ avgBasePay.toFixed(0) }}
           </div>
         </div>
 
         <!-- 4. 預估差額補貼款 (ΔR) -->
-        <div class="bg-gradient-to-br from-emerald-950/80 to-slate-900 p-5 rounded-2xl border border-emerald-500/40 relative overflow-hidden shadow-lg shadow-emerald-950/40">
-          <div class="absolute -top-6 -right-6 w-20 h-20 bg-emerald-500/20 rounded-full blur-xl"></div>
+        <div class="bg-gradient-to-br from-emerald-950/90 to-slate-900 p-3.5 sm:p-5 rounded-2xl border border-emerald-500/40 relative overflow-hidden shadow-md flex flex-col justify-between">
           <div class="flex items-center justify-between">
-            <span class="text-xs text-emerald-300 font-bold">兩週預估差額補貼 (ΔR)</span>
-            <span class="text-[11px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-bold">補發款</span>
+            <span class="text-[11px] sm:text-xs text-emerald-300 font-bold">預估差額補貼</span>
+            <span class="text-[9px] sm:text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-bold">補發款</span>
           </div>
-          <div class="text-3xl font-black font-mono text-emerald-400 mt-2">
-            NT$ {{ Math.round(subsidy).toLocaleString() }}
+          <div class="text-xl sm:text-3xl font-black font-mono text-emerald-400 my-1 sm:my-2">
+            ${{ Math.round(subsidy).toLocaleString() }}
           </div>
-          <div class="mt-2 text-xs text-emerald-500/90 font-medium">
-            {{ subsidy > 0 ? '🎉 系統將於結算日全額補發差額' : '✅ 實領基本報酬已超越法定保底' }}
+          <div class="text-[10px] sm:text-xs text-emerald-400/80 font-medium truncate">
+            {{ subsidy > 0 ? '兩週後自動補發' : '基本費已達保底' }}
           </div>
         </div>
 
       </div>
 
-      <!-- 總收入與實質產值 Banner -->
-      <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/60 p-6 rounded-2xl border border-emerald-500/30 shadow-xl space-y-4">
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-4 border-b border-slate-800">
+      <!-- 總收入與實質產值 Banner (手機端緊湊排版) -->
+      <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950/60 p-4 sm:p-6 rounded-2xl border border-emerald-500/30 shadow-xl space-y-3.5 sm:space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-3 border-b border-slate-800">
           <div>
-            <span class="text-xs text-slate-400 uppercase tracking-widest font-semibold">兩週週期最終實質總收入 (Total Income)</span>
-            <div class="text-3xl sm:text-4xl font-black font-mono text-emerald-300 mt-1">
+            <span class="text-[10px] sm:text-xs text-slate-400 uppercase tracking-wider font-semibold">兩週週期最終實質總收入</span>
+            <div class="text-2xl sm:text-4xl font-black font-mono text-emerald-300 mt-0.5">
               NT$ {{ Math.round(totalIncome).toLocaleString() }}
             </div>
-            <p class="text-xs text-slate-400 mt-1">
-              組成：實領基本 (NT${{ Math.round(totalBasePay).toLocaleString() }}) + 專法補貼 (NT${{ Math.round(subsidy).toLocaleString() }}) + 小費 (NT${{ Math.round(totalTips).toLocaleString() }}) + 活動獎勵 (NT${{ Math.round(totalIncentives).toLocaleString() }})
+            <p class="text-[11px] sm:text-xs text-slate-400 mt-1">
+              基本 ${{ Math.round(totalBasePay) }} + 補貼 ${{ Math.round(subsidy) }} + 小費 ${{ Math.round(totalTips) }} + 獎勵 ${{ Math.round(totalIncentives) }}
             </p>
           </div>
 
           <!-- 實質產值時薪指標 -->
-          <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-800 min-w-[280px]">
-            <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
-              <span>實質保障時薪產值 (物理時薪)</span>
-              <span class="text-xs px-2 py-0.5 rounded font-mono" :class="stackingMultiplier >= 1.5 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-300'">
+          <div class="bg-slate-950/80 p-3 sm:p-4 rounded-xl border border-slate-800">
+            <div class="flex items-center justify-between text-[11px] sm:text-xs text-slate-400 mb-1">
+              <span>實質物理產值時薪</span>
+              <span class="text-[10px] sm:text-xs px-2 py-0.5 rounded font-mono" :class="stackingMultiplier >= 1.5 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-300'">
                 {{ stackingMultiplier.toFixed(2) }}x 疊單倍數
               </span>
             </div>
-            <div class="text-2xl font-black font-mono text-teal-300">
-              NT$ {{ realHourlyRate.toFixed(1) }} <span class="text-xs font-normal text-slate-400">/ 物理小時</span>
+            <div class="text-xl sm:text-2xl font-black font-mono text-teal-300">
+              NT$ {{ realHourlyRate.toFixed(1) }} <span class="text-xs font-normal text-slate-400">/ 物理時</span>
             </div>
-            <div class="mt-1.5 flex items-center gap-2">
-              <span class="text-[11px] text-slate-500">預設物理工時:</span>
-              <input type="number" v-model.number="customPhysicalHours" :placeholder="estimatedPhysicalHours.toFixed(1)" class="w-16 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-xs text-slate-200 text-right font-mono focus:border-teal-500">
-              <span class="text-[11px] text-slate-500">小時 ({{ (customPhysicalHours || estimatedPhysicalHours).toFixed(1) }}h)</span>
+            <div class="mt-1 flex items-center gap-2 text-[10px] sm:text-xs text-slate-500">
+              <span>物理工時:</span>
+              <input type="number" v-model.number="customPhysicalHours" :placeholder="estimatedPhysicalHours.toFixed(1)" class="w-12 sm:w-14 bg-slate-900 border border-slate-700 rounded px-1 py-0.5 text-slate-200 text-right font-mono text-xs focus:border-teal-500">
+              <span>小時 ({{ (customPhysicalHours || estimatedPhysicalHours).toFixed(1) }}h)</span>
             </div>
           </div>
         </div>
 
-        <!-- 快捷操作工具列 -->
-        <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
-          <div class="flex flex-wrap items-center gap-2">
-            <button @click="copyReport" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-lg border border-slate-700 flex items-center gap-1.5 transition">
-              <span>📄</span> {{ copyBtnText }}
-            </button>
-            <button @click="exportCSV" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-lg border border-slate-700 flex items-center gap-1.5 transition">
-              <span>💾</span> 匯出 CSV 備份
-            </button>
-            <button @click="loadSampleData" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-lg border border-slate-700 flex items-center gap-1.5 transition">
-              <span>🧪</span> 載入範例數據 (雙疊/三疊模擬)
-            </button>
-          </div>
-          <div class="text-xs text-slate-500 flex items-center gap-2">
-            <span>💾 數據已自動儲存至 LocalStorage</span>
-          </div>
+        <!-- 快捷操作按鈕 (手機 2 欄 Grid) -->
+        <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 pt-1">
+          <button @click="copyReport" class="px-3 py-2 bg-slate-800 active:bg-slate-700 hover:bg-slate-700 text-slate-200 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition">
+            <span>📄</span> <span class="truncate">{{ copyBtnText }}</span>
+          </button>
+          <button @click="exportCSV" class="px-3 py-2 bg-slate-800 active:bg-slate-700 hover:bg-slate-700 text-slate-200 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition">
+            <span>💾</span> <span>匯出 CSV</span>
+          </button>
+          <button @click="loadSampleData" class="px-3 py-2 bg-slate-800 active:bg-slate-700 hover:bg-slate-700 text-slate-300 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition col-span-2 sm:col-span-1">
+            <span>🧪</span> <span>載入範例數據 (8筆)</span>
+          </button>
         </div>
       </div>
 
     </div>
 
     <!-- 分頁 2: 訂單明細與資料匯入 -->
-    <div v-show="activeTab === 'trips'" class="space-y-6">
+    <div v-show="activeTab === 'trips'" class="space-y-4 sm:space-y-6">
       
-      <!-- 三大輸入管道區塊 (OCR, CSV, 手動) -->
-      <div class="grid md:grid-cols-3 gap-4">
+      <!-- 三大輸入管道區塊 (手機友善排版) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
         
-        <!-- 1. OCR 截圖辨識 -->
-        <div class="bg-slate-900 p-5 rounded-2xl border border-emerald-500/30 flex flex-col justify-between shadow-lg relative overflow-hidden">
+        <!-- 1. OCR 截圖辨識 (支援手機拍照與相簿選取) -->
+        <div class="bg-slate-900 p-4 sm:p-5 rounded-2xl border border-emerald-500/30 flex flex-col justify-between shadow-lg">
           <div>
-            <div class="flex items-center justify-between mb-2">
-              <h2 class="font-bold text-emerald-300 text-sm flex items-center gap-1.5">
-                <span>📸</span> 跑單截圖 OCR 辨識
+            <div class="flex items-center justify-between mb-1.5">
+              <h2 class="font-bold text-emerald-300 text-xs sm:text-sm flex items-center gap-1.5">
+                <span>📸</span> 截圖 OCR 自動辨識
               </h2>
-              <span v-if="isOcrLoading" class="text-[11px] text-amber-400 animate-pulse font-mono">{{ ocrStatus }}</span>
+              <span v-if="isOcrLoading" class="text-[10px] sm:text-[11px] text-amber-400 animate-pulse font-mono">{{ ocrStatus }}</span>
             </div>
-            <p class="text-xs text-slate-400 mb-4 leading-relaxed">上傳外送 APP 跑單明細截圖（支援多張選取，自動辨識時長、行程費與小費）</p>
+            <p class="text-[11px] text-slate-400 mb-3">支援選取多張跑單截圖，自動識別時間與金額</p>
           </div>
           <div>
-            <div v-if="isOcrLoading" class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mb-3">
+            <div v-if="isOcrLoading" class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mb-2.5">
               <div class="bg-emerald-400 h-full transition-all duration-300" :style="{ width: ocrProgress + '%' }"></div>
             </div>
-            <input type="file" accept="image/*" multiple @change="handleImageUpload" :disabled="isOcrLoading" class="block w-full text-xs text-slate-400 file:mr-2 file:py-2 file:px-3.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-500 file:text-slate-950 hover:file:bg-emerald-400 cursor-pointer disabled:opacity-50 transition">
+            <label class="w-full block text-center py-2.5 px-3 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs cursor-pointer active:bg-emerald-400 hover:bg-emerald-400 transition shadow">
+              <span>{{ isOcrLoading ? '辨識進行中...' : '選取跑單截圖辨識' }}</span>
+              <input type="file" accept="image/*" multiple @change="handleImageUpload" :disabled="isOcrLoading" class="hidden">
+            </label>
           </div>
         </div>
 
         <!-- 2. CSV 匯入 -->
-        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 flex flex-col justify-between shadow-lg">
+        <div class="bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-800 flex flex-col justify-between shadow-lg">
           <div>
-            <h2 class="font-bold text-slate-200 text-sm mb-2 flex items-center gap-1.5">
+            <h2 class="font-bold text-slate-200 text-xs sm:text-sm mb-1.5 flex items-center gap-1.5">
               <span>📂</span> 匯入 CSV 紀錄
             </h2>
-            <p class="text-xs text-slate-400 mb-4 leading-relaxed">
-              支援欄位：<code>duration</code> (分鐘), <code>base_pay</code> (元), <code>tips</code>, <code>incentives</code>
+            <p class="text-[11px] text-slate-400 mb-3">
+              支援欄位：<code>duration</code> (分), <code>base_pay</code>, <code>tips</code>, <code>incentives</code>
             </p>
           </div>
-          <input type="file" accept=".csv" @change="handleFileUpload" class="block w-full text-xs text-slate-400 file:mr-2 file:py-2 file:px-3.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer transition">
+          <label class="w-full block text-center py-2.5 px-3 rounded-xl bg-slate-800 text-slate-200 font-semibold text-xs cursor-pointer active:bg-slate-700 hover:bg-slate-700 border border-slate-700 transition">
+            <span>選擇 CSV 檔案匯入</span>
+            <input type="file" accept=".csv" @change="handleFileUpload" class="hidden">
+          </label>
         </div>
 
-        <!-- 3. 手動新增單筆 -->
-        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-lg">
-          <h2 class="font-bold text-slate-200 text-sm mb-2 flex items-center gap-1.5">
-            <span>✏️</span> 手動新增單筆訂單
+        <!-- 3. 手動新增單筆 (防止手機鍵盤跳出放大) -->
+        <div class="bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-lg">
+          <h2 class="font-bold text-slate-200 text-xs sm:text-sm mb-2 flex items-center gap-1.5">
+            <span>✏️</span> 手動新增單筆
           </h2>
           <div class="grid grid-cols-2 gap-2 text-xs">
             <div>
-              <label class="text-[10px] text-slate-400 block mb-0.5">服務時間 (分鐘)</label>
-              <input v-model.number="newTrip.duration" @keyup.enter="addTrip" placeholder="例: 18" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded text-slate-100 font-mono focus:border-emerald-500 focus:outline-none">
+              <label class="text-[10px] text-slate-400 block mb-0.5">時間 (分鐘) *</label>
+              <input type="number" inputmode="numeric" v-model.number="newTrip.duration" @keyup.enter="addTrip" placeholder="例: 18" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
             </div>
             <div>
-              <label class="text-[10px] text-slate-400 block mb-0.5">基本報酬 (NT$)</label>
-              <input v-model.number="newTrip.basePay" @keyup.enter="addTrip" placeholder="例: 45" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded text-slate-100 font-mono focus:border-emerald-500 focus:outline-none">
+              <label class="text-[10px] text-slate-400 block mb-0.5">基本報酬 (NT$) *</label>
+              <input type="number" inputmode="numeric" v-model.number="newTrip.basePay" @keyup.enter="addTrip" placeholder="例: 45" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
             </div>
             <div>
               <label class="text-[10px] text-slate-400 block mb-0.5">顧客小費 (NT$)</label>
-              <input v-model.number="newTrip.tips" @keyup.enter="addTrip" placeholder="選填: 20" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded text-slate-100 font-mono focus:border-emerald-500 focus:outline-none">
+              <input type="number" inputmode="numeric" v-model.number="newTrip.tips" @keyup.enter="addTrip" placeholder="例: 20" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
             </div>
             <div>
               <label class="text-[10px] text-slate-400 block mb-0.5">活動獎勵 (NT$)</label>
-              <input v-model.number="newTrip.incentives" @keyup.enter="addTrip" placeholder="選填: 0" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded text-slate-100 font-mono focus:border-emerald-500 focus:outline-none">
+              <input type="number" inputmode="numeric" v-model.number="newTrip.incentives" @keyup.enter="addTrip" placeholder="例: 0" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
             </div>
           </div>
-          <button @click="addTrip" class="mt-3 w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs py-2 rounded-lg transition shadow-md">
-            加入訂單清單
+          <button @click="addTrip" class="mt-2.5 w-full bg-emerald-600 active:bg-emerald-500 hover:bg-emerald-500 text-slate-950 font-bold text-xs py-2.5 rounded-xl transition shadow">
+            加入清單
           </button>
         </div>
 
       </div>
 
-      <!-- 訂單明細列表與編輯 -->
+      <!-- 訂單明細列表 (手機專屬卡片流 + 電腦端表格雙模適應) -->
       <div class="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
-        <div class="px-5 py-4 border-b border-slate-800 flex flex-wrap justify-between items-center gap-3">
+        <div class="px-4 sm:px-5 py-3.5 border-b border-slate-800 flex justify-between items-center">
           <div class="flex items-center gap-2">
-            <h3 class="text-sm font-bold text-slate-200">訂單明細清單</h3>
+            <h3 class="text-xs sm:text-sm font-bold text-slate-200">訂單明細清單</h3>
             <span class="text-xs text-slate-400 font-mono">({{ trips.length }} 筆)</span>
           </div>
-          <div class="flex items-center gap-2">
-            <button v-if="trips.length > 0" @click="trips = []" class="text-xs text-rose-400 hover:text-rose-300 px-2.5 py-1 rounded bg-rose-500/10 hover:bg-rose-500/20 transition">
-              清空全部明細
-            </button>
+          <button v-if="trips.length > 0" @click="trips = []" class="text-xs text-rose-400 hover:text-rose-300 px-2.5 py-1 rounded bg-rose-500/10 active:bg-rose-500/20 transition">
+            清空明細
+          </button>
+        </div>
+
+        <!-- 模式 A：手機版直覺卡片視圖 (sm:hidden) -->
+        <div class="sm:hidden p-3 space-y-2.5 max-h-[500px] overflow-y-auto">
+          <div v-for="(t, idx) in trips" :key="idx" class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <div class="flex items-center gap-1.5">
+                <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center font-mono text-[10px]">{{ idx + 1 }}</span>
+                <span class="text-emerald-400 font-mono font-bold">法定產值: NT${{ ((t.duration / 60) * rate).toFixed(1) }}</span>
+              </div>
+              <button @click="trips.splice(idx, 1)" class="text-rose-400 active:text-rose-300 text-xs px-2 py-0.5 rounded bg-rose-500/10">
+                刪除
+              </button>
+            </div>
+            
+            <div class="grid grid-cols-4 gap-1.5 text-center text-xs">
+              <div class="bg-slate-900/90 p-1.5 rounded border border-slate-800">
+                <span class="text-[9px] text-slate-500 block">時間</span>
+                <div class="flex items-center justify-center gap-0.5 mt-0.5">
+                  <input type="number" inputmode="numeric" v-model.number="t.duration" class="w-8 bg-transparent text-center font-mono text-cyan-300 font-bold focus:outline-none">
+                  <span class="text-[9px] text-slate-500">分</span>
+                </div>
+              </div>
+
+              <div class="bg-slate-900/90 p-1.5 rounded border border-slate-800">
+                <span class="text-[9px] text-slate-500 block">基本車資</span>
+                <div class="flex items-center justify-center gap-0.5 mt-0.5">
+                  <span class="text-[9px] text-slate-500">$</span>
+                  <input type="number" inputmode="numeric" v-model.number="t.basePay" class="w-8 bg-transparent text-center font-mono text-slate-100 font-bold focus:outline-none">
+                </div>
+              </div>
+
+              <div class="bg-slate-900/90 p-1.5 rounded border border-slate-800">
+                <span class="text-[9px] text-slate-500 block">小費</span>
+                <div class="flex items-center justify-center gap-0.5 mt-0.5">
+                  <span class="text-[9px] text-slate-500">$</span>
+                  <input type="number" inputmode="numeric" v-model.number="t.tips" class="w-8 bg-transparent text-center font-mono text-slate-300 focus:outline-none">
+                </div>
+              </div>
+
+              <div class="bg-slate-900/90 p-1.5 rounded border border-slate-800">
+                <span class="text-[9px] text-slate-500 block">獎勵</span>
+                <div class="flex items-center justify-center gap-0.5 mt-0.5">
+                  <span class="text-[9px] text-slate-500">$</span>
+                  <input type="number" inputmode="numeric" v-model.number="t.incentives" class="w-8 bg-transparent text-center font-mono text-slate-300 focus:outline-none">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="trips.length === 0" class="p-8 text-center text-slate-500 text-xs">
+            尚無訂單資料，請使用上方功能上傳截圖或新增。
           </div>
         </div>
 
-        <div class="overflow-x-auto max-h-96">
+        <!-- 模式 B：電腦與平板版表格視圖 (hidden sm:block) -->
+        <div class="hidden sm:block overflow-x-auto max-h-96">
           <table class="w-full text-xs text-left text-slate-300">
             <thead class="bg-slate-950/80 text-slate-400 sticky top-0 border-b border-slate-800">
               <tr>
@@ -350,7 +414,6 @@
               </tr>
               <tr v-if="trips.length === 0">
                 <td colspan="7" class="p-10 text-center text-slate-500 font-sans">
-                  <div class="text-3xl mb-2">📥</div>
                   尚無訂單資料。請使用上方功能上傳截圖、匯入 CSV 或手動新增。
                 </td>
               </tr>
@@ -362,124 +425,124 @@
     </div>
 
     <!-- 分頁 3: 疊單產值與作戰模擬 -->
-    <div v-show="activeTab === 'tactics'" class="space-y-6">
+    <div v-show="activeTab === 'tactics'" class="space-y-4 sm:space-y-6">
       
       <!-- 即時跑單模擬器 -->
-      <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6">
+      <div class="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4 sm:space-y-6">
         <div>
-          <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
+          <h2 class="text-base sm:text-lg font-bold text-emerald-400 flex items-center gap-2">
             <span>⚡</span> 跑單實質時薪產值模擬推算器
           </h2>
-          <p class="text-xs text-slate-400 mt-1">
-            模擬在指定物理時間內完成疊單時，專法獨立累加工時帶來的實質保障時薪產值。
+          <p class="text-[11px] sm:text-xs text-slate-400 mt-1">
+            模擬在指定物理時間內完成疊單時，專法獨立累加工時帶來的實質時薪產值。
           </p>
         </div>
 
         <!-- 模擬參數滑桿與控制 -->
-        <div class="grid sm:grid-cols-3 gap-6 bg-slate-950 p-4 rounded-xl border border-slate-800">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-950 p-3.5 sm:p-4 rounded-xl border border-slate-800">
           <div>
-            <div class="flex justify-between text-xs mb-1">
+            <div class="flex justify-between text-xs mb-1.5">
               <span class="text-slate-400">派單型態 (疊單數)</span>
               <span class="text-emerald-400 font-bold font-mono">{{ simOrders }} 單</span>
             </div>
-            <input type="range" min="1" max="4" step="1" v-model.number="simOrders" class="w-full accent-emerald-500">
-            <div class="flex justify-between text-[10px] text-slate-600 font-mono mt-1">
-              <span>單發 (1單)</span>
-              <span>雙疊 (2單)</span>
-              <span>三疊 (3單)</span>
-              <span>四疊 (4單)</span>
+            <input type="range" min="1" max="4" step="1" v-model.number="simOrders" class="w-full accent-emerald-500 h-2">
+            <div class="flex justify-between text-[10px] text-slate-500 font-mono mt-1">
+              <span>1單 (單發)</span>
+              <span>2單 (雙疊)</span>
+              <span>3單 (三疊)</span>
+              <span>4單</span>
             </div>
           </div>
 
           <div>
-            <div class="flex justify-between text-xs mb-1">
+            <div class="flex justify-between text-xs mb-1.5">
               <span class="text-slate-400">每單平均服務時間 (T_i)</span>
               <span class="text-cyan-400 font-bold font-mono">{{ simAvgTripMins }} 分鐘</span>
             </div>
-            <input type="range" min="10" max="60" step="1" v-model.number="simAvgTripMins" class="w-full accent-cyan-500">
-            <div class="flex justify-between text-[10px] text-slate-600 font-mono mt-1">
-              <span>10 分</span>
-              <span>30 分</span>
-              <span>60 分</span>
+            <input type="range" min="10" max="60" step="1" v-model.number="simAvgTripMins" class="w-full accent-cyan-500 h-2">
+            <div class="flex justify-between text-[10px] text-slate-500 font-mono mt-1">
+              <span>10分</span>
+              <span>30分</span>
+              <span>60分</span>
             </div>
           </div>
 
           <div>
-            <div class="flex justify-between text-xs mb-1">
+            <div class="flex justify-between text-xs mb-1.5">
               <span class="text-slate-400">實際物理鐘點耗時 (T_physical)</span>
               <span class="text-teal-400 font-bold font-mono">{{ simPhysicalMins }} 分鐘</span>
             </div>
-            <input type="range" min="15" max="90" step="5" v-model.number="simPhysicalMins" class="w-full accent-teal-500">
-            <div class="flex justify-between text-[10px] text-slate-600 font-mono mt-1">
-              <span>15 分</span>
-              <span>60 分 (1小時)</span>
-              <span>90 分</span>
+            <input type="range" min="15" max="90" step="5" v-model.number="simPhysicalMins" class="w-full accent-teal-500 h-2">
+            <div class="flex justify-between text-[10px] text-slate-500 font-mono mt-1">
+              <span>15分</span>
+              <span>60分 (1h)</span>
+              <span>90分</span>
             </div>
           </div>
         </div>
 
         <!-- 模擬結果輸出卡片 -->
-        <div class="grid sm:grid-cols-3 gap-4">
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-            <span class="text-xs text-slate-400 block">累計法定申報工時</span>
-            <div class="text-2xl font-black font-mono text-cyan-300 mt-1">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+            <span class="text-[11px] text-slate-400 block">累計法定申報工時</span>
+            <div class="text-xl sm:text-2xl font-black font-mono text-cyan-300 mt-1">
               {{ (simOrders * simAvgTripMins) }} <span class="text-xs font-normal text-slate-400">分鐘</span>
             </div>
-            <span class="text-[11px] text-slate-500">{{ simOrders }} 單 × {{ simAvgTripMins }} 分鐘</span>
+            <span class="text-[10px] text-slate-500">{{ simOrders }} 單 × {{ simAvgTripMins }} 分</span>
           </div>
 
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-            <span class="text-xs text-slate-400 block">工時產值放大倍數</span>
-            <div class="text-2xl font-black font-mono text-amber-300 mt-1">
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+            <span class="text-[11px] text-slate-400 block">工時產值放大倍數</span>
+            <div class="text-xl sm:text-2xl font-black font-mono text-amber-300 mt-1">
               {{ simMultiplier.toFixed(2) }} <span class="text-xs font-normal text-slate-400">倍</span>
             </div>
-            <span class="text-[11px] text-slate-500">法定工時 ÷ 物理工時</span>
+            <span class="text-[10px] text-slate-500">法定工時 ÷ 物理耗時</span>
           </div>
 
-          <div class="bg-emerald-950/40 p-4 rounded-xl border border-emerald-500/30">
-            <span class="text-xs text-emerald-400 font-bold block">模擬實質保障時薪產值</span>
-            <div class="text-2xl font-black font-mono text-emerald-300 mt-1">
+          <div class="bg-emerald-950/50 p-3.5 rounded-xl border border-emerald-500/30">
+            <span class="text-[11px] text-emerald-400 font-bold block">模擬實質產值時薪</span>
+            <div class="text-xl sm:text-2xl font-black font-mono text-emerald-300 mt-1">
               NT$ {{ Math.round(simRealHourlyWage).toLocaleString() }} <span class="text-xs font-normal text-slate-400">/ hr</span>
             </div>
-            <span class="text-[11px] text-emerald-500/80">倍數 {{ simMultiplier.toFixed(2) }}x × 保障時薪 ${{ rate }}</span>
+            <span class="text-[10px] text-emerald-500/80">{{ simMultiplier.toFixed(2) }}x × ${{ rate }}/h</span>
           </div>
         </div>
 
       </div>
 
       <!-- 作戰參數標準與拒接紅線對照表 -->
-      <div class="grid md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         
         <!-- 黃金標準 -->
-        <div class="bg-slate-900 p-5 rounded-2xl border border-emerald-500/30 space-y-3">
-          <h3 class="text-sm font-bold text-emerald-400 flex items-center gap-2">
+        <div class="bg-slate-900 p-4 sm:p-5 rounded-2xl border border-emerald-500/30 space-y-2.5">
+          <h3 class="text-xs sm:text-sm font-bold text-emerald-400 flex items-center gap-1.5">
             <span>🎯</span> 疊單黃金作戰標準（最大化產值）
           </h3>
-          <ul class="text-xs text-slate-300 space-y-2.5">
+          <ul class="text-xs text-slate-300 space-y-2">
             <li class="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-              <strong class="text-emerald-300">2 疊單黃金標準：</strong>
-              <div class="text-slate-400 mt-1">總里程 $\le 2.5\text{ km}$、耗時 $\le 20\text{ 分鐘}$、等餐 $5 \sim 8\text{ 分鐘}$（雙倍計時最佳區間）。</div>
+              <strong class="text-emerald-300">2 疊單標準：</strong>
+              <div class="text-slate-400 mt-0.5 text-[11px]">總里程 $\le 2.5\text{ km}$、耗時 $\le 20\text{ 分鐘}$、等餐 $5 \sim 8\text{ 分鐘}$（雙倍計時最佳區）。</div>
             </li>
             <li class="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-              <strong class="text-emerald-300">3 疊單黃金標準：</strong>
-              <div class="text-slate-400 mt-1">總里程 $\le 3.5\text{ km}$、耗時 $\le 30\text{ 分鐘}$、等餐 $8 \sim 12\text{ 分鐘}$（超高工時產值區）。</div>
+              <strong class="text-emerald-300">3 疊單標準：</strong>
+              <div class="text-slate-400 mt-0.5 text-[11px]">總里程 $\le 3.5\text{ km}$、耗時 $\le 30\text{ 分鐘}$、等餐 $8 \sim 12\text{ 分鐘}$（超高工時產值區）。</div>
             </li>
           </ul>
         </div>
 
         <!-- 拒接紅線 -->
-        <div class="bg-slate-900 p-5 rounded-2xl border border-rose-500/30 space-y-3">
-          <h3 class="text-sm font-bold text-rose-400 flex items-center gap-2">
+        <div class="bg-slate-900 p-4 sm:p-5 rounded-2xl border border-rose-500/30 space-y-2.5">
+          <h3 class="text-xs sm:text-sm font-bold text-rose-400 flex items-center gap-1.5">
             <span>🚫</span> 拒接紅線指標（避免效率稀釋）
           </h3>
-          <ul class="text-xs text-slate-300 space-y-2.5">
+          <ul class="text-xs text-slate-300 space-y-2">
             <li class="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
               <strong class="text-rose-300">2 疊單紅線：</strong>
-              <div class="text-slate-400 mt-1">總里程超過 $3.0\text{ km}$ 建議果斷拒接（避免里程拉長拉低物理時薪）。</div>
+              <div class="text-slate-400 mt-0.5 text-[11px]">總里程超過 $3.0\text{ km}$ 建議果斷拒接（避免里程過長拉低時薪）。</div>
             </li>
             <li class="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
               <strong class="text-rose-300">3 疊單紅線：</strong>
-              <div class="text-slate-400 mt-1">總里程超過 $4.0\text{ km}$ 或送達點脫離核心熱區之訂單一律拒接。</div>
+              <div class="text-slate-400 mt-0.5 text-[11px]">總里程超過 $4.0\text{ km}$ 或送達點脫離核心熱區之訂單一律拒接。</div>
             </li>
           </ul>
         </div>
@@ -489,80 +552,80 @@
     </div>
 
     <!-- 分頁 4: 專法公式與作戰守則說明 -->
-    <div v-show="activeTab === 'rules'" class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-6 text-slate-300 text-xs leading-relaxed">
+    <div v-show="activeTab === 'rules'" class="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4 sm:space-y-6 text-slate-300 text-xs leading-relaxed">
       <div>
-        <h2 class="text-lg font-bold text-emerald-400 mb-2">外送專法與疊單機制收益精算模型（Uber Eats）</h2>
-        <p class="text-slate-400">本精算系統嚴格遵照勞動部專法草案與外送平台兩週週期結算規則設計。</p>
+        <h2 class="text-base sm:text-lg font-bold text-emerald-400 mb-1">外送專法與疊單機制收益精算模型（Uber Eats）</h2>
+        <p class="text-[11px] text-slate-400">本精算系統遵照外送專法草案規範與雙週結算規則設計。</p>
       </div>
 
       <!-- 1. 核心結算三大基本公式 -->
-      <section class="space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-800">
-        <h3 class="text-sm font-bold text-slate-100">1. 核心結算三大基本公式</h3>
+      <section class="space-y-2.5 bg-slate-950 p-3.5 sm:p-4 rounded-xl border border-slate-800">
+        <h3 class="text-xs sm:text-sm font-bold text-slate-100">1. 核心結算三大基本公式</h3>
         
-        <div class="space-y-2">
-          <div class="font-mono text-emerald-300 bg-slate-900 p-2.5 rounded border border-slate-800">
-            1.1 外送服務期間總工時：T_total = ∑(T_i) = T_1 + T_2 + ... + T_n
+        <div class="space-y-1.5">
+          <div class="font-mono text-emerald-300 bg-slate-900 p-2 rounded border border-slate-800 text-[11px] overflow-x-auto">
+            1.1 外送總工時：T_total = ∑(T_i) = T_1 + T_2 + ... + T_n
           </div>
-          <p class="text-slate-400 pl-2">
-            • <strong>T_i 定義</strong>：第 i 筆訂單自「接受派單」起至「送達交付」為止之完整服務時間。<br>
-            • <strong>疊單累加規則</strong>：多筆訂單時間重疊時，每筆訂單之服務時間各自獨立累加計入法定工時。
+          <p class="text-slate-400 text-[11px] pl-1">
+            • <strong>T_i 定義</strong>：自「接受派單」起至「送達交付」為止之完整服務時間。<br>
+            • <strong>疊單累加</strong>：多筆訂單時間重疊時，各自獨立累加計入法定工時。
           </p>
         </div>
 
-        <div class="space-y-2">
-          <div class="font-mono text-emerald-300 bg-slate-900 p-2.5 rounded border border-slate-800">
-            1.2 法定基本外送總額：Total_legal = T_total × P_rate
+        <div class="space-y-1.5">
+          <div class="font-mono text-emerald-300 bg-slate-900 p-2 rounded border border-slate-800 text-[11px] overflow-x-auto">
+            1.2 法定基本總額：Total_legal = T_total × P_rate
           </div>
-          <p class="text-slate-400 pl-2">
-            • <strong>P_rate</strong>：法定保障實質時薪費率（專法法定底線：$245 元 / 小時；實務結算費率：約 $293.90 ～ $305.50 元 / 小時）。
+          <p class="text-slate-400 text-[11px] pl-1">
+            • <strong>P_rate</strong>：法定保障時薪（專法底線：$245 元 / 小時；實務平均：約 $293.90 ～ $305.50 元 / 小時）。
           </p>
         </div>
 
-        <div class="space-y-2">
-          <div class="font-mono text-emerald-300 bg-slate-900 p-2.5 rounded border border-slate-800">
-            1.3 基本報酬差額調整：ΔR = max(0, Total_legal - R_base)
+        <div class="space-y-1.5">
+          <div class="font-mono text-emerald-300 bg-slate-900 p-2 rounded border border-slate-800 text-[11px] overflow-x-auto">
+            1.3 基本報酬差額補貼：ΔR = max(0, Total_legal - R_base)
           </div>
-          <p class="text-slate-400 pl-2">
-            • <strong>R_base</strong>：兩週週期內實領之基本報酬總額（淨行程費用 + 基本報酬加成）。<br>
-            • <strong>排除項目</strong>：顧客小費、額外活動獎勵及非屬基本報酬之調整項目不計入 R_base。
+          <p class="text-slate-400 text-[11px] pl-1">
+            • <strong>R_base</strong>：雙週週期內實領之基本報酬（淨行程費 + 基本加成）。<br>
+            • <strong>排除項目</strong>：顧客小費與活動獎勵不計入 R_base。
           </p>
         </div>
       </section>
 
       <!-- 2. 跑單實質時薪產值模型 -->
-      <section class="space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-800">
-        <h3 class="text-sm font-bold text-slate-100">2. 跑單實質時薪產值模型與對照表</h3>
-        <div class="font-mono text-teal-300 bg-slate-900 p-2.5 rounded border border-slate-800">
+      <section class="space-y-2.5 bg-slate-950 p-3.5 sm:p-4 rounded-xl border border-slate-800">
+        <h3 class="text-xs sm:text-sm font-bold text-slate-100">2. 跑單實質時薪產值模型與對照表</h3>
+        <div class="font-mono text-teal-300 bg-slate-900 p-2 rounded border border-slate-800 text-[11px] overflow-x-auto">
           Hourly_Wage_real = (∑(T_i) / T_physical) × P_rate
         </div>
         <div class="overflow-x-auto">
-          <table class="w-full text-left font-mono">
+          <table class="w-full text-left font-mono text-[11px]">
             <thead class="text-slate-400 border-b border-slate-800">
               <tr>
-                <th class="py-2">派單型態</th>
-                <th class="py-2">60 分鐘內累加工時</th>
-                <th class="py-2">工時放大倍數</th>
-                <th class="py-2">法定保底實質時薪 (@$245)</th>
+                <th class="py-1.5">型態</th>
+                <th class="py-1.5">60分內工時</th>
+                <th class="py-1.5">放大倍數</th>
+                <th class="py-1.5">保底實質時薪 (@$245)</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-800 text-slate-300">
               <tr>
-                <td class="py-2 text-slate-400">單發單（1 單）</td>
-                <td class="py-2">60 分鐘</td>
-                <td class="py-2 text-cyan-400">1.0 倍</td>
-                <td class="py-2 text-emerald-400">$245.00 元 / 小時</td>
+                <td class="py-1.5 text-slate-400">1 單</td>
+                <td class="py-1.5">60 分鐘</td>
+                <td class="py-1.5 text-cyan-400">1.0x</td>
+                <td class="py-1.5 text-emerald-400">$245.00</td>
               </tr>
               <tr>
-                <td class="py-2 text-slate-400">雙單疊單（2 疊）</td>
-                <td class="py-2">100 ～ 110 分鐘</td>
-                <td class="py-2 text-cyan-400">1.67 ～ 1.83 倍</td>
-                <td class="py-2 text-emerald-400">$408.33 ～ $449.17 元 / 小時</td>
+                <td class="py-1.5 text-slate-400">2 疊</td>
+                <td class="py-1.5">100～110 分</td>
+                <td class="py-1.5 text-cyan-400">1.67～1.83x</td>
+                <td class="py-1.5 text-emerald-400">$408.33 ～ $449.17</td>
               </tr>
               <tr>
-                <td class="py-2 text-slate-400">三單疊單（3 疊）</td>
-                <td class="py-2">140 ～ 160 分鐘</td>
-                <td class="py-2 text-cyan-400">2.33 ～ 2.67 倍</td>
-                <td class="py-2 text-emerald-400">$571.67 ～ $653.33 元 / 小時</td>
+                <td class="py-1.5 text-slate-400">3 疊</td>
+                <td class="py-1.5">140～160 分</td>
+                <td class="py-1.5 text-cyan-400">2.33～2.67x</td>
+                <td class="py-1.5 text-emerald-400">$571.67 ～ $653.33</td>
               </tr>
             </tbody>
           </table>
@@ -571,9 +634,25 @@
 
     </div>
 
+    <!-- 手機端底部常駐狀態列 (Sticky Bottom Bar) -->
+    <aside class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-md border-t border-slate-800 px-4 py-2.5 shadow-2xl pb-safe flex items-center justify-between">
+      <div>
+        <span class="text-[10px] text-slate-400 block">兩週預估補發差額 (ΔR)</span>
+        <div class="text-base font-black font-mono text-emerald-400">
+          NT$ {{ Math.round(subsidy).toLocaleString() }}
+        </div>
+      </div>
+      <div class="text-right">
+        <span class="text-[10px] text-slate-400 block">最終總收入 (含小費/獎勵)</span>
+        <div class="text-base font-black font-mono text-slate-100">
+          NT$ {{ Math.round(totalIncome).toLocaleString() }}
+        </div>
+      </div>
+    </aside>
+
     <!-- 底部版權宣告 -->
-    <footer class="text-center text-xs text-slate-600 py-4 border-t border-slate-800/60 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>外送專法與疊單收益精算系統 · 開源離線版（所有數據皆儲存於本機瀏覽器）</div>
+    <footer class="text-center text-[10px] sm:text-xs text-slate-600 py-3 border-t border-slate-800/60 flex flex-col sm:flex-row items-center justify-between gap-1">
+      <div>外送專法與疊單收益精算系統 · 開源離線版（純本機運算）</div>
       <div>Powered by Vue 3 & Tesseract.js</div>
     </footer>
 
@@ -594,7 +673,7 @@
         const isOcrLoading = ref(false);
         const ocrStatus = ref('');
         const ocrProgress = ref(0);
-        const copyBtnText = ref('複製結算文字報表');
+        const copyBtnText = ref('複製報表');
         const customPhysicalHours = ref(null);
 
         // 模擬器參數
@@ -699,7 +778,7 @@
             duration = parseInt(timeMatch[1], 10);
           }
 
-          // 匹配小費 (小費 $30, 包含小費 20)
+          // 匹配小費
           const tipMatch = text.match(/小費[^\d$NT]*[\$NT\s]*(\d+(?:\.\d+)?)/i);
           if (tipMatch) {
             tips = parseFloat(tipMatch[1]);
@@ -777,7 +856,6 @@
             { duration: 24, basePay: 50, tips: 0, incentives: 10 },
             { duration: 19, basePay: 44, tips: 25, incentives: 0 }
           ];
-          alert('已載入 8 筆外送跑單範例明細！');
         };
 
         // 複製報表文字
@@ -798,8 +876,8 @@
 產生自：外送專法與疊單收益精算系統`;
 
           navigator.clipboard.writeText(text).then(() => {
-            copyBtnText.value = '✅ 已複製至剪貼簿！';
-            setTimeout(() => { copyBtnText.value = '複製結算文字報表'; }, 2500);
+            copyBtnText.value = '✅ 已複製！';
+            setTimeout(() => { copyBtnText.value = '複製報表'; }, 2500);
           });
         };
 
@@ -817,10 +895,10 @@
         // 最終實質總收入
         const totalIncome = computed(() => totalBasePay.value + subsidy.value + totalTips.value + totalIncentives.value);
 
-        // 估計實際物理時間（預設採合理疊單比率估算）
+        // 估計實際物理時間
         const estimatedPhysicalHours = computed(() => {
           if (totalHours.value === 0) return 0;
-          return totalHours.value / 1.6; // 以平均雙疊 1.6x 估算
+          return totalHours.value / 1.6;
         });
 
         const activePhysicalHours = computed(() => {
