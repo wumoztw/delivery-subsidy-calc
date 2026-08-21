@@ -1106,7 +1106,92 @@
           return { duration, distance, baseFare, boostFare, basePay, tips, incentives, points, stacks, merchant };
         };
 
-        // OCR 批次圖片上傳處理
+        // 視覺辨識：利用 Canvas 分析地圖區域的「紅色圓形送達標記」數量 (1個紅點=1單，2個紅點=2疊，3個紅點=3疊)
+        const countRedMarkersOnMap = (imageFile) => {
+          return new Promise((resolve) => {
+            const img = new Image();
+            const url = URL.createObjectURL(imageFile);
+            img.onload = () => {
+              try {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+
+                // 地圖大約位於畫面上方 10% 至 55% 處
+                const startY = Math.floor(img.height * 0.10);
+                const endY = Math.floor(img.height * 0.55);
+                const mapHeight = endY - startY;
+
+                const imgData = ctx.getImageData(0, startY, img.width, mapHeight);
+                const data = imgData.data;
+
+                const redPixels = [];
+
+                // 採樣像素檢測 Uber Eats 特徵紅色標記 (高紅、低綠、低藍)
+                for (let y = 0; y < mapHeight; y += 2) {
+                  for (let x = 0; x < img.width; x += 2) {
+                    const idx = (y * img.width + x) * 4;
+                    const r = data[idx];
+                    const g = data[idx + 1];
+                    const b = data[idx + 2];
+
+                    // Uber Eats 經典送餐紅標 (#E11900 / #DC2626)
+                    if (r > 175 && g < 110 && b < 110 && (r - g) > 65 && (r - b) > 65) {
+                      redPixels.push({ x, y });
+                    }
+                  }
+                }
+
+                // 依據空間距離聚類 (Cluster)，判定獨立紅色圓形圖標數量
+                const clusterThreshold = Math.max(24, img.width * 0.045);
+                const clusters = [];
+
+                for (const p of redPixels) {
+                  let matchedCluster = null;
+                  for (const c of clusters) {
+                    const dist = Math.hypot(c.centerX - p.x, c.centerY - p.y);
+                    if (dist < clusterThreshold) {
+                      matchedCluster = c;
+                      break;
+                    }
+                  }
+
+                  if (matchedCluster) {
+                    matchedCluster.points.push(p);
+                    matchedCluster.centerX = matchedCluster.points.reduce((sum, pt) => sum + pt.x, 0) / matchedCluster.points.length;
+                    matchedCluster.centerY = matchedCluster.points.reduce((sum, pt) => sum + pt.y, 0) / matchedCluster.points.length;
+                  } else {
+                    clusters.push({
+                      centerX: p.x,
+                      centerY: p.y,
+                      points: [p]
+                    });
+                  }
+                }
+
+                // 過濾微小雜訊點（圓形標記應包含足夠紅色像素）
+                const minPoints = 12;
+                const validRedMarkers = clusters.filter(c => c.points.length >= minPoints);
+
+                URL.revokeObjectURL(url);
+                resolve(validRedMarkers.length);
+              } catch (err) {
+                console.warn('地圖紅點視覺分析異常:', err);
+                URL.revokeObjectURL(url);
+                resolve(0);
+              }
+            };
+            img.onerror = () => {
+              URL.revokeObjectURL(url);
+              resolve(0);
+            };
+            img.src = url;
+          });
+        };
+
+        // OCR 批次圖片上傳處理（整合文字辨識 ＋ 地圖紅點視覺分析）
         const handleImageUpload = async (e) => {
           const files = Array.from(e.target.files);
           if (files.length === 0) return;
@@ -1120,6 +1205,10 @@
               ocrStatus.value = `辨識中 (${i + 1}/${files.length})...`;
               ocrProgress.value = Math.round(((i) / files.length) * 100);
 
+              // 1. 先執行地圖紅色圓點圖標視覺分析
+              const detectedRedMarkers = await countRedMarkersOnMap(files[i]);
+
+              // 2. 執行 Tesseract 文字辨識
               const res = await Tesseract.recognize(files[i], 'chi_tra+eng', {
                 logger: m => {
                   if (m.status === 'recognizing text') {
@@ -1129,12 +1218,18 @@
               });
 
               const extracted = parseDeliveryText(res.data.text);
+              
+              // 3. 若地圖視覺成功辨識到紅色圖標，優先以地圖紅點數作為該單單數 (1單/2疊/3疊)
+              if (detectedRedMarkers > 0) {
+                extracted.stacks = detectedRedMarkers;
+              }
+
               if (extracted.duration > 0 || extracted.basePay > 0) {
                 trips.value.push(extracted);
                 successCount++;
               }
             }
-            alert(`OCR 解析完成！已加入 ${successCount} 筆訂單，並自動拆解基本行程費與加成。`);
+            alert(`OCR 與地圖紅點解析完成！已加入 ${successCount} 筆訂單，並自動依地圖標記判定單數。`);
           } catch (err) {
             console.error('OCR 解析失敗:', err);
             alert('截圖辨識時發生錯誤，請確認圖片文字清晰度。');
