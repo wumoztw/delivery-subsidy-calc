@@ -312,7 +312,7 @@
               <input type="number" step="0.01" inputmode="decimal" v-model.number="newTrip.duration" @keyup.enter="addTrip" placeholder="例: 19.63" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
             </div>
             <div>
-              <label class="text-[10px] text-slate-400 block mb-0.5">基本車資 (NT$) *</label>
+              <label class="text-[10px] text-slate-400 block mb-0.5">行程費用 (NT$) *</label>
               <input type="number" inputmode="numeric" v-model.number="newTrip.basePay" @keyup.enter="addTrip" placeholder="例: 113" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
             </div>
             <div>
@@ -385,7 +385,7 @@
               </div>
 
               <div class="bg-slate-900/90 p-1.5 rounded border border-slate-800">
-                <span class="text-[9px] text-slate-500 block">基本車資</span>
+                <span class="text-[9px] text-slate-500 block">行程費用</span>
                 <div class="flex items-center justify-center gap-0.5 mt-0.5">
                   <span class="text-[9px] text-slate-500">$</span>
                   <input type="number" inputmode="numeric" v-model.number="t.basePay" class="w-8 bg-transparent text-center font-mono text-slate-100 font-bold focus:outline-none">
@@ -424,7 +424,7 @@
                 <th class="p-3">派單型態</th>
                 <th class="p-3">物理時間 (分)</th>
                 <th class="p-3">距離 (km)</th>
-                <th class="p-3">基本車資</th>
+                <th class="p-3">行程費用</th>
                 <th class="p-3">加成 / 小費</th>
                 <th class="p-3">每公里效益</th>
                 <th class="p-3">法定申報工時</th>
@@ -923,7 +923,7 @@
             '服務時間_分鐘': t.duration,
             '距離_公里': t.distance || 0,
             '疊單數': t.stacks || 1,
-            '基本報酬_NT': t.basePay,
+            '行程費用_NT': t.basePay,
             '基本加成_NT': t.boostFare || 0,
             '顧客小費_NT': t.tips || 0,
             '活動獎勵_NT': t.incentives || 0,
@@ -1057,18 +1057,15 @@
           }
         };
 
-        // 載入兩張真實截圖範例數據
+        // 載入預設示範數據
         const loadSampleData = () => {
           trips.value = [
-            // 截圖 1: 單發單（11分51秒，1.82km，$78基本 + $15加成 + $40小費，2點）
-            { duration: 11.85, distance: 1.82, basePay: 78, boostFare: 15, tips: 40, incentives: 0, points: 2, stacks: 1, merchant: '饌味香鍋貼麵食館' },
-            // 截圖 2: 雙單疊單（19分38秒，1.58km，$113基本 + $20加成，4點）
-            { duration: 19.63, distance: 1.58, basePay: 113, boostFare: 20, tips: 0, incentives: 0, points: 4, stacks: 2, merchant: '築間幸福鍋物' },
-            // 補充模擬單
-            { duration: 22.0, distance: 2.10, basePay: 98, boostFare: 18, tips: 20, incentives: 0, points: 4, stacks: 2, merchant: '大埔鐵板燒' },
-            { duration: 14.5, distance: 1.40, basePay: 45, boostFare: 0, tips: 10, incentives: 0, points: 2, stacks: 1, merchant: '50嵐 忠孝復興店' }
+            { duration: 14.2, distance: 2.1, basePay: 72, boostFare: 12, tips: 35, incentives: 0, points: 2, stacks: 1, merchant: '熱門便當店 (示範單)' },
+            { duration: 21.5, distance: 2.4, basePay: 115, boostFare: 22, tips: 0, incentives: 0, points: 4, stacks: 2, merchant: '連鎖鍋物 (示範雙疊)' },
+            { duration: 28.0, distance: 3.2, basePay: 155, boostFare: 28, tips: 40, incentives: 20, points: 6, stacks: 3, merchant: '百貨美食街 (示範三疊)' },
+            { duration: 12.0, distance: 1.3, basePay: 50, boostFare: 0, tips: 15, incentives: 0, points: 2, stacks: 1, merchant: '人氣手搖茶 (示範單)' }
           ];
-          alert('已載入兩張真實截圖數據與示範疊單！');
+          alert('已載入示範跑單數據（含單發、雙單疊單與三疊單）！');
         };
 
         // 複製報表文字
