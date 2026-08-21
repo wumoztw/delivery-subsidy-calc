@@ -8,7 +8,7 @@
 
 1. **專法兩週週期差額精算**：
    - 自動累計雙週總服務工時（$T_{\text{total}}$，每單自接單至交付獨立累加）。
-   - 根據法定保障費率（\$245/h 底線至 \$305.5/h 實務費率）精算最低應得保底（$\text{Total}_{\text{legal}}$）。
+   - 根據專法法定保障費率（\$245/h 底線，支援自由自訂費率）精算最低應得保底（$\text{Total}_{\text{legal}}$）。
    - 自動計算兩週結算補發差額（$\Delta R = \max(0, \text{Total}_{\text{legal}} - R_{\text{base}})$）。
 2. **跑單截圖頂級 AI 視覺解析 (NVIDIA Nemotron VL)**：
    - 採用 **NVIDIA Nemotron 12B VL 專屬多模態視覺模型**，支援 1800px 高清原圖閱讀。

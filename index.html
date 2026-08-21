@@ -71,15 +71,14 @@
           </div>
           <span class="text-emerald-300 font-mono font-bold sm:hidden">NT$ {{ rate }} / hr</span>
         </div>
-        <div class="flex items-center justify-between gap-1 overflow-x-auto no-scrollbar">
+        <div class="flex items-center justify-between sm:justify-end gap-2 overflow-x-auto no-scrollbar">
           <div class="flex items-center gap-1 shrink-0">
-            <button @click="rate = 245" :class="rate === 245 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold' : 'bg-slate-800 text-slate-400 border-slate-700'" class="text-[11px] sm:text-xs px-2 sm:px-2.5 py-1 rounded-lg border transition font-mono">$245 底線</button>
-            <button @click="rate = 295" :class="rate === 295 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold' : 'bg-slate-800 text-slate-400 border-slate-700'" class="text-[11px] sm:text-xs px-2 sm:px-2.5 py-1 rounded-lg border transition font-mono">$295 實務</button>
-            <button @click="rate = 305.5" :class="rate === 305.5 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold' : 'bg-slate-800 text-slate-400 border-slate-700'" class="text-[11px] sm:text-xs px-2 sm:px-2.5 py-1 rounded-lg border transition font-mono">$305.5 加成</button>
+            <button @click="rate = 245" :class="rate === 245 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold' : 'bg-slate-800 text-slate-400 border-slate-700'" class="text-[11px] sm:text-xs px-2.5 py-1 rounded-lg border transition font-mono">$245 專法底線</button>
           </div>
-          <div class="flex items-center gap-1 border-l border-slate-800 pl-1.5 shrink-0">
-            <span class="text-[10px] text-slate-500">NT$</span>
-            <input type="number" v-model.number="rate" step="0.5" class="w-14 bg-slate-900 border border-slate-700 rounded px-1 py-0.5 text-right font-mono text-emerald-300 text-xs focus:outline-none focus:border-emerald-500">
+          <div class="flex items-center gap-1 border-l border-slate-800 pl-2 shrink-0">
+            <span class="text-[10px] text-slate-500">自訂 NT$</span>
+            <input type="number" v-model.number="rate" step="0.5" class="w-16 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-emerald-300 text-xs focus:outline-none focus:border-emerald-500">
+            <span class="text-[10px] text-slate-500">/ hr</span>
           </div>
         </div>
       </div>
@@ -771,7 +770,7 @@
             1.2 法定最低保障 ＝ 外送總工時 (小時) × 法定保障時薪費率
           </div>
           <p class="text-slate-400 text-[11px] pl-1">
-            • <strong>保障時薪</strong>：法定保障時薪（專法底線：NT$ 245 元 / 小時；實務平均：約 NT$ 293.90 ～ 305.50 元 / 小時）。
+            • <strong>保障時薪</strong>：法定保障時薪（專法法定底線：NT$ 245 元 / 小時，即基本工資 196 元 × 1.25 倍）。
           </p>
         </div>
 
