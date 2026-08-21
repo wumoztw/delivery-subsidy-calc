@@ -25,10 +25,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Inject OpenRouter API Key
+        env:
+          OPENROUTER_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
-          if [ -n "${{ secrets.OPENROUTER_API_KEY }}" ]; then
+          if [ -n "$OPENROUTER_KEY" ]; then
             echo "Injecting OPENROUTER_API_KEY into index.html..."
-            sed -i "s|__OPENROUTER_API_KEY__|${{ secrets.OPENROUTER_API_KEY }}|g" index.html
+            sed -i "s|__OPENROUTER_API_KEY__|$OPENROUTER_KEY|g" index.html
           else
             echo "No OPENROUTER_API_KEY secret found. Defaulting to local OCR fallback."
           fi
