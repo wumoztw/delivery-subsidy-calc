@@ -1460,19 +1460,46 @@
           });
         };
 
+        // 輔助函式：將任何格式的服務時間（如 19分38秒、19:38、19.63）精確轉為小數分鐘 (例如 19.63)
+        const parseDurationToMins = (rawVal, minsVal, secsVal) => {
+          const mins = Number(minsVal) || 0;
+          const secs = Number(secsVal) || 0;
+          if (mins > 0 || secs > 0) {
+            return parseFloat((mins + (secs / 60)).toFixed(2));
+          }
+
+          if (typeof rawVal === 'number' && !isNaN(rawVal)) {
+            return parseFloat(rawVal.toFixed(2));
+          }
+
+          const str = String(rawVal || '');
+          const minSec = str.match(/(\d+)\s*(?:分鐘|分|m|mins?)\s*(\d+)\s*(?:秒|s|secs?)/i);
+          if (minSec) {
+            return parseFloat((parseInt(minSec[1], 10) + (parseInt(minSec[2], 10) / 60)).toFixed(2));
+          }
+          const colon = str.match(/(\d{1,2}):(\d{2})/);
+          if (colon) {
+            return parseFloat((parseInt(colon[1], 10) + (parseInt(colon[2], 10) / 60)).toFixed(2));
+          }
+          const numMatch = str.match(/(\d+(?:\.\d+)?)/);
+          return numMatch ? parseFloat(parseFloat(numMatch[1]).toFixed(2)) : 0;
+        };
+
         // 呼叫 OpenRouter 視覺 AI 模型進行 100% 精確截圖解析（鎖定 openrouter/free 官方免費模型）
         const parseReceiptWithOpenRouter = async (imageFile, apiKey) => {
           const base64Data = await imageFileToBase64(imageFile);
-          const prompt = `你是專業的 Uber Eats 跑單帳單截圖解析助理。請仔細觀察圖片中的各項數值（時間、距離、基本行程費用、基本報酬加成、小費、點數、商家名稱），並輸出純 JSON 格式（不要有 markdown 語法或任何其他字串）：
+          const prompt = `你是專業的 Uber Eats 跑單帳單截圖解析助理。請仔細觀察圖片中的各項數值並輸出純 JSON 格式（不要有 markdown 語法或多餘字串）：
 {
-  "duration": 服務時間 (數字，分鐘含小數，例如 19 分 38 秒轉為 19.63),
+  "duration_minutes": 服務時間的分鐘整數 (例如 19 分 38 秒則填 19),
+  "duration_seconds": 服務時間的秒數整數 (例如 19 分 38 秒則填 38，若只有分鐘則填 0),
+  "raw_duration": "原始服務時間文字 (例如 19 分 38 秒)",
   "distance": 距離公里 (數字，例如 1.58),
   "baseFare": 基本行程費用 (數字，例如 93，若無則為 行程費用 - 加成),
   "boostFare": 基本報酬加成 (數字，例如 20，若無則為 0),
   "basePay": 行程費用合計 (數字，例如 113),
   "tips": 顧客小費 (數字，若無則為 0),
   "points": 賺取點數 (數字，例如 2 或 4 或 6),
-  "stacks": 疊單數 (數字：1單為1, 雙單疊單為2, 三疊單為3),
+  "stacks": 疊單單數 (數字：單單為1；雙單/賺取4點/送2個顧客為2；三單/賺取6點為3),
   "merchant": "商家名稱 (例如 連鎖鍋物)"
 }`;
 
@@ -1510,21 +1537,36 @@
           const cleanJsonStr = rawContent.replace(/```(?:json)?/gi, '').replace(/```/g, '').trim();
           const parsed = JSON.parse(cleanJsonStr);
 
+          // 1. 精確計算服務時間 (分鐘 + 秒/60)
+          const duration = parseDurationToMins(parsed.raw_duration || parsed.duration, parsed.duration_minutes, parsed.duration_seconds);
+
+          // 2. 精確判斷點數與疊單 (4點=2疊, 6點=3疊)
+          const pts = Number(parsed.points) || 0;
+          let stacks = Number(parsed.stacks) || 1;
+          if (pts >= 5 || stacks >= 3) {
+            stacks = 3;
+          } else if (pts >= 3 || stacks >= 2) {
+            stacks = 2;
+          } else {
+            stacks = 1;
+          }
+
+          // 3. 費用拆解
           const bFare = Number(parsed.baseFare) || 0;
           const bBoost = Number(parsed.boostFare) || 0;
           let bPay = Number(parsed.basePay) || 0;
           if (!bPay && (bFare || bBoost)) bPay = bFare + bBoost;
 
           return {
-            duration: Number(parsed.duration) || 0,
+            duration: duration || 0,
             distance: Number(parsed.distance) || 0,
             baseFare: bFare || (bPay ? Math.max(0, bPay - bBoost) : 0),
             boostFare: bBoost,
             basePay: bPay,
             tips: Number(parsed.tips) || 0,
             incentives: Number(parsed.incentives) || 0,
-            points: Number(parsed.points) || 0,
-            stacks: Number(parsed.stacks) || (Number(parsed.points) >= 5 ? 3 : (Number(parsed.points) >= 3 ? 2 : 1)),
+            points: pts || (stacks === 3 ? 6 : (stacks === 2 ? 4 : 2)),
+            stacks: stacks,
             merchant: String(parsed.merchant || '').slice(0, 20)
           };
         };
