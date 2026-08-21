@@ -451,6 +451,21 @@
                 <span class="text-cyan-400 font-mono">🌟 {{ t.points || (t.stacks === 3 ? 6 : (t.stacks === 2 ? 4 : 2)) }} 點</span>
               </div>
             </div>
+
+            <!-- 專法法定保底與補貼推算 (單趟即時精算) -->
+            <div class="flex items-center justify-between text-[11px] p-2 rounded-xl bg-slate-950/90 border border-emerald-500/30 text-slate-300">
+              <div class="flex items-center gap-1.5">
+                <span class="text-emerald-400 font-bold">⚖️ 專法保底應得:</span>
+                <span class="font-mono font-bold text-emerald-300">NT$ {{ Math.round((getTripStatutoryMins(t) / 60) * rate) }}</span>
+                <span class="text-[10px] text-slate-500">({{ (getTripStatutoryMins(t)).toFixed(1) }}分)</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span class="text-[10px] text-slate-400">預估差額:</span>
+                <span :class="(Math.round((getTripStatutoryMins(t)/60)*rate) - (t.basePay||0)) > 0 ? 'text-amber-400 font-bold' : 'text-emerald-400 font-mono'" class="text-[11px] font-mono">
+                  {{ (Math.round((getTripStatutoryMins(t)/60)*rate) - (t.basePay||0)) > 0 ? '+NT$' + (Math.round((getTripStatutoryMins(t)/60)*rate) - (t.basePay||0)) + ' 補貼' : '✅ 已達保底' }}
+                </span>
+              </div>
+            </div>
           </div>
 
           <div v-if="trips.length === 0" class="p-8 text-center text-slate-500 text-xs">
@@ -472,7 +487,7 @@
                 <th class="p-3">行程費用合計</th>
                 <th class="p-3">顧客小費</th>
                 <th class="p-3 text-emerald-300">您的費用明細 (本趟總計)</th>
-                <th class="p-3">法定申報工時</th>
+                <th class="p-3 text-amber-300">⚖️ 專法保底 / 預估補貼</th>
                 <th class="p-3">戰力評級</th>
                 <th class="p-3 text-right">操作</th>
               </tr>
@@ -529,8 +544,14 @@
                 <td class="p-3 text-emerald-400 font-bold">
                   NT$ {{ ((t.basePay || 0) + (t.tips || 0) + (t.incentives || 0)) }}
                 </td>
-                <td class="p-3 text-cyan-300">
-                  {{ (getTripStatutoryMins(t)).toFixed(1) }} 分
+                <!-- 專法保底與預估補貼 -->
+                <td class="p-3">
+                  <div class="flex flex-col">
+                    <span class="text-emerald-300 font-bold">NT$ {{ Math.round((getTripStatutoryMins(t)/60) * rate) }}</span>
+                    <span :class="(Math.round((getTripStatutoryMins(t)/60)*rate) - (t.basePay||0)) > 0 ? 'text-amber-400 font-bold text-[10px]' : 'text-emerald-500 text-[10px]'">
+                      {{ (Math.round((getTripStatutoryMins(t)/60)*rate) - (t.basePay||0)) > 0 ? '+NT$' + (Math.round((getTripStatutoryMins(t)/60)*rate) - (t.basePay||0)) + ' 補貼' : '已達保底' }}
+                    </span>
+                  </div>
                 </td>
                 <td class="p-3 font-sans">
                   <span :class="getTierBadgeClass(t)" class="text-[10px] px-2 py-0.5 rounded font-bold">
