@@ -306,18 +306,26 @@
           <h2 class="font-bold text-slate-200 text-xs sm:text-sm mb-2 flex items-center gap-1.5">
             <span>✏️</span> 手動新增單筆
           </h2>
-          <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
             <div>
               <label class="text-[10px] text-slate-400 block mb-0.5">時間 (分鐘) *</label>
               <input type="number" step="0.01" inputmode="decimal" v-model.number="newTrip.duration" @keyup.enter="addTrip" placeholder="例: 19.63" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
             </div>
             <div>
-              <label class="text-[10px] text-slate-400 block mb-0.5">行程費用 (NT$) *</label>
-              <input type="number" inputmode="numeric" v-model.number="newTrip.basePay" @keyup.enter="addTrip" placeholder="例: 113" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
-            </div>
-            <div>
               <label class="text-[10px] text-slate-400 block mb-0.5">距離 (公里 km)</label>
               <input type="number" step="0.01" inputmode="decimal" v-model.number="newTrip.distance" @keyup.enter="addTrip" placeholder="例: 1.58" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-400 block mb-0.5">基本行程費用 (NT$)</label>
+              <input type="number" inputmode="numeric" v-model.number="newTrip.baseFare" @input="syncNewTripBasePay" @keyup.enter="addTrip" placeholder="例: 93" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-400 block mb-0.5">基本報酬加成 (NT$)</label>
+              <input type="number" inputmode="numeric" v-model.number="newTrip.boostFare" @input="syncNewTripBasePay" @keyup.enter="addTrip" placeholder="例: 20" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-400 block mb-0.5">行程費用合計 (NT$) *</label>
+              <input type="number" inputmode="numeric" v-model.number="newTrip.basePay" @keyup.enter="addTrip" placeholder="例: 113" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-emerald-300 font-bold font-mono text-xs focus:border-emerald-500 focus:outline-none">
             </div>
             <div>
               <label class="text-[10px] text-slate-400 block mb-0.5">派單型態 (疊單數)</label>
@@ -369,7 +377,7 @@
             
             <div class="grid grid-cols-4 gap-1.5 text-center text-xs">
               <div class="bg-slate-900/90 p-1.5 rounded border border-slate-800">
-                <span class="text-[9px] text-slate-500 block">物理時間</span>
+                <span class="text-[9px] text-slate-500 block">服務時間</span>
                 <div class="flex items-center justify-center gap-0.5 mt-0.5">
                   <input type="number" step="0.01" inputmode="decimal" v-model.number="t.duration" class="w-10 bg-transparent text-center font-mono text-cyan-300 font-bold focus:outline-none">
                   <span class="text-[9px] text-slate-500">分</span>
@@ -385,28 +393,33 @@
               </div>
 
               <div class="bg-slate-900/90 p-1.5 rounded border border-slate-800">
-                <span class="text-[9px] text-slate-500 block">行程費用</span>
+                <span class="text-[9px] text-slate-500 block">基本行程費</span>
                 <div class="flex items-center justify-center gap-0.5 mt-0.5">
                   <span class="text-[9px] text-slate-500">$</span>
-                  <input type="number" inputmode="numeric" v-model.number="t.basePay" class="w-8 bg-transparent text-center font-mono text-slate-100 font-bold focus:outline-none">
+                  <input type="number" inputmode="numeric" v-model.number="t.baseFare" @input="syncTripBasePay(t)" placeholder="0" class="w-8 bg-transparent text-center font-mono text-slate-200 focus:outline-none">
                 </div>
               </div>
 
               <div class="bg-slate-900/90 p-1.5 rounded border border-slate-800">
-                <span class="text-[9px] text-slate-500 block">小費</span>
+                <span class="text-[9px] text-amber-400/90 block">基本加成</span>
                 <div class="flex items-center justify-center gap-0.5 mt-0.5">
-                  <span class="text-[9px] text-slate-500">$</span>
-                  <input type="number" inputmode="numeric" v-model.number="t.tips" class="w-8 bg-transparent text-center font-mono text-slate-300 focus:outline-none">
+                  <span class="text-[9px] text-amber-400">+$</span>
+                  <input type="number" inputmode="numeric" v-model.number="t.boostFare" @input="syncTripBasePay(t)" placeholder="0" class="w-8 bg-transparent text-center font-mono text-amber-300 font-bold focus:outline-none">
                 </div>
               </div>
             </div>
 
-            <!-- 加成、商家與小費後發標籤 -->
-            <div class="flex items-center justify-between text-[10px] text-slate-500 pt-0.5 px-0.5">
-              <span v-if="t.merchant" class="truncate max-w-[140px] text-slate-400">🏪 {{ t.merchant }}</span>
-              <span v-if="t.distance">單價: NT${{ (t.basePay / t.distance).toFixed(1) }}/km</span>
-              <span v-if="t.tips > 0" class="text-amber-400 font-bold">🎁 +${{ t.tips }}小費</span>
-              <span v-else class="text-slate-500">無小費</span>
+            <!-- 行程費用總計、小費與商家 -->
+            <div class="flex items-center justify-between text-[11px] pt-1 px-1 bg-slate-900/60 rounded-lg border border-slate-800/60">
+              <div class="flex items-center gap-1">
+                <span class="text-slate-400 text-[10px]">行程費用:</span>
+                <span class="text-emerald-300 font-bold font-mono">NT$ {{ t.basePay }}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span v-if="t.tips > 0" class="text-emerald-400 font-bold text-[10px]">🎁 +${{ t.tips }} 小費</span>
+                <span v-else class="text-slate-500 text-[10px]">無小費</span>
+                <span v-if="t.merchant" class="truncate max-w-[100px] text-slate-400 text-[10px]">🏪 {{ t.merchant }}</span>
+              </div>
             </div>
           </div>
 
@@ -422,11 +435,12 @@
               <tr>
                 <th class="p-3">#</th>
                 <th class="p-3">派單型態</th>
-                <th class="p-3">物理時間 (分)</th>
+                <th class="p-3">服務時間 (分)</th>
                 <th class="p-3">距離 (km)</th>
-                <th class="p-3">行程費用</th>
-                <th class="p-3">加成 / 小費</th>
-                <th class="p-3">每公里效益</th>
+                <th class="p-3">基本行程費用</th>
+                <th class="p-3">基本報酬加成</th>
+                <th class="p-3">行程費用合計</th>
+                <th class="p-3">顧客小費</th>
                 <th class="p-3">法定申報工時</th>
                 <th class="p-3">戰力評級</th>
                 <th class="p-3 text-right">操作</th>
@@ -452,20 +466,33 @@
                     <span class="text-slate-500 font-sans">km</span>
                   </div>
                 </td>
+                <!-- 基本行程費用 -->
                 <td class="p-3">
                   <div class="flex items-center gap-1">
                     <span class="text-slate-500 font-sans">$</span>
-                    <input type="number" v-model.number="t.basePay" class="bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 w-14 text-slate-100 text-right">
+                    <input type="number" v-model.number="t.baseFare" @input="syncTripBasePay(t)" placeholder="0" class="bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 w-14 text-slate-200 text-right">
                   </div>
                 </td>
+                <!-- 基本報酬加成 -->
                 <td class="p-3">
-                  <span v-if="t.boostFare" class="text-amber-400 font-bold">+${{ t.boostFare }}加成 </span>
-                  <span v-if="t.tips" class="text-emerald-400 font-bold">+${{ t.tips }}小費</span>
-                  <span v-if="!t.boostFare && !t.tips" class="text-slate-600">-</span>
+                  <div class="flex items-center gap-1">
+                    <span class="text-amber-400 font-sans">+$</span>
+                    <input type="number" v-model.number="t.boostFare" @input="syncTripBasePay(t)" placeholder="0" class="bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 w-14 text-amber-300 font-bold text-right">
+                  </div>
                 </td>
-                <td class="p-3 text-teal-300">
-                  <span v-if="t.distance">NT$ {{ ((t.basePay + (t.tips||0)) / t.distance).toFixed(1) }}/km</span>
-                  <span v-else class="text-slate-600">-</span>
+                <!-- 行程費用合計 -->
+                <td class="p-3">
+                  <div class="flex items-center gap-1">
+                    <span class="text-slate-500 font-sans">$</span>
+                    <input type="number" v-model.number="t.basePay" class="bg-slate-950 border border-emerald-500/40 rounded px-1.5 py-0.5 w-14 text-emerald-300 font-bold text-right">
+                  </div>
+                </td>
+                <!-- 顧客小費 -->
+                <td class="p-3">
+                  <div class="flex items-center gap-1">
+                    <span class="text-slate-500 font-sans">$</span>
+                    <input type="number" v-model.number="t.tips" class="bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 w-12 text-slate-300 text-right">
+                  </div>
                 </td>
                 <td class="p-3 text-cyan-300">
                   {{ (getTripStatutoryMins(t)).toFixed(1) }} 分
@@ -482,7 +509,7 @@
                 </td>
               </tr>
               <tr v-if="trips.length === 0">
-                <td colspan="10" class="p-10 text-center text-slate-500 font-sans">
+                <td colspan="11" class="p-10 text-center text-slate-500 font-sans">
                   尚無訂單資料。請使用上方功能上傳截圖、匯入 CSV 或手動新增。
                 </td>
               </tr>
@@ -799,7 +826,7 @@
         const activeTab = ref('dashboard');
         const rate = ref(245);
         const trips = ref([]);
-        const newTrip = ref({ duration: '', basePay: '', distance: '', tips: '', incentives: '', boostFare: '', points: '', stacks: 1, merchant: '' });
+        const newTrip = ref({ duration: '', distance: '', baseFare: '', boostFare: '', basePay: '', tips: '', incentives: '', points: '', stacks: 1, merchant: '' });
         
         const isOcrLoading = ref(false);
         const ocrStatus = ref('');
@@ -812,6 +839,24 @@
         const simAvgTripMins = ref(25);
         const simPhysicalMins = ref(30);
 
+        // 自動同步手動輸入金額
+        const syncNewTripBasePay = () => {
+          const fare = Number(newTrip.value.baseFare) || 0;
+          const boost = Number(newTrip.value.boostFare) || 0;
+          if (fare > 0 || boost > 0) {
+            newTrip.value.basePay = fare + boost;
+          }
+        };
+
+        // 自動同步明細卡片內金額
+        const syncTripBasePay = (t) => {
+          const fare = Number(t.baseFare) || 0;
+          const boost = Number(t.boostFare) || 0;
+          if (fare > 0 || boost > 0) {
+            t.basePay = fare + boost;
+          }
+        };
+
         // 從 LocalStorage 載入資料
         onMounted(() => {
           try {
@@ -819,7 +864,13 @@
             if (saved) {
               const data = JSON.parse(saved);
               if (data.rate) rate.value = data.rate;
-              if (Array.isArray(data.trips)) trips.value = data.trips;
+              if (Array.isArray(data.trips)) {
+                trips.value = data.trips.map(t => ({
+                  ...t,
+                  baseFare: t.baseFare !== undefined ? t.baseFare : Math.max(0, (Number(t.basePay) || 0) - (Number(t.boostFare) || 0)),
+                  boostFare: Number(t.boostFare) || 0
+                }));
+              }
             }
           } catch (e) {
             console.error('載入 LocalStorage 失敗:', e);
@@ -841,18 +892,23 @@
         // 新增單筆
         const addTrip = () => {
           if (!newTrip.value.duration) return;
+          const bFare = Number(newTrip.value.baseFare) || 0;
+          const bBoost = Number(newTrip.value.boostFare) || 0;
+          const bPay = Number(newTrip.value.basePay) || (bFare + bBoost);
+
           trips.value.push({
             duration: Number(newTrip.value.duration) || 0,
-            basePay: Number(newTrip.value.basePay) || 0,
             distance: Number(newTrip.value.distance) || 0,
+            baseFare: bFare || (bPay ? Math.max(0, bPay - bBoost) : 0),
+            boostFare: bBoost,
+            basePay: bPay,
             tips: Number(newTrip.value.tips) || 0,
             incentives: Number(newTrip.value.incentives) || 0,
-            boostFare: Number(newTrip.value.boostFare) || 0,
             points: Number(newTrip.value.points) || 0,
             stacks: Number(newTrip.value.stacks) || 1,
             merchant: newTrip.value.merchant || ''
           });
-          newTrip.value = { duration: '', basePay: '', distance: '', tips: '', incentives: '', boostFare: '', points: '', stacks: 1, merchant: '' };
+          newTrip.value = { duration: '', distance: '', baseFare: '', boostFare: '', basePay: '', tips: '', incentives: '', points: '', stacks: 1, merchant: '' };
         };
 
         // 切換疊單數
@@ -901,17 +957,27 @@
             header: true,
             skipEmptyLines: true,
             complete: (results) => {
-              const formatted = results.data.map(row => ({
-                duration: parseFloat(row.duration_mins || row.duration || row['服務時間_分鐘'] || row['服務時間'] || 0),
-                distance: parseFloat(row.distance || row.km || row['距離_公里'] || row['距離'] || 0),
-                basePay: parseFloat(row.base_pay || row.basePay || row['基本報酬_NT'] || row['基本報酬'] || 0),
-                boostFare: parseFloat(row.boost_fare || row.boostFare || row['加成_NT'] || 0),
-                tips: parseFloat(row.tips || row['小費_NT'] || row['顧客小費_NT'] || row['小費'] || 0),
-                incentives: parseFloat(row.incentives || row['活動獎勵_NT'] || row['獎勵'] || 0),
-                points: parseFloat(row.points || row['點數'] || 0),
-                stacks: parseInt(row.stacks || row['疊單數'] || 1, 10),
-                merchant: row.merchant || row['商家'] || ''
-              })).filter(t => t.duration > 0 || t.basePay > 0);
+              const formatted = results.data.map(row => {
+                const dur = parseFloat(row.duration_mins || row.duration || row['服務時間_分鐘'] || row['服務時間'] || 0);
+                const dist = parseFloat(row.distance || row.km || row['距離_公里'] || row['距離'] || 0);
+                const bFare = parseFloat(row.base_fare || row['基本行程費用_NT'] || row['基本行程費用'] || 0);
+                const bBoost = parseFloat(row.boost_fare || row.boostFare || row['加成_NT'] || row['基本報酬加成_NT'] || 0);
+                let bPay = parseFloat(row.base_pay || row.basePay || row['行程費用_NT'] || row['基本報酬_NT'] || row['行程費用_合計_NT'] || 0);
+                if (!bPay && (bFare || bBoost)) bPay = bFare + bBoost;
+
+                return {
+                  duration: dur,
+                  distance: dist,
+                  baseFare: bFare || (bPay ? Math.max(0, bPay - bBoost) : 0),
+                  boostFare: bBoost,
+                  basePay: bPay,
+                  tips: parseFloat(row.tips || row['小費_NT'] || row['顧客小費_NT'] || row['小費'] || 0),
+                  incentives: parseFloat(row.incentives || row['活動獎勵_NT'] || row['獎勵'] || 0),
+                  points: parseFloat(row.points || row['點數'] || 0),
+                  stacks: parseInt(row.stacks || row['疊單數'] || 1, 10),
+                  merchant: row.merchant || row['商家'] || ''
+                };
+              }).filter(t => t.duration > 0 || t.basePay > 0);
               
               trips.value.push(...formatted);
               alert(`成功匯入 ${formatted.length} 筆訂單明細！`);
@@ -931,8 +997,9 @@
             '服務時間_分鐘': t.duration,
             '距離_公里': t.distance || 0,
             '疊單數': t.stacks || 1,
-            '行程費用_NT': t.basePay,
-            '基本加成_NT': t.boostFare || 0,
+            '基本行程費用_NT': t.baseFare !== undefined ? t.baseFare : Math.max(0, (t.basePay - (t.boostFare||0))),
+            '基本報酬加成_NT': t.boostFare || 0,
+            '行程費用_合計_NT': t.basePay,
             '顧客小費_NT': t.tips || 0,
             '活動獎勵_NT': t.incentives || 0,
             '點數': t.points || 0,
@@ -950,12 +1017,13 @@
           document.body.removeChild(link);
         };
 
-        // 升級版 OCR 文本解析器（雙單疊單、分+秒、公里、加成、小費、點數、商家）
+        // 升級版 OCR 文本解析器（基本行程費用、基本報酬加成、行程費用合計、雙單疊單、分+秒、公里、小費、點數、商家）
         const parseDeliveryText = (text) => {
           let duration = 0;
           let distance = 0;
-          let basePay = 0;
+          let baseFare = 0;
           let boostFare = 0;
+          let basePay = 0;
           let tips = 0;
           let incentives = 0;
           let points = 0;
@@ -987,13 +1055,19 @@
             tips = parseFloat(tipMatch[1]);
           }
 
-          // 4. 匹配基本報酬加成
+          // 4. 匹配基本行程費用 (淨基本費)
+          const baseFareMatch = text.match(/基本行程費用[^\d$NT]*[\$NT\s]*(\d+(?:\.\d+)?)/i);
+          if (baseFareMatch) {
+            baseFare = parseFloat(baseFareMatch[1]);
+          }
+
+          // 5. 匹配基本報酬加成
           const boostMatch = text.match(/基本報酬加成[^\d$NT]*[\$NT\s]*(\d+(?:\.\d+)?)/i);
           if (boostMatch) {
             boostFare = parseFloat(boostMatch[1]);
           }
 
-          // 5. 匹配基本車資
+          // 6. 匹配行程費用 (總計)
           const fareMatch = text.match(/(?:行程費用|基本報酬|車資|費用|本趟行程的預估費用為)[^\d$NT]*[\$NT\s]*(\d+(?:\.\d+)?)/i);
           if (fareMatch) {
             basePay = parseFloat(fareMatch[1]);
@@ -1004,7 +1078,14 @@
             }
           }
 
-          // 6. 匹配 Uber Pro 點數與自動疊單判定
+          if (!baseFare && basePay) {
+            baseFare = Math.max(0, basePay - boostFare);
+          }
+          if (!basePay && baseFare) {
+            basePay = baseFare + boostFare;
+          }
+
+          // 7. 匹配 Uber Pro 點數與自動疊單判定
           const ptsMatch = text.match(/(?:已賺取|賺取)\s*(\d+)\s*點/i);
           if (ptsMatch) {
             points = parseInt(ptsMatch[1], 10);
@@ -1013,7 +1094,7 @@
             else stacks = 1;
           }
 
-          // 7. 匹配商家名稱
+          // 8. 匹配商家名稱
           const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
           for (let l of lines) {
             if (l.includes('館') || l.includes('店') || l.includes('鍋') || l.includes('餐') || l.includes('茶') || l.includes('堂')) {
@@ -1022,7 +1103,7 @@
             }
           }
 
-          return { duration, distance, basePay, boostFare, tips, incentives, points, stacks, merchant };
+          return { duration, distance, baseFare, boostFare, basePay, tips, incentives, points, stacks, merchant };
         };
 
         // OCR 批次圖片上傳處理
@@ -1053,7 +1134,7 @@
                 successCount++;
               }
             }
-            alert(`OCR 解析完成！已加入 ${successCount} 筆訂單，並自動判定單發/雙單疊單工時。`);
+            alert(`OCR 解析完成！已加入 ${successCount} 筆訂單，並自動拆解基本行程費與加成。`);
           } catch (err) {
             console.error('OCR 解析失敗:', err);
             alert('截圖辨識時發生錯誤，請確認圖片文字清晰度。');
@@ -1068,12 +1149,12 @@
         // 載入預設示範數據
         const loadSampleData = () => {
           trips.value = [
-            { duration: 14.2, distance: 2.1, basePay: 72, boostFare: 12, tips: 35, incentives: 0, points: 2, stacks: 1, merchant: '熱門便當店 (示範單)' },
-            { duration: 21.5, distance: 2.4, basePay: 115, boostFare: 22, tips: 0, incentives: 0, points: 4, stacks: 2, merchant: '連鎖鍋物 (示範雙疊)' },
-            { duration: 28.0, distance: 3.2, basePay: 155, boostFare: 28, tips: 40, incentives: 20, points: 6, stacks: 3, merchant: '百貨美食街 (示範三疊)' },
-            { duration: 12.0, distance: 1.3, basePay: 50, boostFare: 0, tips: 15, incentives: 0, points: 2, stacks: 1, merchant: '人氣手搖茶 (示範單)' }
+            { duration: 14.2, distance: 2.1, baseFare: 60, boostFare: 12, basePay: 72, tips: 35, incentives: 0, points: 2, stacks: 1, merchant: '熱門便當店 (示範單)' },
+            { duration: 21.5, distance: 2.4, baseFare: 93, boostFare: 22, basePay: 115, tips: 0, incentives: 0, points: 4, stacks: 2, merchant: '連鎖鍋物 (示範雙疊)' },
+            { duration: 28.0, distance: 3.2, baseFare: 127, boostFare: 28, basePay: 155, tips: 40, incentives: 20, points: 6, stacks: 3, merchant: '百貨美食街 (示範三疊)' },
+            { duration: 12.0, distance: 1.3, baseFare: 50, boostFare: 0, basePay: 50, tips: 15, incentives: 0, points: 2, stacks: 1, merchant: '人氣手搖茶 (示範單)' }
           ];
-          alert('已載入示範跑單數據（含單發、雙單疊單與三疊單）！');
+          alert('已載入示範跑單數據（含基本行程費、加成與小費拆解）！');
         };
 
         // 複製報表文字
@@ -1083,10 +1164,10 @@
 • 累計訂單總數：${trips.value.length} 趟 (共 ${totalOrdersCount.value} 單)
 • 物理服務總工時：${totalPhysicalHours.value.toFixed(2)} 小時 (${totalPhysicalMins.value.toFixed(1)} 分鐘)
 • 法定申報總工時 (T_total)：${totalStatutoryHours.value.toFixed(2)} 小時 (疊單放大率 ${stackingMultiplier.value.toFixed(2)}x)
-• 累計總跑單里程：${totalDistance.value.toFixed(2)} km (每公里產值 NT$${perKmIncome.value.toFixed(1)}/km)
+• 累計總跑單里程：${totalDistance.value.toFixed(2)} km
 • 法定保障時薪費率 (P_rate)：NT$ ${rate.value} / 小時
 • 法定最低應得保障 (Total_legal)：NT$ ${Math.round(totalLegal.value).toLocaleString()}
-• 實領基本車資總額 (R_base)：NT$ ${Math.round(totalBasePay.value).toLocaleString()} (含加成 NT$${Math.round(totalBoostFare.value)})
+• 實領行程費用總額 (R_base)：NT$ ${Math.round(totalBasePay.value).toLocaleString()} (含基本加成 NT$${Math.round(totalBoostFare.value)})
 ----------------------------
 💰 預估差額補貼款 (ΔR)：NT$ ${Math.round(subsidy.value).toLocaleString()}
 💵 實質最終總收入：NT$ ${Math.round(totalIncome.value).toLocaleString()} (含小費 NT$${Math.round(totalTips.value)}、獎勵 NT$${Math.round(totalIncentives.value)})
@@ -1188,6 +1269,7 @@
           perKmIncome, perKmBase, tipPercentage,
           subsidy, totalIncome, stackingMultiplier, realHourlyRate,
           tierStats, tipHitRate, avgTipAmount,
+          syncNewTripBasePay, syncTripBasePay,
           addTrip, cycleStacks, getTripStatutoryMins, getTierLabel, getTierBadgeClass,
           handleFileUpload, exportCSV, handleImageUpload, loadSampleData, copyReport
         };
