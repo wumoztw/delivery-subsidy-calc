@@ -34,20 +34,16 @@
   </script>
   <style>
     [v-cloak] { display: none; }
-    /* Hide scrollbar for Chrome, Safari and Opera */
     .no-scrollbar::-webkit-scrollbar { display: none; }
-    /* Hide scrollbar for IE, Edge and Firefox */
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    /* Prevent iOS input zoom by ensuring minimum 16px font or touch manipulation */
     input, button, select { touch-action: manipulation; }
-    /* Safe area padding for mobile iPhone notches / home bars */
     .pb-safe { padding-bottom: env(safe-area-inset-bottom, 1rem); }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-emerald-500 selection:text-white pb-24 sm:pb-8">
   <div id="app" v-cloak class="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-6">
     
-    <!-- 頂部導航列與系統狀態 (手機自適應) -->
+    <!-- 頂部導航列與系統狀態 -->
     <header class="bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-xl flex flex-col gap-3.5">
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5 sm:gap-3">
@@ -57,21 +53,21 @@
           <div>
             <div class="flex items-center gap-1.5 flex-wrap">
               <h1 class="text-base sm:text-2xl font-bold bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent leading-tight">
-                外送專法與疊單精算
+                外送專法與疊單收益精算系統
               </h1>
-              <span class="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">v2.0</span>
+              <span class="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">v3.0 旗艦版</span>
             </div>
-            <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5 line-clamp-1">雙週差額補貼 × 疊單工時產值放大 × OCR 智慧解析</p>
+            <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5 line-clamp-1">智能雙單疊單工時放大 × 戰力評級 × 秒級精算 × 差額補貼</p>
           </div>
         </div>
       </div>
 
-      <!-- 費率快速切換與自訂 (手機自適應按鈕群) -->
+      <!-- 費率快速切換與自訂 -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-950/70 p-2 sm:p-2.5 rounded-xl border border-slate-800/80 text-xs">
         <div class="text-slate-400 flex items-center justify-between sm:justify-start gap-1.5">
           <div class="flex items-center gap-1.5">
             <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>法定時薪 (P_rate):</span>
+            <span>法定保障時薪 (P_rate):</span>
           </div>
           <span class="text-emerald-300 font-mono font-bold sm:hidden">NT$ {{ rate }} / hr</span>
         </div>
@@ -89,7 +85,7 @@
       </div>
     </header>
 
-    <!-- 主選單分頁切換 (支援手機橫向滑動與觸控) -->
+    <!-- 主選單分頁切換 -->
     <div class="overflow-x-auto no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0">
       <nav class="flex border-b border-slate-800 gap-1 sm:gap-4 text-xs sm:text-sm font-medium min-w-max">
         <button @click="activeTab = 'dashboard'" :class="activeTab === 'dashboard' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/10' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
@@ -102,6 +98,9 @@
         <button @click="activeTab = 'tactics'" :class="activeTab === 'tactics' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/10' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
           <span>⚡</span> 疊單作戰模擬
         </button>
+        <button @click="activeTab = 'analysis'" :class="activeTab === 'analysis' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/10' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
+          <span>📈</span> 時段與戰力分析
+        </button>
         <button @click="activeTab = 'rules'" :class="activeTab === 'rules' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/10' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
           <span>📖</span> 專法準則
         </button>
@@ -111,25 +110,25 @@
     <!-- 分頁 1: 週期結算儀表板 -->
     <div v-show="activeTab === 'dashboard'" class="space-y-4 sm:space-y-6">
       
-      <!-- 核心指標四宮格 (手機 2x2 排版，字體自動適應不折行) -->
+      <!-- 核心指標四宮格 -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         
-        <!-- 1. 累計服務總工時 (T_total) -->
+        <!-- 1. 法定申報累計總工時 (含疊單獨立累加) -->
         <div class="bg-slate-900/90 p-3.5 sm:p-5 rounded-2xl border border-slate-800 relative overflow-hidden shadow-md flex flex-col justify-between">
           <div class="flex items-center justify-between">
-            <span class="text-[11px] sm:text-xs text-slate-400">累計總工時 (T)</span>
-            <span class="text-[9px] sm:text-[10px] bg-cyan-500/10 text-cyan-400 px-1.5 py-0.5 rounded font-mono">獨立疊加</span>
+            <span class="text-[11px] sm:text-xs text-slate-400">法定申報總工時</span>
+            <span class="text-[9px] sm:text-[10px] bg-cyan-500/10 text-cyan-400 px-1.5 py-0.5 rounded font-mono">疊單放大</span>
           </div>
           <div class="text-xl sm:text-3xl font-black font-mono text-cyan-300 my-1 sm:my-2">
-            {{ totalHours.toFixed(2) }} <span class="text-xs font-normal text-slate-400">hr</span>
+            {{ totalStatutoryHours.toFixed(2) }} <span class="text-xs font-normal text-slate-400">hr</span>
           </div>
           <div class="text-[10px] sm:text-xs text-slate-500 flex justify-between">
-            <span>{{ totalMins }} 分鐘</span>
-            <span>{{ trips.length }} 筆</span>
+            <span>物理 {{ totalPhysicalHours.toFixed(1) }}h ({{ totalPhysicalMins.toFixed(0) }}分)</span>
+            <span>共 {{ totalOrdersCount }} 單</span>
           </div>
         </div>
 
-        <!-- 2. 法定最低保底 (Total_legal) -->
+        <!-- 2. 法定最低保底 -->
         <div class="bg-slate-900/90 p-3.5 sm:p-5 rounded-2xl border border-slate-800 relative overflow-hidden shadow-md flex flex-col justify-between">
           <div class="flex items-center justify-between">
             <span class="text-[11px] sm:text-xs text-slate-400">法定最低保底</span>
@@ -139,43 +138,79 @@
             ${{ Math.round(totalLegal).toLocaleString() }}
           </div>
           <div class="text-[10px] sm:text-xs text-slate-500 truncate">
-            {{ totalHours.toFixed(1) }}h × NT${{ rate }}
+            {{ totalStatutoryHours.toFixed(2) }}h × NT${{ rate }}
           </div>
         </div>
 
-        <!-- 3. 實領基本報酬 (R_base) -->
+        <!-- 3. 實領基本車資 -->
         <div class="bg-slate-900/90 p-3.5 sm:p-5 rounded-2xl border border-slate-800 relative overflow-hidden shadow-md flex flex-col justify-between">
           <div class="flex items-center justify-between">
-            <span class="text-[11px] sm:text-xs text-slate-400">實領基本報酬</span>
+            <span class="text-[11px] sm:text-xs text-slate-400">實領基本車資</span>
             <span :class="subsidy > 0 ? 'bg-amber-500/10 text-amber-400' : 'bg-emerald-500/10 text-emerald-400'" class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded font-mono">
-              {{ subsidy > 0 ? '未達標' : '已達標' }}
+              {{ subsidy > 0 ? '需補發' : '已超標' }}
             </span>
           </div>
           <div class="text-xl sm:text-3xl font-black font-mono text-slate-100 my-1 sm:my-2">
             ${{ Math.round(totalBasePay).toLocaleString() }}
           </div>
-          <div class="text-[10px] sm:text-xs text-slate-500">
-            均單 NT$ {{ avgBasePay.toFixed(0) }}
+          <div class="text-[10px] sm:text-xs text-slate-500 flex justify-between">
+            <span>均單 ${{ avgBasePay.toFixed(0) }}</span>
+            <span v-if="totalDistance > 0">${{ (totalBasePay / totalDistance).toFixed(1) }}/km</span>
           </div>
         </div>
 
-        <!-- 4. 預估差額補貼款 (ΔR) -->
+        <!-- 4. 預估差額補貼款 -->
         <div class="bg-gradient-to-br from-emerald-950/90 to-slate-900 p-3.5 sm:p-5 rounded-2xl border border-emerald-500/40 relative overflow-hidden shadow-md flex flex-col justify-between">
           <div class="flex items-center justify-between">
-            <span class="text-[11px] sm:text-xs text-emerald-300 font-bold">預估差額補貼</span>
+            <span class="text-[11px] sm:text-xs text-emerald-300 font-bold">預估差額補貼 (ΔR)</span>
             <span class="text-[9px] sm:text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-bold">補發款</span>
           </div>
           <div class="text-xl sm:text-3xl font-black font-mono text-emerald-400 my-1 sm:my-2">
             ${{ Math.round(subsidy).toLocaleString() }}
           </div>
           <div class="text-[10px] sm:text-xs text-emerald-400/80 font-medium truncate">
-            {{ subsidy > 0 ? '兩週後自動補發' : '基本費已達保底' }}
+            {{ subsidy > 0 ? '兩週結算後全額補發' : '基本車資已達法定保底' }}
           </div>
         </div>
 
       </div>
 
-      <!-- 總收入與實質產值 Banner (手機端緊湊排版) -->
+      <!-- 進階作戰指標面板 -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 bg-slate-900/60 p-3.5 rounded-2xl border border-slate-800 text-xs">
+        <div class="space-y-1">
+          <span class="text-[10px] text-slate-400">🚴 累計總里程</span>
+          <div class="text-base sm:text-lg font-bold font-mono text-slate-200">
+            {{ totalDistance.toFixed(2) }} <span class="text-[10px] font-normal text-slate-400">km</span>
+          </div>
+          <div class="text-[10px] text-slate-500">均趟 {{ avgDistance.toFixed(2) }} km</div>
+        </div>
+
+        <div class="space-y-1">
+          <span class="text-[10px] text-slate-400">📈 每公里實質產值</span>
+          <div class="text-base sm:text-lg font-bold font-mono text-teal-300">
+            NT$ {{ perKmIncome.toFixed(1) }} <span class="text-[10px] font-normal text-slate-400">/ km</span>
+          </div>
+          <div class="text-[10px] text-slate-500">基本 NT$ {{ perKmBase.toFixed(1) }}/km</div>
+        </div>
+
+        <div class="space-y-1">
+          <span class="text-[10px] text-slate-400">🚀 平台加成總額</span>
+          <div class="text-base sm:text-lg font-bold font-mono text-amber-300">
+            NT$ {{ Math.round(totalBoostFare) }}
+          </div>
+          <div class="text-[10px] text-slate-500">加成率 {{ avgBoostRate.toFixed(1) }}%</div>
+        </div>
+
+        <div class="space-y-1">
+          <span class="text-[10px] text-slate-400">⭐ Uber Pro 點數</span>
+          <div class="text-base sm:text-lg font-bold font-mono text-emerald-400">
+            {{ totalPoints }} <span class="text-[10px] font-normal text-slate-400">點</span>
+          </div>
+          <div class="text-[10px] text-slate-500">小費總計 NT${{ Math.round(totalTips) }} ({{ tipPercentage.toFixed(0) }}%)</div>
+        </div>
+      </div>
+
+      <!-- 總收入與實質產值 Banner -->
       <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950/60 p-4 sm:p-6 rounded-2xl border border-emerald-500/30 shadow-xl space-y-3.5 sm:space-y-4">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-3 border-b border-slate-800">
           <div>
@@ -200,14 +235,13 @@
               NT$ {{ realHourlyRate.toFixed(1) }} <span class="text-xs font-normal text-slate-400">/ 物理時</span>
             </div>
             <div class="mt-1 flex items-center gap-2 text-[10px] sm:text-xs text-slate-500">
-              <span>物理工時:</span>
-              <input type="number" v-model.number="customPhysicalHours" :placeholder="estimatedPhysicalHours.toFixed(1)" class="w-12 sm:w-14 bg-slate-900 border border-slate-700 rounded px-1 py-0.5 text-slate-200 text-right font-mono text-xs focus:border-teal-500">
-              <span>小時 ({{ (customPhysicalHours || estimatedPhysicalHours).toFixed(1) }}h)</span>
+              <span>物理耗時:</span>
+              <span class="font-mono text-slate-300">{{ totalPhysicalHours.toFixed(2) }} 小時</span>
             </div>
           </div>
         </div>
 
-        <!-- 快捷操作按鈕 (手機 2 欄 Grid) -->
+        <!-- 快捷操作按鈕 -->
         <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 pt-1">
           <button @click="copyReport" class="px-3 py-2 bg-slate-800 active:bg-slate-700 hover:bg-slate-700 text-slate-200 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition">
             <span>📄</span> <span class="truncate">{{ copyBtnText }}</span>
@@ -216,7 +250,7 @@
             <span>💾</span> <span>匯出 CSV</span>
           </button>
           <button @click="loadSampleData" class="px-3 py-2 bg-slate-800 active:bg-slate-700 hover:bg-slate-700 text-slate-300 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition col-span-2 sm:col-span-1">
-            <span>🧪</span> <span>載入範例數據 (8筆)</span>
+            <span>🧪</span> <span>載入真實範例數據</span>
           </button>
         </div>
       </div>
@@ -226,19 +260,19 @@
     <!-- 分頁 2: 訂單明細與資料匯入 -->
     <div v-show="activeTab === 'trips'" class="space-y-4 sm:space-y-6">
       
-      <!-- 三大輸入管道區塊 (手機友善排版) -->
+      <!-- 三大輸入管道區塊 -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
         
-        <!-- 1. OCR 截圖辨識 (支援手機拍照與相簿選取) -->
+        <!-- 1. OCR 截圖辨識 (雙單辨識、秒級、里程、加成全面支援) -->
         <div class="bg-slate-900 p-4 sm:p-5 rounded-2xl border border-emerald-500/30 flex flex-col justify-between shadow-lg">
           <div>
             <div class="flex items-center justify-between mb-1.5">
               <h2 class="font-bold text-emerald-300 text-xs sm:text-sm flex items-center gap-1.5">
-                <span>📸</span> 截圖 OCR 自動辨識
+                <span>📸</span> 截圖 OCR 智慧解析
               </h2>
               <span v-if="isOcrLoading" class="text-[10px] sm:text-[11px] text-amber-400 animate-pulse font-mono">{{ ocrStatus }}</span>
             </div>
-            <p class="text-[11px] text-slate-400 mb-3">支援選取多張跑單截圖，自動識別時間與金額</p>
+            <p class="text-[11px] text-slate-400 mb-3">自動辨識單發/雙單疊單、秒數時間、距離公里、加成與小費</p>
           </div>
           <div>
             <div v-if="isOcrLoading" class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mb-2.5">
@@ -258,7 +292,7 @@
               <span>📂</span> 匯入 CSV 紀錄
             </h2>
             <p class="text-[11px] text-slate-400 mb-3">
-              支援欄位：<code>duration</code> (分), <code>base_pay</code>, <code>tips</code>, <code>incentives</code>
+              支援：<code>duration</code> (分), <code>distance</code> (km), <code>stacks</code> (疊單數), <code>base_pay</code>
             </p>
           </div>
           <label class="w-full block text-center py-2.5 px-3 rounded-xl bg-slate-800 text-slate-200 font-semibold text-xs cursor-pointer active:bg-slate-700 hover:bg-slate-700 border border-slate-700 transition">
@@ -267,7 +301,7 @@
           </label>
         </div>
 
-        <!-- 3. 手動新增單筆 (防止手機鍵盤跳出放大) -->
+        <!-- 3. 手動新增單筆 (完整欄位) -->
         <div class="bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-lg">
           <h2 class="font-bold text-slate-200 text-xs sm:text-sm mb-2 flex items-center gap-1.5">
             <span>✏️</span> 手動新增單筆
@@ -275,29 +309,33 @@
           <div class="grid grid-cols-2 gap-2 text-xs">
             <div>
               <label class="text-[10px] text-slate-400 block mb-0.5">時間 (分鐘) *</label>
-              <input type="number" inputmode="numeric" v-model.number="newTrip.duration" @keyup.enter="addTrip" placeholder="例: 18" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
+              <input type="number" step="0.01" inputmode="decimal" v-model.number="newTrip.duration" @keyup.enter="addTrip" placeholder="例: 19.63" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
             </div>
             <div>
-              <label class="text-[10px] text-slate-400 block mb-0.5">基本報酬 (NT$) *</label>
-              <input type="number" inputmode="numeric" v-model.number="newTrip.basePay" @keyup.enter="addTrip" placeholder="例: 45" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
+              <label class="text-[10px] text-slate-400 block mb-0.5">基本車資 (NT$) *</label>
+              <input type="number" inputmode="numeric" v-model.number="newTrip.basePay" @keyup.enter="addTrip" placeholder="例: 113" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
             </div>
             <div>
-              <label class="text-[10px] text-slate-400 block mb-0.5">顧客小費 (NT$)</label>
-              <input type="number" inputmode="numeric" v-model.number="newTrip.tips" @keyup.enter="addTrip" placeholder="例: 20" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
+              <label class="text-[10px] text-slate-400 block mb-0.5">距離 (公里 km)</label>
+              <input type="number" step="0.01" inputmode="decimal" v-model.number="newTrip.distance" @keyup.enter="addTrip" placeholder="例: 1.58" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
             </div>
             <div>
-              <label class="text-[10px] text-slate-400 block mb-0.5">活動獎勵 (NT$)</label>
-              <input type="number" inputmode="numeric" v-model.number="newTrip.incentives" @keyup.enter="addTrip" placeholder="例: 0" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
+              <label class="text-[10px] text-slate-400 block mb-0.5">派單型態 (疊單數)</label>
+              <select v-model.number="newTrip.stacks" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none">
+                <option :value="1">1 單 (單發)</option>
+                <option :value="2">2 疊 (雙單)</option>
+                <option :value="3">3 疊 (三單)</option>
+              </select>
             </div>
           </div>
-          <button @click="addTrip" class="mt-2.5 w-full bg-emerald-600 active:bg-emerald-500 hover:bg-emerald-500 text-slate-950 font-bold text-xs py-2.5 rounded-xl transition shadow">
-            加入清單
+          <button @click="addTrip" class="mt-2.5 w-full bg-emerald-600 active:bg-emerald-500 hover:bg-emerald-500 text-slate-950 font-bold text-xs py-2 rounded-xl transition shadow">
+            加入訂單清單
           </button>
         </div>
 
       </div>
 
-      <!-- 訂單明細列表 (手機專屬卡片流 + 電腦端表格雙模適應) -->
+      <!-- 訂單明細列表 (卡片視圖與表格視圖) -->
       <div class="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
         <div class="px-4 sm:px-5 py-3.5 border-b border-slate-800 flex justify-between items-center">
           <div class="flex items-center gap-2">
@@ -309,13 +347,20 @@
           </button>
         </div>
 
-        <!-- 模式 A：手機版直覺卡片視圖 (sm:hidden) -->
-        <div class="sm:hidden p-3 space-y-2.5 max-h-[500px] overflow-y-auto">
+        <!-- 模式 A：手機版進階卡片視圖 -->
+        <div class="sm:hidden p-3 space-y-2.5 max-h-[540px] overflow-y-auto">
           <div v-for="(t, idx) in trips" :key="idx" class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 space-y-2">
             <div class="flex items-center justify-between text-xs">
-              <div class="flex items-center gap-1.5">
+              <div class="flex items-center gap-1.5 flex-wrap">
                 <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center font-mono text-[10px]">{{ idx + 1 }}</span>
-                <span class="text-emerald-400 font-mono font-bold">法定產值: NT${{ ((t.duration / 60) * rate).toFixed(1) }}</span>
+                <!-- 戰力階級徽章 -->
+                <span :class="getTierBadgeClass(t)" class="text-[9px] px-1.5 py-0.2 rounded font-bold">
+                  {{ getTierLabel(t) }}
+                </span>
+                <!-- 疊單型態切換 -->
+                <button @click="cycleStacks(t)" class="text-[9px] px-1.5 py-0.2 rounded font-mono bg-cyan-950/80 text-cyan-300 border border-cyan-500/30">
+                  {{ t.stacks || 1 }} 疊 ({{ (t.stacks === 3 ? 2.5 : (t.stacks === 2 ? 1.75 : 1.0)) }}x 工時)
+                </button>
               </div>
               <button @click="trips.splice(idx, 1)" class="text-rose-400 active:text-rose-300 text-xs px-2 py-0.5 rounded bg-rose-500/10">
                 刪除
@@ -324,10 +369,18 @@
             
             <div class="grid grid-cols-4 gap-1.5 text-center text-xs">
               <div class="bg-slate-900/90 p-1.5 rounded border border-slate-800">
-                <span class="text-[9px] text-slate-500 block">時間</span>
+                <span class="text-[9px] text-slate-500 block">物理時間</span>
                 <div class="flex items-center justify-center gap-0.5 mt-0.5">
-                  <input type="number" inputmode="numeric" v-model.number="t.duration" class="w-8 bg-transparent text-center font-mono text-cyan-300 font-bold focus:outline-none">
+                  <input type="number" step="0.01" inputmode="decimal" v-model.number="t.duration" class="w-10 bg-transparent text-center font-mono text-cyan-300 font-bold focus:outline-none">
                   <span class="text-[9px] text-slate-500">分</span>
+                </div>
+              </div>
+
+              <div class="bg-slate-900/90 p-1.5 rounded border border-slate-800">
+                <span class="text-[9px] text-slate-500 block">距離</span>
+                <div class="flex items-center justify-center gap-0.5 mt-0.5">
+                  <input type="number" step="0.01" inputmode="decimal" v-model.number="t.distance" class="w-10 bg-transparent text-center font-mono text-slate-200 font-bold focus:outline-none">
+                  <span class="text-[9px] text-slate-500">km</span>
                 </div>
               </div>
 
@@ -346,14 +399,14 @@
                   <input type="number" inputmode="numeric" v-model.number="t.tips" class="w-8 bg-transparent text-center font-mono text-slate-300 focus:outline-none">
                 </div>
               </div>
+            </div>
 
-              <div class="bg-slate-900/90 p-1.5 rounded border border-slate-800">
-                <span class="text-[9px] text-slate-500 block">獎勵</span>
-                <div class="flex items-center justify-center gap-0.5 mt-0.5">
-                  <span class="text-[9px] text-slate-500">$</span>
-                  <input type="number" inputmode="numeric" v-model.number="t.incentives" class="w-8 bg-transparent text-center font-mono text-slate-300 focus:outline-none">
-                </div>
-              </div>
+            <!-- 加成、商家與小費後發標籤 -->
+            <div class="flex items-center justify-between text-[10px] text-slate-500 pt-0.5 px-0.5">
+              <span v-if="t.merchant" class="truncate max-w-[140px] text-slate-400">🏪 {{ t.merchant }}</span>
+              <span v-if="t.distance">單價: NT${{ (t.basePay / t.distance).toFixed(1) }}/km</span>
+              <span v-if="t.tips > 0" class="text-amber-400 font-bold">🎁 +${{ t.tips }}小費</span>
+              <span v-else class="text-slate-500">無小費</span>
             </div>
           </div>
 
@@ -362,17 +415,20 @@
           </div>
         </div>
 
-        <!-- 模式 B：電腦與平板版表格視圖 (hidden sm:block) -->
+        <!-- 模式 B：電腦與平板版多欄表格視圖 -->
         <div class="hidden sm:block overflow-x-auto max-h-96">
           <table class="w-full text-xs text-left text-slate-300">
             <thead class="bg-slate-950/80 text-slate-400 sticky top-0 border-b border-slate-800">
               <tr>
                 <th class="p-3">#</th>
-                <th class="p-3">服務時間 (T_i)</th>
-                <th class="p-3">基本報酬 (R_base)</th>
-                <th class="p-3">小費 (Tips)</th>
-                <th class="p-3">活動獎勵 (Incentives)</th>
-                <th class="p-3">單筆法定產值 (@${{ rate }})</th>
+                <th class="p-3">派單型態</th>
+                <th class="p-3">物理時間 (分)</th>
+                <th class="p-3">距離 (km)</th>
+                <th class="p-3">基本車資</th>
+                <th class="p-3">加成 / 小費</th>
+                <th class="p-3">每公里效益</th>
+                <th class="p-3">法定申報工時</th>
+                <th class="p-3">戰力評級</th>
                 <th class="p-3 text-right">操作</th>
               </tr>
             </thead>
@@ -380,31 +436,44 @@
               <tr v-for="(t, idx) in trips" :key="idx" class="hover:bg-slate-800/40 transition">
                 <td class="p-3 text-slate-500 font-sans">{{ idx + 1 }}</td>
                 <td class="p-3">
+                  <button @click="cycleStacks(t)" class="text-[10px] px-2 py-0.5 rounded font-mono bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700">
+                    {{ t.stacks || 1 }} 疊 ({{ (t.stacks === 3 ? 2.5 : (t.stacks === 2 ? 1.75 : 1.0)) }}x)
+                  </button>
+                </td>
+                <td class="p-3">
                   <div class="flex items-center gap-1">
-                    <input type="number" v-model.number="t.duration" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 w-16 text-cyan-300 text-right focus:border-cyan-500">
+                    <input type="number" step="0.01" v-model.number="t.duration" class="bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 w-14 text-cyan-300 text-right">
                     <span class="text-slate-500 font-sans">分</span>
                   </div>
                 </td>
                 <td class="p-3">
                   <div class="flex items-center gap-1">
-                    <span class="text-slate-500 font-sans">$</span>
-                    <input type="number" v-model.number="t.basePay" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 w-16 text-slate-100 text-right focus:border-slate-500">
+                    <input type="number" step="0.01" v-model.number="t.distance" class="bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 w-14 text-slate-200 text-right">
+                    <span class="text-slate-500 font-sans">km</span>
                   </div>
                 </td>
                 <td class="p-3">
                   <div class="flex items-center gap-1">
                     <span class="text-slate-500 font-sans">$</span>
-                    <input type="number" v-model.number="t.tips" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 w-16 text-slate-300 text-right">
+                    <input type="number" v-model.number="t.basePay" class="bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 w-14 text-slate-100 text-right">
                   </div>
                 </td>
                 <td class="p-3">
-                  <div class="flex items-center gap-1">
-                    <span class="text-slate-500 font-sans">$</span>
-                    <input type="number" v-model.number="t.incentives" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 w-16 text-slate-300 text-right">
-                  </div>
+                  <span v-if="t.boostFare" class="text-amber-400 font-bold">+${{ t.boostFare }}加成 </span>
+                  <span v-if="t.tips" class="text-emerald-400 font-bold">+${{ t.tips }}小費</span>
+                  <span v-if="!t.boostFare && !t.tips" class="text-slate-600">-</span>
                 </td>
-                <td class="p-3 text-emerald-400">
-                  NT$ {{ ((t.duration / 60) * rate).toFixed(1) }}
+                <td class="p-3 text-teal-300">
+                  <span v-if="t.distance">NT$ {{ ((t.basePay + (t.tips||0)) / t.distance).toFixed(1) }}/km</span>
+                  <span v-else class="text-slate-600">-</span>
+                </td>
+                <td class="p-3 text-cyan-300">
+                  {{ (getTripStatutoryMins(t)).toFixed(1) }} 分
+                </td>
+                <td class="p-3 font-sans">
+                  <span :class="getTierBadgeClass(t)" class="text-[10px] px-2 py-0.5 rounded font-bold">
+                    {{ getTierLabel(t) }}
+                  </span>
                 </td>
                 <td class="p-3 text-right font-sans">
                   <button @click="trips.splice(idx, 1)" class="text-rose-400 hover:text-rose-300 px-2 py-1 hover:bg-rose-500/10 rounded transition">
@@ -413,7 +482,7 @@
                 </td>
               </tr>
               <tr v-if="trips.length === 0">
-                <td colspan="7" class="p-10 text-center text-slate-500 font-sans">
+                <td colspan="10" class="p-10 text-center text-slate-500 font-sans">
                   尚無訂單資料。請使用上方功能上傳截圖、匯入 CSV 或手動新增。
                 </td>
               </tr>
@@ -551,7 +620,61 @@
 
     </div>
 
-    <!-- 分頁 4: 專法公式與作戰守則說明 -->
+    <!-- 分頁 4: 時段與戰力分析 -->
+    <div v-show="activeTab === 'analysis'" class="space-y-4 sm:space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <!-- 戰力階級分佈 -->
+        <div class="bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3">
+          <h3 class="text-sm font-bold text-slate-200 flex items-center gap-1.5">
+            <span>🌟</span> 訂單戰力階級統計
+          </h3>
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-lg">
+              <span class="text-amber-300 font-bold">🌟 SSR 頂級黃金疊單 (高單價/短距)</span>
+              <span class="font-mono text-slate-200">{{ tierStats.ssr }} 筆</span>
+            </div>
+            <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-lg">
+              <span class="text-emerald-400 font-bold">🎯 SR 優質黃金單 (&le;2.5km, &le;20分)</span>
+              <span class="font-mono text-slate-200">{{ tierStats.sr }} 筆</span>
+            </div>
+            <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-lg">
+              <span class="text-slate-300">⚡ 標準一般單</span>
+              <span class="font-mono text-slate-200">{{ tierStats.normal }} 筆</span>
+            </div>
+            <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-lg">
+              <span class="text-rose-400">⚠️ 遠距 / 紅線單 (&gt;3.0km)</span>
+              <span class="font-mono text-slate-200">{{ tierStats.warning }} 筆</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 小費增幅與後發小費統計 -->
+        <div class="bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-800 space-y-3">
+          <h3 class="text-sm font-bold text-slate-200 flex items-center gap-1.5">
+            <span>🎁</span> 小費效益與期望值
+          </h3>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="bg-slate-950 p-3 rounded-lg text-center">
+              <span class="text-slate-500 text-[10px] block">後發小費率</span>
+              <div class="text-xl font-bold font-mono text-emerald-400 mt-1">{{ tipHitRate.toFixed(1) }}%</div>
+              <span class="text-[10px] text-slate-500">有小費訂單佔比</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-lg text-center">
+              <span class="text-slate-500 text-[10px] block">平均小費金額</span>
+              <div class="text-xl font-bold font-mono text-amber-300 mt-1">NT$ {{ avgTipAmount.toFixed(1) }}</div>
+              <span class="text-[10px] text-slate-500">每趟小費期望值</span>
+            </div>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            小費屬於完全不計入法定 $R_{\text{base}}$ 的免扣抵項目，疊單與高單價訂單的小費能直接疊加為純淨利！
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 分頁 5: 專法公式與作戰守則說明 -->
     <div v-show="activeTab === 'rules'" class="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4 sm:space-y-6 text-slate-300 text-xs leading-relaxed">
       <div>
         <h2 class="text-base sm:text-lg font-bold text-emerald-400 mb-1">外送專法與疊單機制收益精算模型（Uber Eats）</h2>
@@ -567,8 +690,8 @@
             1.1 外送總工時：T_total = ∑(T_i) = T_1 + T_2 + ... + T_n
           </div>
           <p class="text-slate-400 text-[11px] pl-1">
-            • <strong>T_i 定義</strong>：自「接受派單」起至「送達交付」為止之完整服務時間。<br>
-            • <strong>疊單累加</strong>：多筆訂單時間重疊時，各自獨立累加計入法定工時。
+            • <strong>T_i 定義</strong>：自「接受派單」起至「送達交付」為止之完整服務時間（秒級獨立累加）。<br>
+            • <strong>疊單累加</strong>：多筆訂單時間重疊時，各自獨立累加計入法定工時（雙單約放大 1.75x，三單約放大 2.5x）。
           </p>
         </div>
 
@@ -634,7 +757,7 @@
 
     </div>
 
-    <!-- 手機端底部常駐狀態列 (Sticky Bottom Bar) -->
+    <!-- 手機端底部常駐狀態列 -->
     <aside class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-md border-t border-slate-800 px-4 py-2.5 shadow-2xl pb-safe flex items-center justify-between">
       <div>
         <span class="text-[10px] text-slate-400 block">兩週預估補發差額 (ΔR)</span>
@@ -661,14 +784,14 @@
   <script>
     const { createApp, ref, computed, watch, onMounted } = Vue;
 
-    const STORAGE_KEY = 'delivery_subsidy_calc_v2';
+    const STORAGE_KEY = 'delivery_subsidy_calc_v3';
 
     createApp({
       setup() {
         const activeTab = ref('dashboard');
         const rate = ref(245);
         const trips = ref([]);
-        const newTrip = ref({ duration: '', basePay: '', tips: '', incentives: '' });
+        const newTrip = ref({ duration: '', basePay: '', distance: '', tips: '', incentives: '', boostFare: '', points: '', stacks: 1, merchant: '' });
         
         const isOcrLoading = ref(false);
         const ocrStatus = ref('');
@@ -684,7 +807,7 @@
         // 從 LocalStorage 載入資料
         onMounted(() => {
           try {
-            const saved = localStorage.getItem(STORAGE_KEY);
+            const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('delivery_subsidy_calc_v2');
             if (saved) {
               const data = JSON.parse(saved);
               if (data.rate) rate.value = data.rate;
@@ -713,10 +836,53 @@
           trips.value.push({
             duration: Number(newTrip.value.duration) || 0,
             basePay: Number(newTrip.value.basePay) || 0,
+            distance: Number(newTrip.value.distance) || 0,
             tips: Number(newTrip.value.tips) || 0,
-            incentives: Number(newTrip.value.incentives) || 0
+            incentives: Number(newTrip.value.incentives) || 0,
+            boostFare: Number(newTrip.value.boostFare) || 0,
+            points: Number(newTrip.value.points) || 0,
+            stacks: Number(newTrip.value.stacks) || 1,
+            merchant: newTrip.value.merchant || ''
           });
-          newTrip.value = { duration: '', basePay: '', tips: '', incentives: '' };
+          newTrip.value = { duration: '', basePay: '', distance: '', tips: '', incentives: '', boostFare: '', points: '', stacks: 1, merchant: '' };
+        };
+
+        // 切換疊單數
+        const cycleStacks = (t) => {
+          const current = t.stacks || 1;
+          t.stacks = current >= 3 ? 1 : current + 1;
+        };
+
+        // 計算單筆法定累加工時
+        const getTripStatutoryMins = (t) => {
+          const dur = Number(t.duration) || 0;
+          const stacks = Number(t.stacks) || 1;
+          if (stacks === 2) return dur * 1.75;
+          if (stacks === 3) return dur * 2.50;
+          return dur;
+        };
+
+        // 戰力標籤評定
+        const getTierLabel = (t) => {
+          const dur = Number(t.duration) || 0;
+          const dist = Number(t.distance) || 0;
+          const pay = Number(t.basePay) || 0;
+          const stacks = Number(t.stacks) || 1;
+
+          if (dist >= 4.0 || dur >= 35) return '🚫 雷單';
+          if (dist >= 3.0) return '⚠️ 遠距單';
+          if ((stacks >= 2 && dist <= 2.5 && pay >= 90) || (dist > 0 && (pay/dist) >= 60)) return '🌟 SSR 黃金疊單';
+          if (dist <= 2.5 && dur <= 20) return '🎯 SR 黃金單';
+          return '⚡ 標準單';
+        };
+
+        const getTierBadgeClass = (t) => {
+          const label = getTierLabel(t);
+          if (label.includes('SSR')) return 'bg-amber-500/20 text-amber-300 border border-amber-500/40';
+          if (label.includes('SR')) return 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+          if (label.includes('雷單')) return 'bg-rose-500/20 text-rose-300 border border-rose-500/40';
+          if (label.includes('遠距')) return 'bg-amber-500/10 text-amber-400 border border-amber-500/20';
+          return 'bg-slate-800 text-slate-300 border border-slate-700';
         };
 
         // CSV 匯入
@@ -728,10 +894,15 @@
             skipEmptyLines: true,
             complete: (results) => {
               const formatted = results.data.map(row => ({
-                duration: parseFloat(row.duration_mins || row.duration || row['服務時間'] || 0),
-                basePay: parseFloat(row.base_pay || row.basePay || row['基本報酬'] || 0),
-                tips: parseFloat(row.tips || row['小費'] || 0),
-                incentives: parseFloat(row.incentives || row['活動獎勵'] || 0)
+                duration: parseFloat(row.duration_mins || row.duration || row['服務時間_分鐘'] || row['服務時間'] || 0),
+                distance: parseFloat(row.distance || row.km || row['距離_公里'] || row['距離'] || 0),
+                basePay: parseFloat(row.base_pay || row.basePay || row['基本報酬_NT'] || row['基本報酬'] || 0),
+                boostFare: parseFloat(row.boost_fare || row.boostFare || row['加成_NT'] || 0),
+                tips: parseFloat(row.tips || row['小費_NT'] || row['顧客小費_NT'] || row['小費'] || 0),
+                incentives: parseFloat(row.incentives || row['活動獎勵_NT'] || row['獎勵'] || 0),
+                points: parseFloat(row.points || row['點數'] || 0),
+                stacks: parseInt(row.stacks || row['疊單數'] || 1, 10),
+                merchant: row.merchant || row['商家'] || ''
               })).filter(t => t.duration > 0 || t.basePay > 0);
               
               trips.value.push(...formatted);
@@ -750,9 +921,15 @@
           const csvData = trips.value.map((t, idx) => ({
             '序號': idx + 1,
             '服務時間_分鐘': t.duration,
+            '距離_公里': t.distance || 0,
+            '疊單數': t.stacks || 1,
             '基本報酬_NT': t.basePay,
-            '顧客小費_NT': t.tips,
-            '活動獎勵_NT': t.incentives
+            '基本加成_NT': t.boostFare || 0,
+            '顧客小費_NT': t.tips || 0,
+            '活動獎勵_NT': t.incentives || 0,
+            '點數': t.points || 0,
+            '戰力等級': getTierLabel(t),
+            '商家': t.merchant || ''
           }));
           const csvString = '\uFEFF' + Papa.unparse(csvData);
           const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
@@ -765,43 +942,79 @@
           document.body.removeChild(link);
         };
 
-        // 強化版 OCR 文本解析器
+        // 升級版 OCR 文本解析器（雙單疊單、分+秒、公里、加成、小費、點數、商家）
         const parseDeliveryText = (text) => {
           let duration = 0;
+          let distance = 0;
           let basePay = 0;
+          let boostFare = 0;
           let tips = 0;
           let incentives = 0;
+          let points = 0;
+          let stacks = 1;
+          let merchant = '';
 
-          // 匹配時間 (例如: 18 分鐘, 25 mins, 0:24)
-          const timeMatch = text.match(/(\d+)\s*(分鐘|分|mins?)/i);
-          if (timeMatch) {
-            duration = parseInt(timeMatch[1], 10);
+          // 1. 匹配時間 (分+秒)
+          const minSecMatch = text.match(/(\d+)\s*(?:分鐘|分|mins?)\s*(\d+)\s*(?:秒|secs?)/i);
+          if (minSecMatch) {
+            const mins = parseInt(minSecMatch[1], 10);
+            const secs = parseInt(minSecMatch[2], 10);
+            duration = parseFloat((mins + (secs / 60)).toFixed(2));
+          } else {
+            const minOnlyMatch = text.match(/(\d+)\s*(?:分鐘|分|mins?)/i);
+            if (minOnlyMatch) {
+              duration = parseInt(minOnlyMatch[1], 10);
+            }
           }
 
-          // 匹配小費
-          const tipMatch = text.match(/小費[^\d$NT]*[\$NT\s]*(\d+(?:\.\d+)?)/i);
+          // 2. 匹配距離 (公里)
+          const distMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:公里|公里路程|km)/i);
+          if (distMatch) {
+            distance = parseFloat(distMatch[1]);
+          }
+
+          // 3. 匹配小費
+          const tipMatch = text.match(/(?:包含小費|小費)[^\d$NT]*[\$NT\s]*(\d+(?:\.\d+)?)/i);
           if (tipMatch) {
             tips = parseFloat(tipMatch[1]);
           }
 
-          // 匹配活動獎勵 / 加成
-          const incMatch = text.match(/(?:獎勵|加碼|加成|活動)[^\d$NT]*[\$NT\s]*(\d+(?:\.\d+)?)/i);
-          if (incMatch) {
-            incentives = parseFloat(incMatch[1]);
+          // 4. 匹配基本報酬加成
+          const boostMatch = text.match(/基本報酬加成[^\d$NT]*[\$NT\s]*(\d+(?:\.\d+)?)/i);
+          if (boostMatch) {
+            boostFare = parseFloat(boostMatch[1]);
           }
 
-          // 匹配基本報酬或淨行程費用
-          const fareMatch = text.match(/(?:淨行程費用|基本報酬|行程費用|車資|費用|NT\$|\$)\s*(\d+(?:\.\d+)?)/i);
+          // 5. 匹配基本車資
+          const fareMatch = text.match(/(?:行程費用|基本報酬|車資|費用|本趟行程的預估費用為)[^\d$NT]*[\$NT\s]*(\d+(?:\.\d+)?)/i);
           if (fareMatch) {
             basePay = parseFloat(fareMatch[1]);
           } else {
-            const generalAmounts = text.match(/(?:\$|NT\$)\s*(\d+)/g);
+            const generalAmounts = text.match(/(?:\$|NT\$)\s*(\d+(?:\.\d+)?)/g);
             if (generalAmounts && generalAmounts.length > 0) {
-              basePay = parseFloat(generalAmounts[0].replace(/[^\d]/g, ''));
+              basePay = parseFloat(generalAmounts[0].replace(/[^\d.]/g, ''));
             }
           }
 
-          return { duration, basePay, tips, incentives };
+          // 6. 匹配 Uber Pro 點數與自動疊單判定
+          const ptsMatch = text.match(/(?:已賺取|賺取)\s*(\d+)\s*點/i);
+          if (ptsMatch) {
+            points = parseInt(ptsMatch[1], 10);
+            if (points >= 5) stacks = 3;
+            else if (points >= 3) stacks = 2;
+            else stacks = 1;
+          }
+
+          // 7. 匹配商家名稱
+          const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+          for (let l of lines) {
+            if (l.includes('館') || l.includes('店') || l.includes('鍋') || l.includes('餐') || l.includes('茶') || l.includes('堂')) {
+              merchant = l.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '').slice(0, 16);
+              break;
+            }
+          }
+
+          return { duration, distance, basePay, boostFare, tips, incentives, points, stacks, merchant };
         };
 
         // OCR 批次圖片上傳處理
@@ -832,7 +1045,7 @@
                 successCount++;
               }
             }
-            alert(`OCR 辨識完成！共成功解析加入 ${successCount} 筆訂單明細。`);
+            alert(`OCR 解析完成！已加入 ${successCount} 筆訂單，並自動判定單發/雙單疊單工時。`);
           } catch (err) {
             console.error('OCR 解析失敗:', err);
             alert('截圖辨識時發生錯誤，請確認圖片文字清晰度。');
@@ -844,34 +1057,36 @@
           }
         };
 
-        // 載入模擬範例數據
+        // 載入兩張真實截圖範例數據
         const loadSampleData = () => {
           trips.value = [
-            { duration: 18, basePay: 45, tips: 20, incentives: 0 },
-            { duration: 22, basePay: 48, tips: 0, incentives: 15 },
-            { duration: 28, basePay: 55, tips: 30, incentives: 0 },
-            { duration: 15, basePay: 42, tips: 0, incentives: 0 },
-            { duration: 32, basePay: 62, tips: 50, incentives: 20 },
-            { duration: 20, basePay: 46, tips: 10, incentives: 0 },
-            { duration: 24, basePay: 50, tips: 0, incentives: 10 },
-            { duration: 19, basePay: 44, tips: 25, incentives: 0 }
+            // 截圖 1: 單發單（11分51秒，1.82km，$78基本 + $15加成 + $40小費，2點）
+            { duration: 11.85, distance: 1.82, basePay: 78, boostFare: 15, tips: 40, incentives: 0, points: 2, stacks: 1, merchant: '饌味香鍋貼麵食館' },
+            // 截圖 2: 雙單疊單（19分38秒，1.58km，$113基本 + $20加成，4點）
+            { duration: 19.63, distance: 1.58, basePay: 113, boostFare: 20, tips: 0, incentives: 0, points: 4, stacks: 2, merchant: '築間幸福鍋物' },
+            // 補充模擬單
+            { duration: 22.0, distance: 2.10, basePay: 98, boostFare: 18, tips: 20, incentives: 0, points: 4, stacks: 2, merchant: '大埔鐵板燒' },
+            { duration: 14.5, distance: 1.40, basePay: 45, boostFare: 0, tips: 10, incentives: 0, points: 2, stacks: 1, merchant: '50嵐 忠孝復興店' }
           ];
+          alert('已載入兩張真實截圖數據與示範疊單！');
         };
 
         // 複製報表文字
         const copyReport = () => {
           const text = `【外送專法兩週收益結算報告】
 ----------------------------
-• 累計訂單總數：${trips.value.length} 筆
-• 累計服務總工時 (T_total)：${totalHours.value.toFixed(2)} 小時 (${totalMins.value} 分鐘)
+• 累計訂單總數：${trips.value.length} 趟 (共 ${totalOrdersCount.value} 單)
+• 物理服務總工時：${totalPhysicalHours.value.toFixed(2)} 小時 (${totalPhysicalMins.value.toFixed(1)} 分鐘)
+• 法定申報總工時 (T_total)：${totalStatutoryHours.value.toFixed(2)} 小時 (疊單放大率 ${stackingMultiplier.value.toFixed(2)}x)
+• 累計總跑單里程：${totalDistance.value.toFixed(2)} km (每公里產值 NT$${perKmIncome.value.toFixed(1)}/km)
 • 法定保障時薪費率 (P_rate)：NT$ ${rate.value} / 小時
 • 法定最低應得保障 (Total_legal)：NT$ ${Math.round(totalLegal.value).toLocaleString()}
-• 實領基本報酬總額 (R_base)：NT$ ${Math.round(totalBasePay.value).toLocaleString()}
+• 實領基本車資總額 (R_base)：NT$ ${Math.round(totalBasePay.value).toLocaleString()} (含加成 NT$${Math.round(totalBoostFare.value)})
 ----------------------------
 💰 預估差額補貼款 (ΔR)：NT$ ${Math.round(subsidy.value).toLocaleString()}
 💵 實質最終總收入：NT$ ${Math.round(totalIncome.value).toLocaleString()} (含小費 NT$${Math.round(totalTips.value)}、獎勵 NT$${Math.round(totalIncentives.value)})
-⚡ 疊單工時放大倍數：${stackingMultiplier.value.toFixed(2)}x
-📈 實質產值時薪：NT$ ${realHourlyRate.value.toFixed(1)} / 物理小時
+⚡ 實質產值時薪：NT$ ${realHourlyRate.value.toFixed(1)} / 物理小時
+⭐ 累計點數：${totalPoints.value} 點
 ----------------------------
 產生自：外送專法與疊單收益精算系統`;
 
@@ -882,41 +1097,69 @@
         };
 
         // 計算屬性
-        const totalMins = computed(() => trips.value.reduce((sum, t) => sum + (Number(t.duration) || 0), 0));
-        const totalHours = computed(() => totalMins.value / 60);
-        const totalLegal = computed(() => totalHours.value * rate.value);
+        const totalPhysicalMins = computed(() => trips.value.reduce((sum, t) => sum + (Number(t.duration) || 0), 0));
+        const totalPhysicalHours = computed(() => totalPhysicalMins.value / 60);
+
+        const totalStatutoryMins = computed(() => trips.value.reduce((sum, t) => sum + getTripStatutoryMins(t), 0));
+        const totalStatutoryHours = computed(() => totalStatutoryMins.value / 60);
+
+        const totalOrdersCount = computed(() => trips.value.reduce((sum, t) => sum + (Number(t.stacks) || 1), 0));
+
+        const totalLegal = computed(() => totalStatutoryHours.value * rate.value);
         const totalBasePay = computed(() => trips.value.reduce((sum, t) => sum + (Number(t.basePay) || 0), 0));
+        const totalBoostFare = computed(() => trips.value.reduce((sum, t) => sum + (Number(t.boostFare) || 0), 0));
         const totalTips = computed(() => trips.value.reduce((sum, t) => sum + (Number(t.tips) || 0), 0));
         const totalIncentives = computed(() => trips.value.reduce((sum, t) => sum + (Number(t.incentives) || 0), 0));
+        const totalPoints = computed(() => trips.value.reduce((sum, t) => sum + (Number(t.points) || 0), 0));
+        const totalDistance = computed(() => trips.value.reduce((sum, t) => sum + (Number(t.distance) || 0), 0));
+
         const avgBasePay = computed(() => trips.value.length > 0 ? (totalBasePay.value / trips.value.length) : 0);
+        const avgDistance = computed(() => trips.value.length > 0 ? (totalDistance.value / trips.value.length) : 0);
+        const avgBoostRate = computed(() => totalBasePay.value > 0 ? ((totalBoostFare.value / totalBasePay.value) * 100) : 0);
 
         // 差額補貼款 ΔR = max(0, Total_legal - R_base)
         const subsidy = computed(() => Math.max(0, totalLegal.value - totalBasePay.value));
         // 最終實質總收入
         const totalIncome = computed(() => totalBasePay.value + subsidy.value + totalTips.value + totalIncentives.value);
 
-        // 估計實際物理時間
-        const estimatedPhysicalHours = computed(() => {
-          if (totalHours.value === 0) return 0;
-          return totalHours.value / 1.6;
-        });
+        // 每公里效益
+        const perKmIncome = computed(() => totalDistance.value > 0 ? (totalIncome.value / totalDistance.value) : 0);
+        const perKmBase = computed(() => totalDistance.value > 0 ? (totalBasePay.value / totalDistance.value) : 0);
+        const tipPercentage = computed(() => totalIncome.value > 0 ? ((totalTips.value / totalIncome.value) * 100) : 0);
 
-        const activePhysicalHours = computed(() => {
-          if (customPhysicalHours.value && customPhysicalHours.value > 0) {
-            return customPhysicalHours.value;
-          }
-          return estimatedPhysicalHours.value;
-        });
-
-        // 疊單放大倍數
+        // 疊單工時放大倍數
         const stackingMultiplier = computed(() => {
-          if (activePhysicalHours.value <= 0) return 1.0;
-          return totalHours.value / activePhysicalHours.value;
+          if (totalPhysicalHours.value <= 0) return 1.0;
+          return totalStatutoryHours.value / totalPhysicalHours.value;
         });
 
         // 實質產值時薪
         const realHourlyRate = computed(() => {
           return stackingMultiplier.value * rate.value;
+        });
+
+        // 戰力統計
+        const tierStats = computed(() => {
+          let ssr = 0, sr = 0, normal = 0, warning = 0;
+          for (let t of trips.value) {
+            const l = getTierLabel(t);
+            if (l.includes('SSR')) ssr++;
+            else if (l.includes('SR')) sr++;
+            else if (l.includes('雷單') || l.includes('遠距')) warning++;
+            else normal++;
+          }
+          return { ssr, sr, normal, warning };
+        });
+
+        const tipHitRate = computed(() => {
+          if (trips.value.length === 0) return 0;
+          const count = trips.value.filter(t => (t.tips || 0) > 0).length;
+          return (count / trips.value.length) * 100;
+        });
+
+        const avgTipAmount = computed(() => {
+          if (trips.value.length === 0) return 0;
+          return totalTips.value / trips.value.length;
         });
 
         // 模擬器計算
@@ -932,11 +1175,16 @@
 
         return {
           activeTab, rate, trips, newTrip, isOcrLoading, ocrStatus, ocrProgress,
-          copyBtnText, customPhysicalHours, estimatedPhysicalHours,
+          copyBtnText, customPhysicalHours,
           simOrders, simAvgTripMins, simPhysicalMins, simMultiplier, simRealHourlyWage,
-          totalMins, totalHours, totalLegal, totalBasePay, totalTips, totalIncentives,
-          avgBasePay, subsidy, totalIncome, stackingMultiplier, realHourlyRate,
-          addTrip, handleFileUpload, exportCSV, handleImageUpload, loadSampleData, copyReport
+          totalPhysicalMins, totalPhysicalHours, totalStatutoryMins, totalStatutoryHours, totalOrdersCount,
+          totalLegal, totalBasePay, totalBoostFare, totalTips, totalIncentives,
+          totalPoints, totalDistance, avgBasePay, avgDistance, avgBoostRate,
+          perKmIncome, perKmBase, tipPercentage,
+          subsidy, totalIncome, stackingMultiplier, realHourlyRate,
+          tierStats, tipHitRate, avgTipAmount,
+          addTrip, cycleStacks, getTripStatutoryMins, getTierLabel, getTierBadgeClass,
+          handleFileUpload, exportCSV, handleImageUpload, loadSampleData, copyReport
         };
       }
     }).mount('#app');
