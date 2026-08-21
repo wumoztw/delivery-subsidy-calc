@@ -1434,7 +1434,8 @@
               const img = new Image();
               img.onload = () => {
                 const canvas = document.createElement('canvas');
-                const maxDim = 1024;
+                // 限制最長邊為 1800px 以保有極高文字銳利度
+                const maxDim = 1800;
                 let w = img.width;
                 let h = img.height;
                 if (w > maxDim || h > maxDim) {
@@ -1450,7 +1451,7 @@
                 canvas.height = h;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, w, h);
-                resolve(canvas.toDataURL('image/jpeg', 0.85));
+                resolve(canvas.toDataURL('image/jpeg', 0.94));
               };
               img.onerror = () => resolve(e.target.result);
               img.src = e.target.result;
@@ -1488,9 +1489,9 @@
         // 呼叫 NVIDIA NIM / OpenRouter 視覺 AI 模型進行 100% 精確截圖解析
         const parseReceiptWithAI = async (imageFile, apiKey) => {
           const base64Data = await imageFileToBase64(imageFile);
-          const isNvidia = apiKey.startsWith('nvapi-') || !apiKey.startsWith('sk-');
-          const endpoint = isNvidia ? 'https://integrate.api.nvidia.com/v1/chat/completions' : 'https://openrouter.ai/api/v1/chat/completions';
-          const model = isNvidia ? 'meta/llama-3.2-90b-vision-instruct' : 'meta/llama-3.2-90b-vision-instruct';
+          const isNvidiaDirect = apiKey.startsWith('nvapi-');
+          const endpoint = isNvidiaDirect ? 'https://integrate.api.nvidia.com/v1/chat/completions' : 'https://openrouter.ai/api/v1/chat/completions';
+          const model = isNvidiaDirect ? 'meta/llama-3.2-90b-vision-instruct' : 'nvidia/nemotron-nano-12b-v2-vl:free';
 
           const prompt = `你是專業的 Uber Eats 跑單帳單截圖解析助理。請仔細觀察圖片中的各項數值並輸出純 JSON 格式（不要有 markdown 語法或多餘字串）：
 {
