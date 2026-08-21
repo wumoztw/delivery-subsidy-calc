@@ -1031,7 +1031,13 @@
 
         // AI 視覺引擎設定
         const customApiKey = ref(localStorage.getItem('delivery_calc_openrouter_key') || '');
-        const activeApiKey = computed(() => customApiKey.value || (INJECTED_OPENROUTER_KEY !== '__OPENROUTER_API_KEY__' ? INJECTED_OPENROUTER_KEY : ''));
+        const activeApiKey = computed(() => {
+          if (customApiKey.value && customApiKey.value.trim()) return customApiKey.value.trim();
+          if (typeof INJECTED_OPENROUTER_KEY === 'string' && !INJECTED_OPENROUTER_KEY.startsWith('__') && INJECTED_OPENROUTER_KEY.length > 10) {
+            return INJECTED_OPENROUTER_KEY;
+          }
+          return '';
+        });
         const isAiEngineActive = computed(() => Boolean(activeApiKey.value));
 
         const isOcrLoading = ref(false);
