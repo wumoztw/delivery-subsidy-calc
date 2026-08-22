@@ -1105,6 +1105,7 @@
     const INJECTED_OPENROUTER_KEY = '__OPENROUTER_API_KEY__';
     const INJECTED_NVIDIA_KEY = '__NVIDIA_API_KEY__';
     const INJECTED_AI_KEY = '__AI_API_KEY__';
+    const STORAGE_KEY = 'delivery_subsidy_calc_v3';
 
     createApp({
       setup() {
@@ -1991,7 +1992,8 @@
         return {
           activeTab, rate, trips, newTrip,
           showPasteModal, showManualModal, showAiSettingsModal, pasteText, parsedPasteTrip,
-          customApiKey, isAiEngineActive, saveAiSettings,
+          customOpenRouterKey, customNvidiaKey, activeOpenRouterKey, activeNvidiaKey,
+          isDualAiActive, isAiEngineActive, saveAiSettings,
           isOcrLoading, ocrStatus, ocrProgress, copyBtnText, customPhysicalHours,
           simOrders, simAvgTripMins, simPhysicalMins, simMultiplier, simRealHourlyWage,
           totalPhysicalMins, totalPhysicalHours, totalStatutoryMins, totalStatutoryHours, totalOrdersCount,
