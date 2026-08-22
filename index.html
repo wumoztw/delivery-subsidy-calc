@@ -266,45 +266,25 @@
     <!-- 分頁 2: 訂單明細與資料匯入 -->
     <div v-show="activeTab === 'trips'" class="space-y-4 sm:space-y-6">
       
-      <!-- 四大輸入管道區塊 -->
+      <!-- 四大輸入管道區塊 (依需求調整順序：1.快速手動輸入 ➔ 2.原況文字秒貼 ➔ 3.CSV匯入 ➔ 4.雙AI極速辨識) -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         
-        <!-- 1. OCR / AI 截圖辨識 (支援 雙 AI 雙軌並行 Nemotron + NIM 與 本機降噪 OCR) -->
-        <div class="bg-slate-900 p-4 rounded-2xl border border-emerald-500/30 flex flex-col justify-between shadow-lg">
+        <!-- 1. 快速手動輸入 (移至第一優先位置) -->
+        <div class="bg-slate-900 p-4 rounded-2xl border border-emerald-500/40 flex flex-col justify-between shadow-lg">
           <div>
             <div class="flex items-center justify-between mb-1">
               <h2 class="font-bold text-emerald-300 text-xs sm:text-sm flex items-center gap-1.5">
-                <span>{{ isDualAiActive ? '⚡' : (isAiEngineActive ? '✨' : '📸') }}</span>
-                {{ isDualAiActive ? '雙 AI 雙軌極速辨識' : (isAiEngineActive ? 'Nemotron 視覺解析' : '截圖 OCR 辨識') }}
+                <span>✏️</span> 快速手動輸入
               </h2>
-              <span v-if="isDualAiActive" class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 font-mono">
-                純血雙 Nemotron 並行
-              </span>
-              <span v-else-if="isAiEngineActive" class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 font-mono">
-                nemotron-nano-12b-v2-vl
-              </span>
-              <span v-else class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">
-                本機離線 OCR
+              <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">
+                自訂行程
               </span>
             </div>
-            <p class="text-[11px] text-slate-400 mb-2.5">
-              {{ isDualAiActive ? '已啟動純血雙 Nemotron 12B VL 雙軌分流並行加速 + 自動互為備援，辨識率 100%' : (isAiEngineActive ? '已啟用 NVIDIA 專屬多模態視覺模型，純點數精算法定工時與費用' : '內建 Canvas 銳化降噪預處理，可於設定輸入 Key 升級 AI') }}
-            </p>
+            <p class="text-[11px] text-slate-400 mb-2.5">精確自訂服務時間、行程費用、加成與疊單數</p>
           </div>
-          <div>
-            <div v-if="isOcrLoading" class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mb-2">
-              <div class="bg-emerald-400 h-full transition-all duration-300" :style="{ width: ocrProgress + '%' }"></div>
-            </div>
-            <div class="flex gap-1.5">
-              <label class="flex-1 block text-center py-2 px-2.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs cursor-pointer active:bg-emerald-400 hover:bg-emerald-400 transition shadow">
-                <span>{{ isOcrLoading ? '辨識處理中...' : (isAiEngineActive ? '✨ 選取截圖 AI 解析' : '選取跑單截圖') }}</span>
-                <input type="file" accept="image/*" multiple @change="handleImageUpload" :disabled="isOcrLoading" class="hidden">
-              </label>
-              <button @click="showAiSettingsModal = true" title="AI 設定" class="px-2.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs border border-slate-700 transition">
-                ⚙️
-              </button>
-            </div>
-          </div>
+          <button @click="showManualModal = true" class="w-full block text-center py-2 px-2.5 rounded-xl bg-emerald-600 active:bg-emerald-500 hover:bg-emerald-500 text-slate-950 font-bold text-xs transition shadow">
+            開啟手動新增表單
+          </button>
         </div>
 
         <!-- 2. 原況文字 / 剪貼簿一鍵秒貼 (100% 零誤差) -->
@@ -339,17 +319,42 @@
           </label>
         </div>
 
-        <!-- 4. 手動新增單筆 (完整欄位) -->
+        <!-- 4. OCR / AI 截圖辨識 (雙 AI 雙軌並行 Nemotron + NIM 與 本機降噪 OCR) -->
         <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800 flex flex-col justify-between shadow-lg">
           <div>
-            <h2 class="font-bold text-slate-200 text-xs sm:text-sm mb-1 flex items-center gap-1.5">
-              <span>✏️</span> 快速手動輸入
-            </h2>
-            <p class="text-[11px] text-slate-400 mb-2.5">自訂時間、行程費、加成與疊單數</p>
+            <div class="flex items-center justify-between mb-1">
+              <h2 class="font-bold text-slate-200 text-xs sm:text-sm flex items-center gap-1.5">
+                <span>{{ isDualAiActive ? '⚡' : (isAiEngineActive ? '✨' : '📸') }}</span>
+                {{ isDualAiActive ? '雙 AI 雙軌極速辨識' : (isAiEngineActive ? 'Nemotron 視覺解析' : '截圖 OCR 辨識') }}
+              </h2>
+              <span v-if="isDualAiActive" class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 font-mono">
+                純血雙 Nemotron
+              </span>
+              <span v-else-if="isAiEngineActive" class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 font-mono">
+                nemotron-12b
+              </span>
+              <span v-else class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">
+                離線 OCR
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 mb-2.5">
+              {{ isDualAiActive ? '已啟動純血雙 Nemotron 12B VL 雙軌並行加速 + 4重流量調節' : (isAiEngineActive ? '已啟用 NVIDIA 專屬多模態視覺模型' : '內建 Canvas 銳化降噪，可輸入 Key 升級 AI') }}
+            </p>
           </div>
-          <button @click="showManualModal = true" class="w-full block text-center py-2 px-2.5 rounded-xl bg-slate-800 text-slate-200 font-semibold text-xs active:bg-slate-700 hover:bg-slate-700 border border-slate-700 transition">
-            開啟手動新增表單
-          </button>
+          <div>
+            <div v-if="isOcrLoading" class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mb-2">
+              <div class="bg-emerald-400 h-full transition-all duration-300" :style="{ width: ocrProgress + '%' }"></div>
+            </div>
+            <div class="flex gap-1.5">
+              <label class="flex-1 block text-center py-2 px-2.5 rounded-xl bg-slate-800 text-slate-200 font-semibold text-xs cursor-pointer active:bg-slate-700 hover:bg-slate-700 border border-slate-700 transition">
+                <span>{{ isOcrLoading ? '辨識處理中...' : (isAiEngineActive ? '✨ 選取截圖 AI 解析' : '選取跑單截圖') }}</span>
+                <input type="file" accept="image/*" multiple @change="handleImageUpload" :disabled="isOcrLoading" class="hidden">
+              </label>
+              <button @click="showAiSettingsModal = true" title="AI 設定" class="px-2.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs border border-slate-700 transition">
+                ⚙️
+              </button>
+            </div>
+          </div>
         </div>
 
       </div>
