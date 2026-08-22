@@ -382,16 +382,15 @@
               </button>
             </div>
 
-            <!-- 🛵 疊單數量手動快速切換選擇器 (1單 / 2疊 / 3疊 / 4疊) -->
+            <!-- 🛵 疊單數量手動快速切換選擇器 (最多 3 疊) -->
             <div class="flex items-center justify-between bg-slate-900/90 px-2.5 py-1.5 rounded-lg border border-slate-800 text-[11px]">
               <span class="text-slate-400 flex items-center gap-1 font-bold">
                 <span>🛵</span> 疊單數量：
               </span>
-              <div class="flex items-center gap-1 font-mono">
-                <button type="button" @click="t.stacks = 1" :class="(t.stacks === 1 || !t.stacks) ? 'bg-cyan-500/30 text-cyan-300 border-cyan-400 font-bold' : 'bg-slate-950 text-slate-400 border-slate-800'" class="px-2 py-0.5 rounded border text-[10px] transition">1單 (1.0x)</button>
-                <button type="button" @click="t.stacks = 2" :class="t.stacks === 2 ? 'bg-amber-500/30 text-amber-300 border-amber-400 font-bold' : 'bg-slate-950 text-slate-400 border-slate-800'" class="px-2 py-0.5 rounded border text-[10px] transition">2疊 (1.75x)</button>
-                <button type="button" @click="t.stacks = 3" :class="t.stacks === 3 ? 'bg-purple-500/30 text-purple-300 border-purple-400 font-bold' : 'bg-slate-950 text-slate-400 border-slate-800'" class="px-2 py-0.5 rounded border text-[10px] transition">3疊 (2.5x)</button>
-                <button type="button" @click="t.stacks = 4" :class="t.stacks === 4 ? 'bg-rose-500/30 text-rose-300 border-rose-400 font-bold' : 'bg-slate-950 text-slate-400 border-slate-800'" class="px-2 py-0.5 rounded border text-[10px] transition">4疊 (3.25x)</button>
+              <div class="flex items-center gap-1.5 font-mono">
+                <button type="button" @click="t.stacks = 1" :class="(t.stacks === 1 || !t.stacks) ? 'bg-cyan-500/30 text-cyan-300 border-cyan-400 font-bold' : 'bg-slate-950 text-slate-400 border-slate-800'" class="px-2.5 py-0.5 rounded border text-[11px] transition">1單 (1.0x)</button>
+                <button type="button" @click="t.stacks = 2" :class="t.stacks === 2 ? 'bg-amber-500/30 text-amber-300 border-amber-400 font-bold' : 'bg-slate-950 text-slate-400 border-slate-800'" class="px-2.5 py-0.5 rounded border text-[11px] transition">2疊 (1.75x)</button>
+                <button type="button" @click="t.stacks = 3" :class="t.stacks === 3 ? 'bg-purple-500/30 text-purple-300 border-purple-400 font-bold' : 'bg-slate-950 text-slate-400 border-slate-800'" class="px-2.5 py-0.5 rounded border text-[11px] transition">3疊 (2.5x)</button>
               </div>
             </div>
             
@@ -520,7 +519,6 @@
                     <option :value="1">1 單 (1.00x)</option>
                     <option :value="2">2 疊 (1.75x)</option>
                     <option :value="3">3 疊 (2.50x)</option>
-                    <option :value="4">4 疊 (3.25x)</option>
                   </select>
                 </td>
                 <td class="p-3">
@@ -1286,19 +1284,18 @@
           }
         };
 
-        // 切換疊單數 (1 -> 2 -> 3 -> 4 -> 1)
+        // 切換疊單數 (1 -> 2 -> 3 -> 1)
         const cycleStacks = (t) => {
           const current = t.stacks || 1;
-          t.stacks = current >= 4 ? 1 : current + 1;
+          t.stacks = current >= 3 ? 1 : current + 1;
         };
 
-        // 計算單筆法定累加工時 (專法倍率：1單=1.0x, 2疊=1.75x, 3疊=2.50x, 4疊=3.25x)
+        // 計算單筆法定累加工時 (專法倍率：1單=1.0x, 2疊=1.75x, 3疊=2.50x)
         const getTripStatutoryMins = (t) => {
           const dur = Number(t.duration) || 0;
           const stacks = Number(t.stacks) || 1;
           if (stacks === 2) return dur * 1.75;
-          if (stacks === 3) return dur * 2.50;
-          if (stacks >= 4) return dur * 3.25;
+          if (stacks >= 3) return dur * 2.50;
           return dur;
         };
 
