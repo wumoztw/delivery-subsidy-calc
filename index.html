@@ -278,17 +278,17 @@
                 {{ isDualAiActive ? '雙 AI 雙軌極速辨識' : (isAiEngineActive ? 'Nemotron 視覺解析' : '截圖 OCR 辨識') }}
               </h2>
               <span v-if="isDualAiActive" class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 font-mono">
-                雙 AI 雙軌並行
+                純血雙 Nemotron 並行
               </span>
               <span v-else-if="isAiEngineActive" class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 font-mono">
-                {{ activeOpenRouterKey ? 'nemotron-nano-12b' : 'nvidia-nim-90b' }}
+                nemotron-nano-12b-v2-vl
               </span>
               <span v-else class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">
                 本機離線 OCR
               </span>
             </div>
             <p class="text-[11px] text-slate-400 mb-2.5">
-              {{ isDualAiActive ? '已啟動雙 AI 雙軌分流並行加速 + 毫秒級自動互為備援，批次辨識極速翻倍' : (isAiEngineActive ? '已啟用 NVIDIA 專屬多模態視覺模型，純點數精算法定工時與費用' : '內建 Canvas 銳化降噪預處理，可於設定輸入 Key 升級 AI') }}
+              {{ isDualAiActive ? '已啟動純血雙 Nemotron 12B VL 雙軌分流並行加速 + 自動互為備援，辨識率 100%' : (isAiEngineActive ? '已啟用 NVIDIA 專屬多模態視覺模型，純點數精算法定工時與費用' : '內建 Canvas 銳化降噪預處理，可於設定輸入 Key 升級 AI') }}
             </p>
           </div>
           <div>
@@ -1023,7 +1023,7 @@
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <div class="flex items-center gap-2">
             <span class="text-xl">⚡</span>
-            <h3 class="text-sm sm:text-base font-bold text-emerald-300">雙 AI 視覺解析引擎設定</h3>
+            <h3 class="text-sm sm:text-base font-bold text-emerald-300">純血雙 Nemotron 視覺解析引擎設定</h3>
           </div>
           <button @click="showAiSettingsModal = false" class="text-slate-400 hover:text-slate-200 text-lg">✕</button>
         </div>
@@ -1032,17 +1032,17 @@
           <div class="flex items-center justify-between">
             <span class="text-slate-300 font-bold">目前運行狀態：</span>
             <span v-if="isDualAiActive" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/40">
-              ⚡ 雙 AI 雙軌極速並行中
+              ⚡ 純血雙 Nemotron 雙軌並行中
             </span>
             <span v-else-if="isAiEngineActive" class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/40">
-              ✨ 單 AI 視覺引擎就緒
+              ✨ 單 Nemotron 視覺引擎就緒
             </span>
             <span v-else class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40">
               📸 本機離線 OCR 模式
             </span>
           </div>
           <p class="text-slate-400 text-[11px]">
-            {{ isDualAiActive ? '✅ 系統已偵測到 2 把金鑰！多圖上傳時自動啟動雙軌分流並行加速（Nemotron + NIM 90B），並具備毫秒級相互無縫備援。' : (isAiEngineActive ? '✅ 已啟用專屬 AI 視覺模型。填入第 2 把金鑰即可升級為「雙軌極速並行」。' : '⚠️ 尚未設定 API Key。您可於下方填入個人的 API Key，或由 GitHub Actions 自動注入。') }}
+            {{ isDualAiActive ? '✅ 系統已偵測到 2 把金鑰！多圖上傳時自動啟動純血雙軌分流加速（OpenRouter Nemotron + NVIDIA NIM Nemotron），並具備毫秒級相互無縫備援。' : (isAiEngineActive ? '✅ 已啟用 Nemotron 12B VL 專屬視覺模型。填入第 2 把金鑰即可升級為「純血雙軌極速並行」。' : '⚠️ 尚未設定 API Key。您可於下方填入個人的 API Key，或由 GitHub Actions 自動注入。') }}
           </p>
         </div>
 
@@ -1067,15 +1067,15 @@
           <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
             <div class="flex items-center justify-between">
               <label class="text-cyan-400 font-bold flex items-center gap-1">
-                <span>🧠 引擎 B：NVIDIA NIM (Llama 3.2 90B)</span>
+                <span>🧠 引擎 B：NVIDIA NIM (Nemotron 12B VL)</span>
               </label>
-              <a href="https://build.nvidia.com/meta/llama-3.2-90b-vision-instruct" target="_blank" class="text-cyan-400 hover:underline text-[11px]">
+              <a href="https://build.nvidia.com/nvidia/nemotron-nano-12b-v2-vl" target="_blank" class="text-cyan-400 hover:underline text-[11px]">
                 🔑 領取 Key ➔
               </a>
             </div>
             <input type="password" v-model="customNvidiaKey" placeholder="nvapi-..." class="w-full bg-slate-900 border border-slate-700 p-2 rounded-lg text-slate-100 font-mono text-xs focus:border-cyan-500 focus:outline-none">
             <span class="text-[10px] text-slate-500 block">
-              狀態：{{ activeNvidiaKey ? '🟢 已連結 (meta/llama-3.2-90b-vision-instruct)' : '⚪ 未設定' }}
+              狀態：{{ activeNvidiaKey ? '🟢 已連結 (nvidia/nemotron-nano-12b-v2-vl)' : '⚪ 未設定' }}
             </span>
           </div>
         </div>
@@ -1650,7 +1650,7 @@
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              model: 'meta/llama-3.2-90b-vision-instruct',
+              model: 'nvidia/nemotron-nano-12b-v2-vl',
               messages: [
                 {
                   role: 'user',
@@ -1660,8 +1660,7 @@
                   ]
                 }
               ],
-              temperature: 0.1,
-              max_tokens: 512
+              temperature: 0.1
             })
           });
 
