@@ -269,55 +269,65 @@
             <h3 class="text-sm font-bold text-slate-200">收入組成分析報表</h3>
             <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-mono ml-auto">本週期</span>
           </div>
-          <div class="flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
-            <!-- SVG 甜甜圈圖（從12點鐘起順時針，中心文字正向顯示） -->
+          <div class="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
+
+            <!-- SVG 甜甜圈圖 -->
             <div class="flex-shrink-0 relative" style="width:180px;height:180px">
-              <svg viewBox="0 0 200 200" width="180" height="180" style="transform:rotate(-90deg);display:block">
+              <svg viewBox="0 0 200 200" width="180" height="180"
+                   style="transform:rotate(-90deg);display:block;overflow:visible">
                 <template v-for="(slice, idx) in pieSlices" :key="idx">
                   <circle cx="100" cy="100" r="70" fill="none"
-                    :stroke="slice.color" stroke-width="40"
+                    :stroke="slice.color"
+                    stroke-width="38"
                     :stroke-dasharray="slice.dash + ' ' + slice.gap"
-                    :stroke-dashoffset="slice.offset"
-                    style="transition: stroke-dashoffset 0.5s ease, stroke-dasharray 0.5s ease" />
+                    :stroke-dashoffset="slice.offset" />
                 </template>
-                <circle cx="100" cy="100" r="49" fill="#0f172a" />
+                <circle cx="100" cy="100" r="50" fill="#0f172a" />
               </svg>
-              <!-- 中心文字：用 absolute 定位疊上去，避免 SVG transform 相容問題 -->
-              <div style="position:absolute;top:0;left:0;width:180px;height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
-                <span style="color:#94a3b8;font-size:10px;font-family:monospace">總收入</span>
-                <span style="color:#e2e8f0;font-size:12px;font-weight:900;font-family:monospace">NT${{ Math.round(totalIncome).toLocaleString() }}</span>
+              <!-- 中心文字（absolute 疊上，不受 SVG rotate 影響） -->
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
+                <span style="color:#64748b;font-size:10px;font-family:monospace;letter-spacing:0.05em">總收入</span>
+                <span style="color:#f1f5f9;font-size:13px;font-weight:900;font-family:monospace;margin-top:2px">
+                  NT${{ Math.round(totalIncome).toLocaleString() }}
+                </span>
               </div>
             </div>
-            <!-- 圖例說明 -->
-            <div class="flex-1 w-full space-y-2.5">
-              <template v-for="(slice, idx) in pieSlices" :key="'legend-'+idx">
-                <div class="flex items-center gap-3">
-                  <div class="w-3 h-3 rounded-full flex-shrink-0" :style="{ backgroundColor: slice.color }"></div>
-                  <div class="flex-1 min-w-0">
-                    <div class="flex justify-between items-center mb-1">
-                      <span class="text-xs text-slate-300">{{ slice.label }}</span>
-                      <span class="text-xs font-mono font-bold" :style="{ color: slice.color }">{{ slice.pct.toFixed(1) }}%</span>
+
+            <!-- 右側圖例 -->
+            <div class="flex-1 w-full space-y-3">
+              <template v-for="(slice, idx) in pieSlices" :key="'leg-'+idx">
+                <div>
+                  <div class="flex justify-between items-center mb-1">
+                    <div class="flex items-center gap-2">
+                      <span class="inline-block w-2.5 h-2.5 rounded-full" :style="{ background: slice.color }"></span>
+                      <span class="text-xs text-slate-200">{{ slice.label }}</span>
                     </div>
-                    <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                      <div class="h-full rounded-full transition-all duration-500" :style="{ width: slice.pct + '%', backgroundColor: slice.color }"></div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-[11px] text-slate-400 font-mono">NT${{ Math.round(slice.value).toLocaleString() }}</span>
+                      <span class="text-xs font-black font-mono w-12 text-right" :style="{ color: slice.color }">{{ slice.pct.toFixed(1) }}%</span>
                     </div>
-                    <div class="text-[10px] text-slate-500 mt-0.5 font-mono">NT$ {{ Math.round(slice.value).toLocaleString() }} 元</div>
+                  </div>
+                  <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full" :style="{ width: slice.pct + '%', background: slice.color }"></div>
                   </div>
                 </div>
               </template>
             </div>
+
           </div>
-          <!-- 底部小結格 -->
-          <div class="mt-4 pt-3 border-t border-slate-800 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
-            <template v-for="(slice, idx) in pieSlices" :key="'summary-'+idx">
-              <div class="bg-slate-950/60 rounded-xl p-2">
-                <div class="text-[10px] text-slate-400 mb-0.5">{{ slice.label }}</div>
+
+          <!-- 底部摘要格 -->
+          <div class="mt-5 pt-4 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <template v-for="(slice, idx) in pieSlices" :key="'sum-'+idx">
+              <div class="bg-slate-950/70 rounded-xl p-2.5 text-center">
+                <div class="text-[10px] text-slate-400 mb-1">{{ slice.label }}</div>
                 <div class="text-sm font-black font-mono" :style="{ color: slice.color }">{{ slice.pct.toFixed(1) }}%</div>
+                <div class="text-[10px] text-slate-500 font-mono mt-0.5">NT${{ Math.round(slice.value).toLocaleString() }}</div>
               </div>
             </template>
           </div>
         </div>
-      </template>
+      </template>      </template>
       <template v-else>
         <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 text-center text-slate-500 text-xs">
           🥧 新增訂單資料後，此處將自動顯示收入組成圓餅圖
@@ -2261,30 +2271,29 @@
 
         // 收入組成圓餅圖 computed（純 SVG stroke-dasharray 甜甜圈圖）
         const pieSlices = computed(() => {
-          const C = 2 * Math.PI * 70; // r=70 圓周長 ≈ 439.82
-          const base = totalBasePay.value || 0;
-          const sub = Math.max(0, subsidy.value) || 0;
-          const tips = totalTips.value || 0;
-          const incentives = totalIncentives.value || 0;
+          const C = 2 * Math.PI * 70; // 圓周長 ≈ 439.82
+          const base       = Number(totalBasePay.value)   || 0;
+          const sub        = Math.max(0, Number(subsidy.value)) || 0;
+          const tips       = Number(totalTips.value)       || 0;
+          const incentives = Number(totalIncentives.value) || 0;
           const total = base + sub + tips + incentives;
           if (total <= 0) return [];
-          const items = [
-            { label: '基本車資', value: base, color: '#34d399' },
-            { label: '差額補貼', value: sub, color: '#fbbf24' },
+
+          const raw = [
+            { label: '基本車資', value: base,       color: '#34d399' },
+            { label: '差額補貼', value: sub,        color: '#fbbf24' },
             { label: '平台獎勵', value: incentives, color: '#38bdf8' },
-            { label: '顧客小費', value: tips, color: '#f472b6' },
-          ];
-          const withDash = items.map(item => ({
-            ...item,
-            pct: (item.value / total) * 100,
-            dash: (item.value / total) * C,
-            gap: C - (item.value / total) * C,
-          }));
+            { label: '顧客小費', value: tips,       color: '#f472b6' },
+          ].filter(item => item.value > 0); // 過濾掉 0 值項目，避免空切片
+
           let cumulative = 0;
-          return withDash.map(slice => {
+          return raw.map(item => {
+            const pct  = (item.value / total) * 100;
+            const dash = (item.value / total) * C;
+            const gap  = C - dash;
             const offset = -cumulative;
-            cumulative += slice.dash;
-            return { ...slice, offset };
+            cumulative += dash;
+            return { ...item, pct, dash, gap, offset };
           });
         });
 
