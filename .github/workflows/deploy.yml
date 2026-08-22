@@ -21,17 +21,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Inject AI API Key
+      - name: Inject Dual AI API Keys
         env:
-          AI_KEY: ${{ secrets.OPENROUTER_API_KEY || secrets.NVIDIA_API_KEY }}
+          OPENROUTER_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          NVIDIA_KEY: ${{ secrets.NVIDIA_API_KEY }}
         run: |
-          if [ -n "$AI_KEY" ]; then
-            echo "Successfully found AI_KEY! Injecting into index.html..."
-            sed -i "s|__AI_API_KEY__|$AI_KEY|g" index.html
-            sed -i "s|__OPENROUTER_API_KEY__|$AI_KEY|g" index.html
-            sed -i "s|__NVIDIA_API_KEY__|$AI_KEY|g" index.html
-          else
-            echo "::warning::OPENROUTER_API_KEY or NVIDIA_API_KEY secret is not set in GitHub Secrets."
+          echo "Checking GitHub Secrets for Dual AI Engines..."
+          if [ -n "$OPENROUTER_KEY" ]; then
+            echo "✅ OPENROUTER_API_KEY detected! Injecting..."
+            sed -i "s|__OPENROUTER_API_KEY__|$OPENROUTER_KEY|g" index.html
+          fi
+          if [ -n "$NVIDIA_KEY" ]; then
+            echo "✅ NVIDIA_API_KEY detected! Injecting..."
+            sed -i "s|__NVIDIA_API_KEY__|$NVIDIA_KEY|g" index.html
+          fi
+          # Fallback for unified placeholder
+          FALLBACK_KEY="${OPENROUTER_KEY:-$NVIDIA_KEY}"
+          if [ -n "$FALLBACK_KEY" ]; then
+            sed -i "s|__AI_API_KEY__|$FALLBACK_KEY|g" index.html
           fi
 
       - name: Setup Pages
