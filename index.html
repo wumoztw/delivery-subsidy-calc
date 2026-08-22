@@ -693,6 +693,34 @@
           <div>• <strong>實質產值時薪</strong> ＝ 工時放大倍數 × 法定保障時薪費率</div>
         </div>
 
+        <!-- 第一原理深度戰術解讀（外送實務盲點） -->
+        <div class="bg-slate-950 p-4 rounded-xl border border-amber-500/30 text-xs text-slate-300 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <h3 class="text-amber-400 font-bold flex items-center gap-1.5 text-xs sm:text-sm">
+              <span>💡</span> 第一原理深度戰術解讀（外送實務盲點）
+            </h3>
+            <span :class="simMultiplier >= 1.5 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : (simMultiplier > 1.05 ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' : 'bg-rose-500/20 text-rose-300 border-rose-500/40')" class="px-2 py-0.5 rounded text-[10px] font-bold border font-mono">
+              {{ simMultiplier >= 1.5 ? '🌟 黃金並聯（超高產值）' : (simMultiplier > 1.05 ? '⚡ 輕度重疊（有效增益）' : '⚠️ 完全串聯（零重疊效益）') }}
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-[11px] text-slate-300">
+            <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+              <strong class="text-amber-300 block">🛑 實務盲點 1：接了疊單 ≠ 自動賺到高時薪</strong>
+              <p class="text-slate-400 leading-relaxed">
+                若 2 單每單 25 分鐘，實際卻花了 50 分鐘才送完，表示兩單在時間軸上<strong>完全無重疊</strong>（完全串聯跑單），放大倍數跌回 <span class="text-rose-400 font-mono font-bold">1.00 倍</span>，實質時薪僅有專法法定保底底線 NT$245/時。
+              </p>
+            </div>
+
+            <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+              <strong class="text-emerald-300 block">🎯 核心精髓：物理時間壓縮率是第一關鍵</strong>
+              <p class="text-slate-400 leading-relaxed">
+                疊單超高產值的本質是<strong>「並聯壓縮物理工時」</strong>。若能透過同店家取餐、順路短距將 50 分鐘的法定工時壓縮在 30 分鐘送完，放大倍數立即躍升為 <span class="text-emerald-400 font-mono font-bold">1.67 倍</span>，實質時薪直接飆上 NT$408/時！
+              </p>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <!-- 作戰參數標準與拒接紅線對照表 -->
