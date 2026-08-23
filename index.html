@@ -334,6 +334,99 @@
         </div>
       </template>
 
+
+      <!-- ── 智慧診斷建議區塊 ── -->
+      <div v-if="trips.length > 0" class="space-y-4">
+
+        <!-- 整體戰略建議 -->
+        <div v-if="globalInsights.length > 0" class="bg-slate-900/90 p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-md">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-base">🧠</span>
+            <h3 class="text-sm font-bold text-slate-200">週期戰略診斷建議</h3>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-mono ml-auto">{{ trips.length }} 張訂單</span>
+          </div>
+          <div class="space-y-2.5">
+            <template v-for="(item, idx) in globalInsights" :key="idx">
+              <div class="flex gap-3 p-3 rounded-xl border"
+                :class="{
+                  'bg-rose-950/40 border-rose-500/30': item.level === 'danger',
+                  'bg-amber-950/40 border-amber-500/30': item.level === 'warning',
+                  'bg-emerald-950/40 border-emerald-500/30': item.level === 'success',
+                  'bg-cyan-950/40 border-cyan-500/30': item.level === 'info',
+                }">
+                <span class="text-lg flex-shrink-0 mt-0.5">{{ item.icon }}</span>
+                <div class="min-w-0">
+                  <div class="text-xs font-bold mb-0.5"
+                    :class="{
+                      'text-rose-300': item.level === 'danger',
+                      'text-amber-300': item.level === 'warning',
+                      'text-emerald-300': item.level === 'success',
+                      'text-cyan-300': item.level === 'info',
+                    }">{{ item.title }}</div>
+                  <div class="text-[11px] text-slate-400 leading-relaxed">{{ item.desc }}</div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- 每單逐筆診斷 -->
+        <div class="bg-slate-900/90 p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-md">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-base">🔍</span>
+            <h3 class="text-sm font-bold text-slate-200">每單逐筆診斷報告</h3>
+          </div>
+          <div class="space-y-3">
+            <template v-for="ins in tripInsights" :key="ins.idx">
+              <div class="bg-slate-950/70 rounded-xl border border-slate-800 overflow-hidden">
+                <!-- 訂單標頭列 -->
+                <div class="flex items-center justify-between px-3 py-2 border-b border-slate-800/60">
+                  <div class="flex items-center gap-2 text-xs">
+                    <span class="font-bold font-mono text-slate-300">單 #{{ ins.idx + 1 }}</span>
+                    <span class="text-slate-500">{{ ins.t.merchant || '未填商家' }}</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-mono text-slate-400">{{ ins.stacks }}疊 · {{ ins.dist.toFixed(1) }}km · {{ ins.dur }}分</span>
+                    <span class="text-[11px] font-black font-mono px-2 py-0.5 rounded" :class="ins.gradeColor"
+                      :style="{ background: ins.grade==='SSR' ? 'rgba(234,179,8,0.1)' : ins.grade==='A' ? 'rgba(52,211,153,0.1)' : ins.grade==='B' ? 'rgba(56,189,248,0.1)' : 'rgba(244,63,94,0.1)' }">
+                      {{ ins.grade }}
+                    </span>
+                  </div>
+                </div>
+                <!-- 指標列 -->
+                <div class="grid grid-cols-3 divide-x divide-slate-800/60 text-center text-[10px] border-b border-slate-800/60">
+                  <div class="py-1.5">
+                    <div class="text-slate-500">法定保底</div>
+                    <div class="font-mono font-bold text-slate-200">NT${{ Math.round(ins.legal) }}</div>
+                  </div>
+                  <div class="py-1.5">
+                    <div class="text-slate-500">工時倍率</div>
+                    <div class="font-mono font-bold" :class="ins.efficiency >= 2.0 ? 'text-emerald-400' : ins.efficiency >= 1.5 ? 'text-cyan-400' : 'text-rose-400'">{{ ins.efficiency.toFixed(2) }}x</div>
+                  </div>
+                  <div class="py-1.5">
+                    <div class="text-slate-500">差額補貼</div>
+                    <div class="font-mono font-bold text-amber-400">+NT${{ Math.round(ins.subsidy) }}</div>
+                  </div>
+                </div>
+                <!-- 診斷訊息 -->
+                <div class="px-3 py-2 space-y-1" v-if="ins.tips.length > 0 || ins.warnings.length > 0">
+                  <div v-for="w in ins.warnings" :key="w.type" class="flex gap-1.5 text-[11px] text-amber-300/90">
+                    <span class="flex-shrink-0">{{ w.icon }}</span>
+                    <span>{{ w.text }}</span>
+                  </div>
+                  <div v-for="tip in ins.tips" :key="tip.type" class="flex gap-1.5 text-[11px] text-emerald-400/90">
+                    <span class="flex-shrink-0">{{ tip.icon }}</span>
+                    <span>{{ tip.text }}</span>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+      </div>
+      <!-- 無資料時不顯示 -->
+
     </div>
 
     <!-- 分頁 2: 訂單明細與資料匯入 -->
@@ -2314,6 +2407,109 @@
         });
 
 
+        // ── 每單智慧診斷引擎 ──
+        const tripInsights = computed(() => {
+          const rate = 245;
+          return trips.value.map((t, idx) => {
+            const dur      = Number(t.duration) || 0;
+            const dist     = Number(t.distance) || 0;
+            const stacks   = Math.min(10, Math.max(1, Number(t.stacks) || 1));
+            const basePay  = Number(t.basePay)  || 0;
+            const multiplier = stackMultiplierMap[stacks] || 1;
+            const statMins = dur * multiplier;
+            const legal    = (statMins / 60) * rate;
+            const subsidy  = Math.max(0, legal - basePay);
+            const efficiency = dur > 0 ? (statMins / dur) : 1; // 工時放大倍數
+            const kmRate   = dist > 0 ? (legal / dist) : 0;    // 每公里法定產值
+
+            const tips = [];
+            const warnings = [];
+
+            // 診斷 1：單發單 → 建議疊單
+            if (stacks === 1) {
+              const gain2 = ((dur * 1.75 / 60) * rate) - legal;
+              const gain3 = ((dur * 2.50 / 60) * rate) - legal;
+              warnings.push({ type: 'stack', icon: '⚡', text: `單發單，若升級為雙疊可多賺 NT$${Math.round(gain2)}，三疊可多賺 NT$${Math.round(gain3)}` });
+            }
+
+            // 診斷 2：距離過遠（>3.5km）
+            if (dist > 3.5 && dist <= 5.0) {
+              warnings.push({ type: 'dist', icon: '⚠️', text: `距離 ${dist.toFixed(1)}km 稍遠，送完後空車回程消耗額外 ${Math.round(dist * 1.2)} 分鐘，建議下次接 2.5km 內同商圈單` });
+            } else if (dist > 5.0) {
+              warnings.push({ type: 'dist_bad', icon: '🚫', text: `距離 ${dist.toFixed(1)}km 超出紅線，建議果斷拒接此類遠單，改接 3km 內疊單` });
+            }
+
+            // 診斷 3：工時放大倍數優秀
+            if (efficiency >= 2.3) {
+              tips.push({ type: 'good_stack', icon: '🌟', text: `疊單倍數 ${efficiency.toFixed(2)}x，本單為高產值黃金單，繼續保持！` });
+            } else if (efficiency >= 1.7 && efficiency < 2.3) {
+              tips.push({ type: 'ok_stack', icon: '✅', text: `疊單倍數 ${efficiency.toFixed(2)}x，產值良好，若加快接單銜接可再提升` });
+            }
+
+            // 診斷 4：每公里法定產值
+            if (dist > 0 && kmRate < 60) {
+              warnings.push({ type: 'km_low', icon: '📉', text: `每公里法定產值 NT$${kmRate.toFixed(0)}，偏低，建議縮短距離或提升疊單數` });
+            } else if (dist > 0 && kmRate >= 100) {
+              tips.push({ type: 'km_good', icon: '💎', text: `每公里法定產值 NT$${kmRate.toFixed(0)}，超高效率！此類短距疊單是最強作戰組合` });
+            }
+
+            // 診斷 5：服務時間過短（< 10分）
+            if (dur < 10 && dur > 0) {
+              warnings.push({ type: 'short_time', icon: '⏱️', text: `服務時間僅 ${dur} 分鐘，工時過短導致法定保底偏低，建議拉長接單半徑至 1.5km 以上` });
+            }
+
+            // 綜合評級
+            let grade = 'C';
+            let gradeColor = 'text-slate-400';
+            if (efficiency >= 2.3 && dist <= 3.0) { grade = 'SSR'; gradeColor = 'text-yellow-300'; }
+            else if (efficiency >= 1.7 && dist <= 4.0) { grade = 'A'; gradeColor = 'text-emerald-400'; }
+            else if (efficiency >= 1.3 && dist <= 4.5) { grade = 'B'; gradeColor = 'text-cyan-400'; }
+            else if (dist > 5.0 || stacks === 1) { grade = 'D'; gradeColor = 'text-rose-400'; }
+
+            return { idx, t, dur, dist, stacks, basePay, statMins, legal, subsidy, efficiency, kmRate, tips, warnings, grade, gradeColor };
+          });
+        });
+
+        // ── 整體週期戰略建議 ──
+        const globalInsights = computed(() => {
+          if (!trips.value.length) return [];
+          const insights = tripInsights.value;
+          const results = [];
+
+          const singleCount  = insights.filter(i => i.stacks === 1).length;
+          const farCount     = insights.filter(i => i.dist > 3.5).length;
+          const goodCount    = insights.filter(i => i.grade === 'SSR' || i.grade === 'A').length;
+          const totalCount   = insights.length;
+          const singleRatio  = singleCount / totalCount;
+          const avgEff       = insights.reduce((s, i) => s + i.efficiency, 0) / totalCount;
+
+          if (singleRatio > 0.5) {
+            results.push({ level: 'danger', icon: '🚨', title: '單發單比例過高', desc: `本週期 ${singleCount}/${totalCount} 張為單發單（${Math.round(singleRatio*100)}%），大量壓低整體時薪。建議優先等待疊單，或在尖峰時段集中接單以提高疊單機率。` });
+          }
+          if (farCount > 0) {
+            results.push({ level: 'warning', icon: '📍', title: `${farCount} 張遠距單需改善`, desc: `距離超過 3.5km 的訂單共 ${farCount} 張，每張都帶來回程空車時間損耗。下次遇到 4km 以上遠單建議直接拒接，改等商圈短疊單。` });
+          }
+          if (avgEff >= 2.0) {
+            results.push({ level: 'success', icon: '🏆', title: '整體疊單效率優秀', desc: `本週期平均工時放大倍數 ${avgEff.toFixed(2)}x，已達高產值外送員標準！繼續維持此節奏。` });
+          } else if (avgEff < 1.3) {
+            results.push({ level: 'danger', icon: '📊', title: '整體工時效率偏低', desc: `平均工時放大倍數僅 ${avgEff.toFixed(2)}x，主因可能是單發單過多或距離過遠。專注 2.5km 內雙疊/三疊單可顯著提升。` });
+          }
+          if (goodCount >= totalCount * 0.6) {
+            results.push({ level: 'success', icon: '✨', title: '高產值單佔比優秀', desc: `本週期 SSR/A 級單佔 ${Math.round(goodCount/totalCount*100)}%，是優秀的接單策略！` });
+          }
+          // 模擬「若全部換成雙疊」的收益差距
+          const currentLegal = insights.reduce((s, i) => s + i.legal, 0);
+          const simulatedLegal = insights.reduce((s, i) => {
+            const simMins = i.dur * (i.stacks >= 2 ? stackMultiplierMap[i.stacks] : 1.75);
+            return s + (simMins / 60) * 245;
+          }, 0);
+          const potentialGain = simulatedLegal - currentLegal;
+          if (potentialGain > 50) {
+            results.push({ level: 'info', icon: '💡', title: `若單發單全升級雙疊，可多賺 NT$${Math.round(potentialGain)}`, desc: `本週期所有單發單若都升級為雙疊單，法定保底總額可從 NT$${Math.round(currentLegal)} 提升至 NT$${Math.round(simulatedLegal)}，增加 NT$${Math.round(potentialGain)} 元。` });
+          }
+          return results;
+        });
+
         // 戰力統計
         const tierStats = computed(() => {
           let ssr = 0, sr = 0, normal = 0, warning = 0;
@@ -2361,6 +2557,7 @@
           totalPoints, totalDistance, avgBasePay, avgDistance, avgBoostRate,
           perKmIncome, perKmBase, tipPercentage,
           subsidy, totalIncome, stackingMultiplier, realHourlyRate, pieSlices,
+          tripInsights, globalInsights,
           tierStats, tipHitRate, avgTipAmount,
           syncNewTripBasePay, syncTripBasePay,
           addTrip, addTripFromModal, openPasteModal, readClipboard, confirmPasteTrip,
