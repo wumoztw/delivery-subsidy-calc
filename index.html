@@ -255,7 +255,9 @@
           <button @click="exportCSV" class="px-3 py-2 bg-slate-800 active:bg-slate-700 hover:bg-slate-700 text-slate-200 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition">
             <span>💾</span> <span>匯出 CSV</span>
           </button>
-
+          <button @click="downloadDiagnosisReport" class="px-3 py-2 bg-emerald-950/60 active:bg-emerald-900/80 hover:bg-emerald-900/60 text-emerald-300 text-xs rounded-xl border border-emerald-500/40 flex items-center justify-center gap-1.5 transition font-semibold">
+            <span>📥</span> <span>下載診斷戰報</span>
+          </button>
         </div>
       </div>
 
@@ -335,6 +337,25 @@
 
       <!-- ── 智慧診斷建議區塊 ── -->
       <div v-if="trips.length > 0" class="space-y-4">
+
+        <!-- 診斷區頂部標頭與操作列 -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 bg-slate-900/90 p-3.5 sm:p-4 rounded-2xl border border-slate-800 shadow-md">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">🎯</span>
+            <div>
+              <h3 class="text-sm font-bold text-slate-200">外送專法戰略診斷中心</h3>
+              <p class="text-[11px] text-slate-400">依據第一原理推算之週期改善方針與每單產值逐筆評級</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button @click="copyDiagnosisReport" class="flex-1 sm:flex-none px-3 py-1.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition">
+              <span>📋</span> <span class="font-mono">{{ copyDiagBtnText }}</span>
+            </button>
+            <button @click="downloadDiagnosisReport" class="flex-1 sm:flex-none px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-slate-950 font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-1.5">
+              <span>📥</span> <span>下載診斷報告 (.md)</span>
+            </button>
+          </div>
+        </div>
 
         <!-- 整體戰略建議 -->
         <div v-if="globalInsights.length > 0" class="bg-slate-900/90 p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-md">
@@ -1526,6 +1547,7 @@
         const ocrStatus = ref('');
         const ocrProgress = ref(0);
         const copyBtnText = ref('複製報表');
+        const copyDiagBtnText = ref('複製診斷戰報');
         const customPhysicalHours = ref(null);
 
         // 模擬器參數
@@ -2233,6 +2255,108 @@
           });
         };
 
+        // 產生完整戰略診斷與逐筆優化報告文字
+        const generateDiagnosisReportText = () => {
+          const now = new Date();
+          const dateStr = `${now.getFullYear()}年${String(now.getMonth() + 1).padStart(2, '0')}月${String(now.getDate()).padStart(2, '0')}日`;
+          
+          let report = `# 外送專法戰略診斷與收益優化報告
+產生日期：${dateStr}
+分析樣本：${trips.value.length} 趟訂單 (共 ${totalOrdersCount.value} 單)
+
+============================================================
+📊 一、週期核心戰力總評
+============================================================
+• 兩週週期最終實質總收入：NT$ ${Math.round(totalIncome.value).toLocaleString()}
+• 物理服務總工時：${totalPhysicalHours.value.toFixed(2)} 小時 (${totalPhysicalMins.value.toFixed(1)} 分鐘)
+• 法定申報總工時：${totalStatutoryHours.value.toFixed(2)} 小時 (工時放大率 ${stackingMultiplier.value.toFixed(2)}x)
+• 法定最低應得保障：NT$ ${Math.round(totalLegal.value).toLocaleString()}
+• 實領行程費用總額：NT$ ${Math.round(totalBasePay.value).toLocaleString()} (含基本加成 NT$${Math.round(totalBoostFare.value)})
+• 預估差額補貼款 (ΔR)：NT$ ${Math.round(subsidy.value).toLocaleString()}
+• 實質物理產值時薪：NT$ ${realHourlyRate.value.toFixed(1)} / 物理時
+• 戰力評級分佈：SSR級 ${tierStats.value.ssr} 單 / SR級 ${tierStats.value.sr} 單 / 正常 ${tierStats.value.normal} 單 / 需改善 ${tierStats.value.warning} 單
+• 跑單總里程：${totalDistance.value.toFixed(2)} km (均趟 ${avgDistance.value.toFixed(2)} km)
+• 每公里實質產值：NT$ ${perKmIncome.value.toFixed(1)} / km
+
+============================================================
+🧠 二、週期戰略診斷與改善方針
+============================================================
+`;
+
+          if (globalInsights.value.length === 0) {
+            report += `（目前資料量正常，無異常警示）\n\n`;
+          } else {
+            globalInsights.value.forEach((item, idx) => {
+              report += `【${idx + 1}】${item.icon} ${item.title}\n說明：${item.desc}\n\n`;
+            });
+          }
+
+          report += `============================================================
+🔍 三、每單逐筆診斷報告與改進建議
+============================================================
+`;
+
+          tripInsights.value.forEach((ins) => {
+            report += `------------------------------------------------------------
+[單 #${ins.idx + 1}] ${ins.t.merchant || '未填商家'}
+• 派單型態：${ins.stacks} 疊單 | 里程：${ins.dist.toFixed(1)} km | 服務時間：${ins.dur} 分鐘
+• 戰力評級：[${ins.grade}] | 工時放大倍率：${ins.efficiency.toFixed(2)}x
+• 法定最低保障：NT$ ${Math.round(ins.legal)} | 表定車資：NT$ ${ins.basePay} | 差額補貼：+NT$ ${Math.round(ins.subsidy)}
+• 診斷分析與建議：\n`;
+
+            if (ins.warnings.length === 0 && ins.tips.length === 0) {
+              report += `  - 數據表現平穩，符合常態標準。\n`;
+            } else {
+              ins.warnings.forEach(w => {
+                report += `  - ⚠️ [警示/改善] ${w.text}\n`;
+              });
+              ins.tips.forEach(tip => {
+                report += `  - 🌟 [優勢/保持] ${tip.text}\n`;
+              });
+            }
+            report += `\n`;
+          });
+
+          report += `============================================================
+產生自：外送專法與疊單收益精算系統 · ${dateStr}
+============================================================\n`;
+
+          return report;
+        };
+
+        // 下載診斷戰報 (.md)
+        const downloadDiagnosisReport = () => {
+          if (trips.value.length === 0) {
+            alert('目前尚無訂單資料可供下載診斷報告！');
+            return;
+          }
+          const text = generateDiagnosisReportText();
+          const now = new Date();
+          const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+          const blob = new Blob(['\uFEFF' + text], { type: 'text/markdown;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.setAttribute('href', url);
+          link.setAttribute('download', `外送專法戰略診斷報告_${dateStr}.md`);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          setTimeout(() => URL.revokeObjectURL(url), 1500);
+        };
+
+        // 複製診斷戰報
+        const copyDiagnosisReport = () => {
+          if (trips.value.length === 0) {
+            alert('目前尚無訂單資料！');
+            return;
+          }
+          const text = generateDiagnosisReportText();
+          navigator.clipboard.writeText(text).then(() => {
+            copyDiagBtnText.value = '✅ 已複製診斷戰報！';
+            setTimeout(() => { copyDiagBtnText.value = '複製診斷戰報'; }, 2500);
+          });
+        };
+
         // 計算屬性
         const totalPhysicalMins = computed(() => trips.value.reduce((sum, t) => sum + (Number(t.duration) || 0), 0));
         const totalPhysicalHours = computed(() => totalPhysicalMins.value / 60);
@@ -2459,7 +2583,8 @@
           syncNewTripBasePay, syncTripBasePay,
           addTrip, addTripFromModal, openPasteModal, readClipboard, confirmPasteTrip,
           cycleStacks, getTripStatutoryMins, getTierLabel, getTierBadgeClass,
-          handleFileUpload, exportCSV, handleImageUpload, loadSampleData, copyReport
+          handleFileUpload, exportCSV, handleImageUpload, loadSampleData, copyReport,
+          copyDiagBtnText, generateDiagnosisReportText, downloadDiagnosisReport, copyDiagnosisReport
         };
       }
     }).mount('#app');
