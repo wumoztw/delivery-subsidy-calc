@@ -255,9 +255,7 @@
           <button @click="exportCSV" class="px-3 py-2 bg-slate-800 active:bg-slate-700 hover:bg-slate-700 text-slate-200 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition">
             <span>💾</span> <span>匯出 CSV</span>
           </button>
-          <button @click="loadSampleData" class="px-3 py-2 bg-slate-800 active:bg-slate-700 hover:bg-slate-700 text-slate-300 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition col-span-2 sm:col-span-1">
-            <span>🧪</span> <span>載入真實範例數據</span>
-          </button>
+
         </div>
       </div>
 
@@ -1757,8 +1755,11 @@
             alert('目前無訂單資料可供匯出！');
             return;
           }
+          const now = new Date();
+          const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
           const csvData = trips.value.map((t, idx) => ({
             '序號': idx + 1,
+            '產生日期': dateStr,
             '服務時間_分鐘': t.duration,
             '距離_公里': t.distance || 0,
             '疊單數': t.stacks || 1,
@@ -2313,7 +2314,10 @@
 
         // 複製報表文字
         const copyReport = () => {
+          const now = new Date();
+          const dateStr = `${now.getFullYear()}年${String(now.getMonth()+1).padStart(2,'0')}月${String(now.getDate()).padStart(2,'0')}日`;
           const text = `【外送專法兩週收益結算報告】
+產生日期：${dateStr}
 ----------------------------
 • 累計訂單總數：${trips.value.length} 趟 (共 ${totalOrdersCount.value} 單)
 • 物理服務總工時：${totalPhysicalHours.value.toFixed(2)} 小時 (${totalPhysicalMins.value.toFixed(1)} 分鐘)
@@ -2328,7 +2332,7 @@
 ⚡ 實質產值時薪：NT$ ${realHourlyRate.value.toFixed(1)} / 物理小時
 ⭐ 累計點數：${totalPoints.value} 點
 ----------------------------
-產生自：外送專法與疊單收益精算系統`;
+產生自：外送專法與疊單收益精算系統 · ${dateStr}`;
 
           navigator.clipboard.writeText(text).then(() => {
             copyBtnText.value = '✅ 已複製！';
