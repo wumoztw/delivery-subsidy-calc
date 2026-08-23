@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages with AI Key Injection
+name: Deploy to GitHub Pages (BYOK Mode)
 
 on:
   push:
@@ -20,26 +20,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Inject Dual AI API Keys
-        env:
-          OPENROUTER_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          NVIDIA_KEY: ${{ secrets.NVIDIA_API_KEY }}
-        run: |
-          echo "Checking GitHub Secrets for Dual AI Engines..."
-          if [ -n "$OPENROUTER_KEY" ]; then
-            echo "✅ OPENROUTER_API_KEY detected! Injecting..."
-            sed -i "s|__OPENROUTER_API_KEY__|$OPENROUTER_KEY|g" index.html
-          fi
-          if [ -n "$NVIDIA_KEY" ]; then
-            echo "✅ NVIDIA_API_KEY detected! Injecting..."
-            sed -i "s|__NVIDIA_API_KEY__|$NVIDIA_KEY|g" index.html
-          fi
-          # Fallback for unified placeholder
-          FALLBACK_KEY="${OPENROUTER_KEY:-$NVIDIA_KEY}"
-          if [ -n "$FALLBACK_KEY" ]; then
-            sed -i "s|__AI_API_KEY__|$FALLBACK_KEY|g" index.html
-          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

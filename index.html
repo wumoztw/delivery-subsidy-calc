@@ -1431,7 +1431,7 @@
             </span>
           </div>
           <p class="text-slate-400 text-[11px]">
-            {{ isDualAiActive ? '✅ 系統已偵測到 2 把金鑰！多圖上傳時自動啟動 Llama 3.2 Vision + Nemotron 12B 雙引擎並行競速（Promise.race 誰快用誰），速度提升 50% 以上並具備無縫備援。' : (isAiEngineActive ? '✅ 已啟用 AI 視覺模型。填入第 2 把金鑰即可升級為「雙軌極速競速並行」。' : '⚠️ 尚未設定 API Key。您可於下方填入個人的 API Key，或由 GitHub Actions 自動注入。') }}
+            {{ isDualAiActive ? '✅ 已啟用雙引擎極速競速模式！金鑰安全保存在本機瀏覽器。' : (isAiEngineActive ? '✅ 已啟用單引擎 AI 視覺解析。填入第 2 把金鑰即可升級為雙軌競速。' : '🔒 安全自備金鑰（BYOK 模式）：未設定 Key 時自動使用本機離線 OCR 或原況文字秒貼；填入個人免費 API Key 可升級雙 AI 競速，金鑰僅儲存在您的瀏覽器中，其他人無法讀取或消耗您的額度。') }}
           </p>
         </div>
 
@@ -1491,9 +1491,6 @@
   <script>
     const { createApp, ref, computed, watch, onMounted } = Vue;
 
-    const INJECTED_OPENROUTER_KEY = '__OPENROUTER_API_KEY__';
-    const INJECTED_NVIDIA_KEY = '__NVIDIA_API_KEY__';
-    const INJECTED_AI_KEY = '__AI_API_KEY__';
     const STORAGE_KEY = 'delivery_subsidy_calc_v3';
 
     createApp({
@@ -1513,26 +1510,13 @@
         const customOpenRouterKey = ref(localStorage.getItem('delivery_calc_openrouter_key') || '');
         const customNvidiaKey = ref(localStorage.getItem('delivery_calc_nvidia_key') || '');
 
+        // 自備金鑰模式（BYOK）：金鑰僅儲存於使用者個人的本機瀏覽器 localStorage，絕不共用或外洩
         const activeOpenRouterKey = computed(() => {
-          if (customOpenRouterKey.value && customOpenRouterKey.value.trim()) return customOpenRouterKey.value.trim();
-          if (typeof INJECTED_OPENROUTER_KEY === 'string' && !INJECTED_OPENROUTER_KEY.startsWith('__') && INJECTED_OPENROUTER_KEY.length > 10) {
-            return INJECTED_OPENROUTER_KEY;
-          }
-          if (typeof INJECTED_AI_KEY === 'string' && INJECTED_AI_KEY.startsWith('sk-or-')) {
-            return INJECTED_AI_KEY;
-          }
-          return '';
+          return (customOpenRouterKey.value && customOpenRouterKey.value.trim()) ? customOpenRouterKey.value.trim() : '';
         });
 
         const activeNvidiaKey = computed(() => {
-          if (customNvidiaKey.value && customNvidiaKey.value.trim()) return customNvidiaKey.value.trim();
-          if (typeof INJECTED_NVIDIA_KEY === 'string' && !INJECTED_NVIDIA_KEY.startsWith('__') && INJECTED_NVIDIA_KEY.length > 10) {
-            return INJECTED_NVIDIA_KEY;
-          }
-          if (typeof INJECTED_AI_KEY === 'string' && INJECTED_AI_KEY.startsWith('nvapi-')) {
-            return INJECTED_AI_KEY;
-          }
-          return '';
+          return (customNvidiaKey.value && customNvidiaKey.value.trim()) ? customNvidiaKey.value.trim() : '';
         });
 
         const isDualAiActive = computed(() => Boolean(activeOpenRouterKey.value && activeNvidiaKey.value));
