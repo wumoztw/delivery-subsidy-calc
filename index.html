@@ -247,16 +247,16 @@
           </div>
         </div>
 
-        <!-- 快捷操作按鈕 -->
+        <!-- 快捷操作按鈕 (整合完整戰報複製與下載) -->
         <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 pt-1">
-          <button @click="copyReport" class="px-3 py-2 bg-slate-800 active:bg-slate-700 hover:bg-slate-700 text-slate-200 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition">
-            <span>📄</span> <span class="truncate">{{ copyBtnText }}</span>
+          <button @click="copyReport" class="px-3.5 py-2 bg-slate-800 active:bg-slate-700 hover:bg-slate-700 text-slate-200 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition">
+            <span>📋</span> <span class="truncate font-mono">{{ copyBtnText }}</span>
           </button>
-          <button @click="exportCSV" class="px-3 py-2 bg-slate-800 active:bg-slate-700 hover:bg-slate-700 text-slate-200 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition">
-            <span>💾</span> <span>匯出 CSV</span>
+          <button @click="downloadReport" class="px-3.5 py-2 bg-emerald-600 active:bg-emerald-700 hover:bg-emerald-500 text-slate-950 font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-1.5">
+            <span>📥</span> <span>下載完整戰報 (.md)</span>
           </button>
-          <button @click="downloadDiagnosisReport" class="px-3 py-2 bg-emerald-950/60 active:bg-emerald-900/80 hover:bg-emerald-900/60 text-emerald-300 text-xs rounded-xl border border-emerald-500/40 flex items-center justify-center gap-1.5 transition font-semibold">
-            <span>📥</span> <span>下載診斷戰報</span>
+          <button @click="exportCSV" class="px-3.5 py-2 bg-slate-800 active:bg-slate-700 hover:bg-slate-700 text-slate-200 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition">
+            <span>💾</span> <span>匯出明細 CSV</span>
           </button>
         </div>
       </div>
@@ -348,10 +348,10 @@
             </div>
           </div>
           <div class="flex items-center gap-2">
-            <button @click="copyDiagnosisReport" class="flex-1 sm:flex-none px-3 py-1.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition">
-              <span>📋</span> <span class="font-mono">{{ copyDiagBtnText }}</span>
+            <button @click="copyReport" class="flex-1 sm:flex-none px-3 py-1.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition">
+              <span>📋</span> <span class="font-mono">{{ copyBtnText }}</span>
             </button>
-            <button @click="downloadDiagnosisReport" class="flex-1 sm:flex-none px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-slate-950 font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-1.5">
+            <button @click="downloadReport" class="flex-1 sm:flex-none px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-slate-950 font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-1.5">
               <span>📥</span> <span>下載診斷報告 (.md)</span>
             </button>
           </div>
@@ -1546,8 +1546,7 @@
         const isOcrLoading = ref(false);
         const ocrStatus = ref('');
         const ocrProgress = ref(0);
-        const copyBtnText = ref('複製報表');
-        const copyDiagBtnText = ref('複製診斷戰報');
+        const copyBtnText = ref('複製完整戰報');
         const customPhysicalHours = ref(null);
 
         // 模擬器參數
@@ -2227,59 +2226,36 @@
           alert('已載入示範跑單數據（含基本行程費、加成與小費拆解）！');
         };
 
-        // 複製報表文字
-        const copyReport = () => {
-          const now = new Date();
-          const dateStr = `${now.getFullYear()}年${String(now.getMonth()+1).padStart(2,'0')}月${String(now.getDate()).padStart(2,'0')}日`;
-          const text = `【外送專法兩週收益結算報告】
-產生日期：${dateStr}
-----------------------------
-• 累計訂單總數：${trips.value.length} 趟 (共 ${totalOrdersCount.value} 單)
-• 物理服務總工時：${totalPhysicalHours.value.toFixed(2)} 小時 (${totalPhysicalMins.value.toFixed(1)} 分鐘)
-• 法定申報總工時 (T_total)：${totalStatutoryHours.value.toFixed(2)} 小時 (疊單放大率 ${stackingMultiplier.value.toFixed(2)}x)
-• 累計總跑單里程：${totalDistance.value.toFixed(2)} km
-• 法定保障時薪費率 (P_rate)：NT$ ${rate.value} / 小時
-• 法定最低應得保障 (Total_legal)：NT$ ${Math.round(totalLegal.value).toLocaleString()}
-• 實領行程費用總額 (R_base)：NT$ ${Math.round(totalBasePay.value).toLocaleString()} (含基本加成 NT$${Math.round(totalBoostFare.value)})
-----------------------------
-💰 預估差額補貼款 (ΔR)：NT$ ${Math.round(subsidy.value).toLocaleString()}
-💵 實質最終總收入：NT$ ${Math.round(totalIncome.value).toLocaleString()} (含小費 NT$${Math.round(totalTips.value)}、獎勵 NT$${Math.round(totalIncentives.value)})
-⚡ 實質產值時薪：NT$ ${realHourlyRate.value.toFixed(1)} / 物理小時
-⭐ 累計點數：${totalPoints.value} 點
-----------------------------
-產生自：外送專法與疊單收益精算系統 · ${dateStr}`;
-
-          navigator.clipboard.writeText(text).then(() => {
-            copyBtnText.value = '✅ 已複製！';
-            setTimeout(() => { copyBtnText.value = '複製報表'; }, 2500);
-          });
-        };
-
-        // 產生完整戰略診斷與逐筆優化報告文字
-        const generateDiagnosisReportText = () => {
+                // 產生完整綜合戰報（整合兩週結算總表 + 戰略診斷方針 + 每單逐筆評級建議）
+        const generateFullReportText = () => {
           const now = new Date();
           const dateStr = `${now.getFullYear()}年${String(now.getMonth() + 1).padStart(2, '0')}月${String(now.getDate()).padStart(2, '0')}日`;
           
-          let report = `# 外送專法戰略診斷與收益優化報告
+          let report = `============================================================
+【外送專法綜合結算與戰略診斷戰報】
 產生日期：${dateStr}
 分析樣本：${trips.value.length} 趟訂單 (共 ${totalOrdersCount.value} 單)
+============================================================
 
-============================================================
-📊 一、週期核心戰力總評
-============================================================
-• 兩週週期最終實質總收入：NT$ ${Math.round(totalIncome.value).toLocaleString()}
+📊 【一、兩週週期收益結算總評】
+------------------------------------------------------------
+• 累計訂單總數：${trips.value.length} 趟 (共 ${totalOrdersCount.value} 單)
 • 物理服務總工時：${totalPhysicalHours.value.toFixed(2)} 小時 (${totalPhysicalMins.value.toFixed(1)} 分鐘)
-• 法定申報總工時：${totalStatutoryHours.value.toFixed(2)} 小時 (工時放大率 ${stackingMultiplier.value.toFixed(2)}x)
-• 法定最低應得保障：NT$ ${Math.round(totalLegal.value).toLocaleString()}
-• 實領行程費用總額：NT$ ${Math.round(totalBasePay.value).toLocaleString()} (含基本加成 NT$${Math.round(totalBoostFare.value)})
-• 預估差額補貼款 (ΔR)：NT$ ${Math.round(subsidy.value).toLocaleString()}
-• 實質物理產值時薪：NT$ ${realHourlyRate.value.toFixed(1)} / 物理時
-• 戰力評級分佈：SSR級 ${tierStats.value.ssr} 單 / SR級 ${tierStats.value.sr} 單 / 正常 ${tierStats.value.normal} 單 / 需改善 ${tierStats.value.warning} 單
-• 跑單總里程：${totalDistance.value.toFixed(2)} km (均趟 ${avgDistance.value.toFixed(2)} km)
-• 每公里實質產值：NT$ ${perKmIncome.value.toFixed(1)} / km
+• 法定申報總工時 (T_total)：${totalStatutoryHours.value.toFixed(2)} 小時 (疊單工時放大率 ${stackingMultiplier.value.toFixed(2)}x)
+• 累計總跑單里程：${totalDistance.value.toFixed(2)} km (均趟 ${avgDistance.value.toFixed(2)} km)
+• 法定保障時薪費率 (P_rate)：NT$ ${rate.value} / 小時
+• 法定最低應得保障 (Total_legal)：NT$ ${Math.round(totalLegal.value).toLocaleString()}
+• 實領行程費用總額 (R_base)：NT$ ${Math.round(totalBasePay.value).toLocaleString()} (含基本加成 NT$${Math.round(totalBoostFare.value)})
+------------------------------------------------------------
+💰 預估差額補貼款 (ΔR)：NT$ ${Math.round(subsidy.value).toLocaleString()}
+💵 實質最終總收入：NT$ ${Math.round(totalIncome.value).toLocaleString()} (含小費 NT$${Math.round(totalTips.value)}、獎勵 NT$${Math.round(totalIncentives.value)})
+⚡ 實質物理產值時薪：NT$ ${realHourlyRate.value.toFixed(1)} / 物理小時
+⭐ 累計點數：${totalPoints.value} 點
+📈 每公里實質產值：NT$ ${perKmIncome.value.toFixed(1)} / km
+🏆 戰力評級分佈：SSR級 ${tierStats.value.ssr} 單 / SR級 ${tierStats.value.sr} 單 / 正常 ${tierStats.value.normal} 單 / 需改善 ${tierStats.value.warning} 單
 
 ============================================================
-🧠 二、週期戰略診斷與改善方針
+🧠 【二、週期戰略診斷與改善方針】
 ============================================================
 `;
 
@@ -2292,7 +2268,7 @@
           }
 
           report += `============================================================
-🔍 三、每單逐筆診斷報告與改進建議
+🔍 【三、每單逐筆診斷報告與改進建議】
 ============================================================
 `;
 
@@ -2324,37 +2300,37 @@
           return report;
         };
 
-        // 下載診斷戰報 (.md)
-        const downloadDiagnosisReport = () => {
+        // 一鍵複製完整戰報
+        const copyReport = () => {
           if (trips.value.length === 0) {
-            alert('目前尚無訂單資料可供下載診斷報告！');
+            alert('目前尚無訂單資料！');
             return;
           }
-          const text = generateDiagnosisReportText();
+          const text = generateFullReportText();
+          navigator.clipboard.writeText(text).then(() => {
+            copyBtnText.value = '✅ 已複製完整戰報！';
+            setTimeout(() => { copyBtnText.value = '複製完整戰報'; }, 2500);
+          });
+        };
+
+        // 一鍵下載完整戰報 (.md)
+        const downloadReport = () => {
+          if (trips.value.length === 0) {
+            alert('目前尚無訂單資料可供下載戰報！');
+            return;
+          }
+          const text = generateFullReportText();
           const now = new Date();
           const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
           const blob = new Blob(['\uFEFF' + text], { type: 'text/markdown;charset=utf-8;' });
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.setAttribute('href', url);
-          link.setAttribute('download', `外送專法戰略診斷報告_${dateStr}.md`);
+          link.setAttribute('download', `外送專法綜合結算戰報_${dateStr}.md`);
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
           setTimeout(() => URL.revokeObjectURL(url), 1500);
-        };
-
-        // 複製診斷戰報
-        const copyDiagnosisReport = () => {
-          if (trips.value.length === 0) {
-            alert('目前尚無訂單資料！');
-            return;
-          }
-          const text = generateDiagnosisReportText();
-          navigator.clipboard.writeText(text).then(() => {
-            copyDiagBtnText.value = '✅ 已複製診斷戰報！';
-            setTimeout(() => { copyDiagBtnText.value = '複製診斷戰報'; }, 2500);
-          });
         };
 
         // 計算屬性
@@ -2583,8 +2559,7 @@
           syncNewTripBasePay, syncTripBasePay,
           addTrip, addTripFromModal, openPasteModal, readClipboard, confirmPasteTrip,
           cycleStacks, getTripStatutoryMins, getTierLabel, getTierBadgeClass,
-          handleFileUpload, exportCSV, handleImageUpload, loadSampleData, copyReport,
-          copyDiagBtnText, generateDiagnosisReportText, downloadDiagnosisReport, copyDiagnosisReport
+          handleFileUpload, exportCSV, handleImageUpload, loadSampleData, copyReport, downloadReport, generateFullReportText
         };
       }
     }).mount('#app');
