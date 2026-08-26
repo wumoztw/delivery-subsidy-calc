@@ -11,6 +11,10 @@
   <meta name="theme-color" content="#020617">
   <!-- 閃電高質感 SVG Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <!-- Google Fonts: 🌿 思源黑體 (Noto Sans TC) & 數字專用 (JetBrains Mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800;900&family=Noto+Sans+TC:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Vue 3 高速多線路備援 CDN (cdnjs ➔ jsdelivr ➔ unpkg) -->
@@ -34,6 +38,10 @@
       darkMode: 'class',
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['"Noto Sans TC"', '-apple-system', 'BlinkMacSystemFont', '"PingFang TC"', '"Microsoft JhengHei"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          },
           colors: {
             brand: {
               50: '#ecfdf5',
@@ -50,6 +58,14 @@
     }
   </script>
   <style>
+    body, button, input, select, textarea {
+      font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    }
+    .font-mono, [class*="font-mono"] {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+      font-feature-settings: "tnum";
+      font-variant-numeric: tabular-nums;
+    }
     [v-cloak] { display: none !important; }
     [v-cloak] * { display: none !important; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
