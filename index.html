@@ -956,6 +956,153 @@
 
       </div>
 
+      <!-- 🛵 機車外送員實戰指南：打破「3 公里魔咒」與收益最大化戰略 -->
+      <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-cyan-950/40 p-4 sm:p-6 rounded-2xl border border-cyan-500/40 shadow-2xl space-y-4 sm:space-y-5">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🛵</span>
+              <h3 class="text-sm sm:text-base font-bold text-cyan-300">
+                機車帳號實戰：如何打破「3 公里魔咒」？
+              </h3>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-1">
+              第一原理深度解析：機車時速 40～50 km/h 的物理特性、距離陷阱與高產值接單決策樹
+            </p>
+          </div>
+          <span class="inline-flex items-center gap-1 self-start sm:self-auto px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-bold font-mono border border-cyan-500/30">
+            機車專屬作戰手冊
+          </span>
+        </div>
+
+        <!-- 為什麼機車容易接到超過 3 公里的單？ -->
+        <div class="bg-slate-950 p-3.5 sm:p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
+          <div class="font-bold text-slate-200 flex items-center gap-1.5 text-xs sm:text-sm">
+            <span>❓</span> 為什麼機車帳號特別容易接到超過 3 公里的訂單？
+          </div>
+          <p class="text-slate-400 leading-relaxed text-[11px]">
+            平台演算法會依據載具速度（機車 40~50 km/h vs 腳踏車/電輔車 15 km/h）分配單量。短距單優先派給慢速載具，而 <strong class="text-cyan-300">3 公里以上的跨區單則大量傾斜給機車</strong>。但超過 3 公里<strong>「不代表一定是雷單」</strong>，關鍵在於它是<span class="text-rose-400 font-bold">「單發單」</span>還是<span class="text-emerald-400 font-bold">「多疊單」</span>！
+          </p>
+        </div>
+
+        <!-- 3 大距離陷阱圖解 -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div class="bg-slate-950 p-3 rounded-xl border border-rose-500/30 space-y-1">
+            <span class="text-rose-400 font-bold flex items-center gap-1 text-[11px]">
+              <span>🛑</span> 陷阱 1：空車折返零計費
+            </span>
+            <p class="text-slate-400 text-[11px] leading-relaxed">
+              專法只保障「送餐中」工時。送完 4.5km 遠單後，騎回熱區的 8 分鐘是 <strong>0 元空窗</strong>，實質時薪直接腰斬至 <span class="text-rose-400 font-mono font-bold">$160/時</span>。
+            </p>
+          </div>
+
+          <div class="bg-slate-950 p-3 rounded-xl border border-amber-500/30 space-y-1">
+            <span class="text-amber-400 font-bold flex items-center gap-1 text-[11px]">
+              <span>⚠️</span> 陷阱 2：單發單無法並聯
+            </span>
+            <p class="text-slate-400 text-[11px] leading-relaxed">
+              遠距單若只有 1 單，工時倍率永遠鎖死在 <span class="text-amber-300 font-mono font-bold">1.0x</span>，無法享受專法「多單時間重疊獨立累加」的倍數紅利。
+            </p>
+          </div>
+
+          <div class="bg-slate-950 p-3 rounded-xl border border-teal-500/30 space-y-1">
+            <span class="text-teal-400 font-bold flex items-center gap-1 text-[11px]">
+              <span>⛽</span> 陷阱 3：油耗與磨耗流失
+            </span>
+            <p class="text-slate-400 text-[11px] leading-relaxed">
+              機車每公里實體成本約 <strong>NT$ 1.5～2.0 元</strong>（油錢 + 機油輪胎損耗）。單張遠距單來回 9km 直接吃掉 NT$15+ 純利。
+            </p>
+          </div>
+        </div>
+
+        <!-- 機車帳號距離與單數決策矩陣 -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse font-sans">
+            <thead>
+              <tr class="bg-slate-950 text-slate-400 border-b border-slate-800 text-[11px]">
+                <th class="p-2.5 font-bold">派單型態</th>
+                <th class="p-2.5 font-bold">總里程</th>
+                <th class="p-2.5 font-bold">終點環境</th>
+                <th class="p-2.5 font-bold text-center">戰力評級</th>
+                <th class="p-2.5 font-bold text-right">預估實質時薪</th>
+                <th class="p-2.5 font-bold text-emerald-400">機車司機實戰處置</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-xs">
+              <tr class="hover:bg-slate-800/30 text-slate-300">
+                <td class="p-2.5 font-bold text-rose-400 flex items-center gap-1"><span>❌</span> 長距單發單</td>
+                <td class="p-2.5 font-mono text-rose-300">3.5 ～ 6.0 km</td>
+                <td class="p-2.5 text-slate-400">偏遠住宅區 / 郊區死胡同</td>
+                <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-bold">🚫 超級雷單</span></td>
+                <td class="p-2.5 text-right font-mono text-rose-400 font-bold">$150 ～ $180</td>
+                <td class="p-2.5 text-rose-300 font-bold">果斷拒接 / 轉單！（避免產能死鎖）</td>
+              </tr>
+              <tr class="hover:bg-slate-800/30 text-slate-300">
+                <td class="p-2.5 font-bold text-amber-300 flex items-center gap-1"><span>🟡</span> 雙疊中長距</td>
+                <td class="p-2.5 font-mono text-amber-300">3.0 ～ 4.5 km</td>
+                <td class="p-2.5 text-slate-400">鄰近下一個次級商圈/大馬路</td>
+                <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold">⚡ 標準合格單</span></td>
+                <td class="p-2.5 text-right font-mono text-cyan-300 font-bold">$380 ～ $420</td>
+                <td class="p-2.5 text-cyan-300">可以接！（1.75x 並聯工時覆蓋距離成本）</td>
+              </tr>
+              <tr class="bg-emerald-950/40 text-emerald-200 border-emerald-500/30">
+                <td class="p-2.5 font-bold text-emerald-300 flex items-center gap-1"><span>👑</span> 三疊商圈巡航</td>
+                <td class="p-2.5 font-mono text-emerald-300 font-bold">3.5 ～ 5.5 km</td>
+                <td class="p-2.5 text-emerald-100">市區主幹道 / 繁華美食圈</td>
+                <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold">🌟 SSR 黃金單</span></td>
+                <td class="p-2.5 text-right font-mono text-emerald-300 font-black">NT$ 480 ～ $550+</td>
+                <td class="p-2.5 text-emerald-300 font-black">秒接！機車高速吞吐最賺模式 🚀</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 🚀 機車司機收益最大化：5 大接單鐵律 -->
+        <div class="bg-slate-950/80 p-4 rounded-xl border border-cyan-500/30 space-y-3 text-xs">
+          <h4 class="text-cyan-300 font-bold text-xs sm:text-sm flex items-center gap-1.5">
+            <span>💎</span> 機車司機收益最大化：5 大實戰接單鐵律
+          </h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] text-slate-300">
+            <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+              <strong class="text-emerald-400 block">1. 嚴格執行「單發過 3km 必轉」</strong>
+              <p class="text-slate-400 leading-relaxed">
+                看到單發單超過 3 公里請毫不猶豫拒接或轉單，把寶貴的時間留給商圈內的雙疊或三疊單。
+              </p>
+            </div>
+
+            <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+              <strong class="text-emerald-400 block">2. 善用機車速度優勢「大膽接 4~5km 三疊」</strong>
+              <p class="text-slate-400 leading-relaxed">
+                機車時速 50km/h 跑 4km 僅需 5 分鐘，搭配三疊單 2.5x 工時並聯，能將小時時薪直接推上 $500+。
+              </p>
+            </div>
+
+            <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+              <strong class="text-cyan-300 block">3. 堅持「終點熱區預判」原則</strong>
+              <p class="text-slate-400 leading-relaxed">
+                接單前快速看終點地圖：如果終點周圍 500 公尺有其他連鎖餐飲，即可大膽接；若是荒涼斷頭路則需謹慎。
+              </p>
+            </div>
+
+            <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+              <strong class="text-cyan-300 block">4. 善用「等餐時間槓桿」</strong>
+              <p class="text-slate-400 leading-relaxed">
+                三疊單在店等餐 6 分鐘＝3 單同時跳表＝累積 18 分鐘法定工時（賺 NT$73.5），等餐不再是浪費時間！
+              </p>
+            </div>
+
+            <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1 sm:col-span-2">
+              <strong class="text-amber-300 block">5. 送達前 2 分鐘「無縫預接下一組」</strong>
+              <p class="text-slate-400 leading-relaxed">
+                在即將送達最後一單前 2 分鐘，若系統彈出下一組商圈疊單立即按下接受，消除任何零工時空窗，讓機車輪子每一分鐘都在賺取法定保底！
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
       <!-- 👑 60分鐘極限效益接單樣板（黃金並聯 ＋ 無縫串接實戰藍圖） -->
       <div class="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-amber-500/40 shadow-2xl space-y-4 sm:space-y-5">
         
