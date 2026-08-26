@@ -799,15 +799,90 @@
     <!-- 分頁 3: 疊單產值與作戰模擬 -->
     <div v-show="activeTab === 'tactics'" class="space-y-4 sm:space-y-6">
       
-      <!-- 即時跑單模擬器 -->
+      <!-- 即時跑單模擬器（三種載具計算建議：步行 / 腳踏車 / 機車） -->
       <div class="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4 sm:space-y-6">
-        <div>
-          <h2 class="text-base sm:text-lg font-bold text-emerald-400 flex items-center gap-2">
-            <span>⚡</span> 跑單實質時薪產值模擬推算器
-          </h2>
-          <p class="text-[11px] sm:text-xs text-slate-400 mt-1">
-            模擬在指定物理時間內完成疊單時，專法獨立累加工時帶來的實質時薪產值。
-          </p>
+        
+        <!-- 標頭與模式選擇器 -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-emerald-400 flex items-center gap-2">
+              <span>⚡</span> 跑單實質時薪產值模擬推算器
+            </h2>
+            <p class="text-[11px] sm:text-xs text-slate-400 mt-1">
+              依據載具物理特性（時速、距離、成本）進行第一原理工時並聯試算與接單作戰建議
+            </p>
+          </div>
+
+          <!-- 3 大載具模式切換鈕 -->
+          <div class="flex items-center gap-1.5 p-1 bg-slate-950 rounded-xl border border-slate-800 self-start lg:self-auto flex-wrap">
+            <button type="button" @click="setVehicleMode('walk')"
+              :class="simVehicleMode === 'walk' ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
+              class="px-3 py-1.5 rounded-lg text-xs transition border flex items-center gap-1.5">
+              <span>🚶</span> <span>1. 步行 (4-5 km/h)</span>
+            </button>
+            <button type="button" @click="setVehicleMode('bike')"
+              :class="simVehicleMode === 'bike' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
+              class="px-3 py-1.5 rounded-lg text-xs transition border flex items-center gap-1.5">
+              <span>🚲</span> <span>2. 腳踏車/電輔 (15-25 km/h)</span>
+            </button>
+            <button type="button" @click="setVehicleMode('motorcycle')"
+              :class="simVehicleMode === 'motorcycle' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
+              class="px-3 py-1.5 rounded-lg text-xs transition border flex items-center gap-1.5">
+              <span>🛵</span> <span>3. 機車 (40-50 km/h)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 載具專屬作戰建議 Banner -->
+        <div class="p-3.5 sm:p-4 rounded-xl border text-xs leading-relaxed"
+          :class="{
+            'bg-amber-950/30 border-amber-500/30 text-amber-200': simVehicleMode === 'walk',
+            'bg-emerald-950/30 border-emerald-500/30 text-emerald-200': simVehicleMode === 'bike',
+            'bg-cyan-950/30 border-cyan-500/30 text-cyan-200': simVehicleMode === 'motorcycle'
+          }">
+          
+          <!-- 步行專屬建議 -->
+          <div v-if="simVehicleMode === 'walk'" class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <strong class="text-amber-300 font-bold flex items-center gap-1.5 text-xs sm:text-sm">
+                <span>🚶</span> 步行模式作戰建議（極致短距、零成本淨利）
+              </strong>
+              <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-mono font-bold border border-amber-500/30">作戰半徑 ≤ 800m</span>
+            </div>
+            <p class="text-slate-300 text-[11px]">
+              • <strong>最佳場景</strong>：夜市美食街、百貨美食街、超高密度住商大樓群。<br>
+              • <strong>核心戰術</strong>：嚴格限制只接 800 公尺以內短單，優先雙疊。等餐 8 分鐘＋步行 10 分鐘將單張服務時間拉滿至 18 分鐘，2 單法定工時 36 分鐘，物理 28 分鐘完成，<strong>零油錢零車損，淨賺 100% 專法保底！</strong>
+            </p>
+          </div>
+
+          <!-- 腳踏車/電輔車專屬建議 -->
+          <div v-else-if="simVehicleMode === 'bike'" class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <strong class="text-emerald-300 font-bold flex items-center gap-1.5 text-xs sm:text-sm">
+                <span>🚲</span> 腳踏車 / 電輔車模式作戰建議（慢騎拉工時、黃金雙疊）
+              </strong>
+              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold border border-emerald-500/30">作戰半徑 1.0 ～ 2.5km</span>
+            </div>
+            <p class="text-slate-300 text-[11px]">
+              • <strong>最佳場景</strong>：市中心密集商圈、校園周邊、捷運站沿線 2.5 公里生活圈。<br>
+              • <strong>核心戰術</strong>：鎖定 2.5km 內雙疊單，以 15~20km/h 悠閒安全騎乘，透過等餐 6~8 分鐘將每單服務時間拉滿至 24 分鐘（雙疊法定工時 48 分鐘），物理 30 分鐘完成，<strong>放大倍數 1.6x，時薪保底 NT$390+ 且體力負擔最低！</strong>
+            </p>
+          </div>
+
+          <!-- 機車專屬建議 -->
+          <div v-else class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <strong class="text-cyan-300 font-bold flex items-center gap-1.5 text-xs sm:text-sm">
+                <span>🛵</span> 機車模式作戰建議（高速三疊吞吐、無縫銜接）
+              </strong>
+              <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-mono font-bold border border-cyan-500/30">作戰半徑 3.5 ～ 5.0km</span>
+            </div>
+            <p class="text-slate-300 text-[11px]">
+              • <strong>最佳場景</strong>：跨商圈主幹道、大型熱門連鎖餐飲群、多疊單熱區。<br>
+              • <strong>核心戰術</strong>：果斷拒接單發長距單，專注 4~5km 內三疊單（2.5x 工時並聯）！以 50km/h 大路巡航，25 分鐘吞吐 3 單（法定工時 54 分鐘），送達前 2 分鐘預接下組，<strong>扣除油損後淨時薪穩拿 NT$500+ 終極天花板！</strong>
+            </p>
+          </div>
+
         </div>
 
         <!-- 模擬參數滑桿與控制 -->
@@ -852,39 +927,86 @@
           </div>
         </div>
 
-        <!-- 模擬結果輸出卡片 -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
-            <span class="text-[11px] text-slate-400 block">累計法定申報工時</span>
-            <div class="text-xl sm:text-2xl font-black font-mono text-cyan-300 mt-1">
-              {{ (simOrders * simAvgTripMins) }} <span class="text-xs font-normal text-slate-400">分鐘</span>
+        <!-- 模擬結果輸出卡片 (4 宮格，含載具淨利扣除) -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+          
+          <div class="bg-slate-950 p-3 sm:p-3.5 rounded-xl border border-slate-800">
+            <span class="text-[10px] sm:text-[11px] text-slate-400 block">累計法定申報工時</span>
+            <div class="text-lg sm:text-2xl font-black font-mono text-cyan-300 mt-1">
+              {{ (simOrders * simAvgTripMins) }} <span class="text-[10px] font-normal text-slate-400">分鐘</span>
             </div>
-            <span class="text-[10px] text-slate-500 font-sans">{{ simOrders }} 單 × {{ simAvgTripMins }} 分鐘 ＝ {{ simOrders * simAvgTripMins }} 分鐘</span>
+            <span class="text-[9px] text-slate-500 font-sans block truncate">{{ simOrders }}單 × {{ simAvgTripMins }}分</span>
           </div>
 
-          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
-            <span class="text-[11px] text-slate-400 block">工時產值放大倍數</span>
-            <div class="text-xl sm:text-2xl font-black font-mono text-amber-300 mt-1">
-              {{ simMultiplier.toFixed(2) }} <span class="text-xs font-normal text-slate-400">倍</span>
+          <div class="bg-slate-950 p-3 sm:p-3.5 rounded-xl border border-slate-800">
+            <span class="text-[10px] sm:text-[11px] text-slate-400 block">工時產值放大倍數</span>
+            <div class="text-lg sm:text-2xl font-black font-mono text-amber-300 mt-1">
+              {{ simMultiplier.toFixed(2) }} <span class="text-[10px] font-normal text-slate-400">倍</span>
             </div>
-            <span class="text-[10px] text-slate-500 font-sans">法定工時 ÷ 實際耗時 ＝ {{ simMultiplier.toFixed(2) }} 倍</span>
+            <span class="text-[9px] text-slate-500 font-sans block truncate">法定 ÷ 物理耗時</span>
           </div>
 
-          <div class="bg-emerald-950/50 p-3.5 rounded-xl border border-emerald-500/30">
-            <span class="text-[11px] text-emerald-400 font-bold block">模擬實質產值時薪</span>
-            <div class="text-xl sm:text-2xl font-black font-mono text-emerald-300 mt-1">
-              NT$ {{ Math.round(simRealHourlyWage).toLocaleString() }} <span class="text-xs font-normal text-slate-400">/ 小時</span>
+          <div class="bg-slate-950 p-3 sm:p-3.5 rounded-xl border border-slate-800">
+            <span class="text-[10px] sm:text-[11px] text-slate-400 block">專法保底毛時薪</span>
+            <div class="text-lg sm:text-2xl font-black font-mono text-slate-200 mt-1">
+              NT$ {{ Math.round(simRealHourlyWage).toLocaleString() }}
             </div>
-            <span class="text-[10px] text-emerald-500/80 font-sans">{{ simMultiplier.toFixed(2) }} 倍 × NT${{ rate }} ＝ NT${{ Math.round(simRealHourlyWage) }}/時</span>
+            <span class="text-[9px] text-slate-500 font-sans block truncate">{{ simMultiplier.toFixed(2) }}x × NT${{ rate }}</span>
           </div>
+
+          <div class="bg-emerald-950/60 p-3 sm:p-3.5 rounded-xl border border-emerald-500/40 shadow">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] sm:text-[11px] text-emerald-400 font-bold block">實質淨利時薪</span>
+              <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 font-mono">扣油耗-${{ simVehicleCostPerHour }}</span>
+            </div>
+            <div class="text-lg sm:text-2xl font-black font-mono text-emerald-300 mt-1">
+              NT$ {{ Math.round(simNetHourlyWage).toLocaleString() }} <span class="text-[10px] font-normal text-slate-400">/ 時</span>
+            </div>
+            <span class="text-[9px] text-emerald-400/80 font-sans block truncate">真正落袋純收益 🚀</span>
+          </div>
+
         </div>
 
-        <!-- 純文字計算公式速覽 -->
-        <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 text-[11px] text-slate-400 space-y-1">
-          <div class="text-emerald-400 font-bold text-xs mb-1">📐 純文字計算公式說明：</div>
-          <div>• <strong>法定申報工時</strong> ＝ 疊單數 × 每單平均服務時間（每筆訂單各自獨立計時）</div>
-          <div>• <strong>工時放大倍數</strong> ＝ 法定申報總工時 ÷ 實際跑單物理耗時</div>
-          <div>• <strong>實質產值時薪</strong> ＝ 工時放大倍數 × 法定保障時薪費率</div>
+        <!-- 3 大載具模式第一原理綜合對照表 -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse font-sans">
+            <thead>
+              <tr class="bg-slate-950 text-slate-400 border-b border-slate-800 text-[11px]">
+                <th class="p-2.5 font-bold">載具模式</th>
+                <th class="p-2.5 font-bold">巡航速度</th>
+                <th class="p-2.5 font-bold">最佳作戰半徑</th>
+                <th class="p-2.5 font-bold">核心賺錢策略</th>
+                <th class="p-2.5 font-bold text-right">每小時成本</th>
+                <th class="p-2.5 font-bold text-right text-emerald-400">預估實質淨時薪</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-xs">
+              <tr :class="simVehicleMode === 'walk' ? 'bg-amber-500/10' : 'hover:bg-slate-800/30'" class="transition cursor-pointer" @click="setVehicleMode('walk')">
+                <td class="p-2.5 font-bold text-amber-300 flex items-center gap-1"><span>🚶</span> 1. 步行</td>
+                <td class="p-2.5 font-mono text-slate-300">4 ～ 5 km/h</td>
+                <td class="p-2.5 font-mono text-amber-300">≤ 800 公尺</td>
+                <td class="p-2.5 text-slate-300">美食街高密度短雙疊、零油耗 100% 淨賺</td>
+                <td class="p-2.5 text-right font-mono text-emerald-400">NT$ 0 元</td>
+                <td class="p-2.5 text-right font-mono text-amber-300 font-bold">NT$ 315 ～ $380</td>
+              </tr>
+              <tr :class="simVehicleMode === 'bike' ? 'bg-emerald-500/10' : 'hover:bg-slate-800/30'" class="transition cursor-pointer" @click="setVehicleMode('bike')">
+                <td class="p-2.5 font-bold text-emerald-300 flex items-center gap-1"><span>🚲</span> 2. 腳踏車/電輔</td>
+                <td class="p-2.5 font-mono text-slate-300">15 ～ 25 km/h</td>
+                <td class="p-2.5 font-mono text-emerald-300">1.0 ～ 2.5 公里</td>
+                <td class="p-2.5 text-slate-300">專注 2.5km 內雙疊/三疊，慢騎安全拉工時</td>
+                <td class="p-2.5 text-right font-mono text-emerald-400">約 NT$ 2 元</td>
+                <td class="p-2.5 text-right font-mono text-emerald-300 font-bold">NT$ 390 ～ $440</td>
+              </tr>
+              <tr :class="simVehicleMode === 'motorcycle' ? 'bg-cyan-500/10' : 'hover:bg-slate-800/30'" class="transition cursor-pointer" @click="setVehicleMode('motorcycle')">
+                <td class="p-2.5 font-bold text-cyan-300 flex items-center gap-1"><span>🛵</span> 3. 機車</td>
+                <td class="p-2.5 font-mono text-slate-300">40 ～ 50 km/h</td>
+                <td class="p-2.5 font-mono text-cyan-300">3.5 ～ 5.0 公里</td>
+                <td class="p-2.5 text-slate-300">拒接長距單發，鎖定大商圈 3 疊高速吞吐</td>
+                <td class="p-2.5 text-right font-mono text-rose-400">約 NT$ 22 元</td>
+                <td class="p-2.5 text-right font-mono text-cyan-300 font-black">NT$ 480 ～ $550+ 🚀</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <!-- 第一原理深度戰術解讀（外送實務盲點） -->
@@ -916,7 +1038,6 @@
         </div>
 
       </div>
-
       <!-- 作戰參數標準與拒接紅線對照表 -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         
@@ -1696,10 +1817,28 @@
         const copyBtnText = ref('複製完整戰報');
         const customPhysicalHours = ref(null);
 
-        // 模擬器參數
-        const simOrders = ref(2);
-        const simAvgTripMins = ref(25);
-        const simPhysicalMins = ref(30);
+        // 模擬器參數（支援 步行 / 腳踏車 / 機車 三種載具模式切換）
+        const simVehicleMode = ref('motorcycle');
+        const simOrders = ref(3);
+        const simAvgTripMins = ref(18);
+        const simPhysicalMins = ref(25);
+
+        const setVehicleMode = (mode) => {
+          simVehicleMode.value = mode;
+          if (mode === 'walk') {
+            simOrders.value = 2;
+            simAvgTripMins.value = 18;
+            simPhysicalMins.value = 28;
+          } else if (mode === 'bike') {
+            simOrders.value = 2;
+            simAvgTripMins.value = 24;
+            simPhysicalMins.value = 30;
+          } else if (mode === 'motorcycle') {
+            simOrders.value = 3;
+            simAvgTripMins.value = 18;
+            simPhysicalMins.value = 25;
+          }
+        };
 
         // 儲存 AI 設定
         const saveAiSettings = () => {
@@ -2678,7 +2817,7 @@
           return totalTips.value / trips.value.length;
         });
 
-        // 模擬器計算
+        // 模擬器計算（含 3 種載具成本與純淨時薪計算）
         const simMultiplier = computed(() => {
           const totalSimMins = simOrders.value * simAvgTripMins.value;
           if (simPhysicalMins.value <= 0) return 1.0;
@@ -2689,13 +2828,23 @@
           return simMultiplier.value * rate.value;
         });
 
+        const simVehicleCostPerHour = computed(() => {
+          if (simVehicleMode.value === 'motorcycle') return 22; // 油錢 10元 + 機油輪胎折舊 12元
+          if (simVehicleMode.value === 'bike') return 2;        // 電輔車充電 + 微量耗損 2元
+          return 0;                                             // 步行 0元成本
+        });
+
+        const simNetHourlyWage = computed(() => {
+          return Math.max(0, simRealHourlyWage.value - simVehicleCostPerHour.value);
+        });
+
         return {
           activeTab, rate, trips, newTrip,
           showPasteModal, showManualModal, showAiSettingsModal, pasteText, parsedPasteTrip,
           customOpenRouterKey, customNvidiaKey, activeOpenRouterKey, activeNvidiaKey,
           isDualAiActive, isAiEngineActive, saveAiSettings,
           isOcrLoading, ocrStatus, ocrProgress, copyBtnText, customPhysicalHours,
-          simOrders, simAvgTripMins, simPhysicalMins, simMultiplier, simRealHourlyWage,
+          simVehicleMode, setVehicleMode, simOrders, simAvgTripMins, simPhysicalMins, simMultiplier, simRealHourlyWage, simVehicleCostPerHour, simNetHourlyWage,
           totalPhysicalMins, totalPhysicalHours, totalStatutoryMins, totalStatutoryHours, totalOrdersCount,
           totalLegal, totalBasePay, totalBoostFare, totalTips, totalIncentives,
           totalPoints, totalDistance, avgBasePay, avgDistance, avgBoostRate,
