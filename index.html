@@ -115,6 +115,37 @@
 
     <!-- 分頁 1: 週期結算儀表板 -->
     <div v-show="activeTab === 'dashboard'" class="space-y-4 sm:space-y-6">
+
+      <!-- 全域外送載具模式切換列 -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-slate-900/90 p-3 sm:p-3.5 rounded-2xl border border-slate-800 shadow-md">
+        <div class="flex items-center gap-2.5">
+          <span class="text-2xl">{{ currentVehicleConfig.icon }}</span>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs sm:text-sm font-bold text-slate-200">外送載具分析模式：{{ currentVehicleConfig.name }}</span>
+              <span class="text-[10px] px-2 py-0.2 rounded bg-slate-800 text-slate-300 font-mono">{{ currentVehicleConfig.speed }}</span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-0.5">{{ currentVehicleConfig.desc }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 p-1 bg-slate-950 rounded-xl border border-slate-800 self-start sm:self-auto flex-wrap">
+          <button type="button" @click="setGlobalVehicleMode('walk')"
+            :class="vehicleMode === 'walk' ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
+            class="px-2.5 py-1 rounded-lg text-xs transition border flex items-center gap-1">
+            <span>🚶</span> <span>步行</span>
+          </button>
+          <button type="button" @click="setGlobalVehicleMode('bike')"
+            :class="vehicleMode === 'bike' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
+            class="px-2.5 py-1 rounded-lg text-xs transition border flex items-center gap-1">
+            <span>🚲</span> <span>腳踏車/電輔</span>
+          </button>
+          <button type="button" @click="setGlobalVehicleMode('motorcycle')"
+            :class="vehicleMode === 'motorcycle' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
+            class="px-2.5 py-1 rounded-lg text-xs transition border flex items-center gap-1">
+            <span>🛵</span> <span>機車</span>
+          </button>
+        </div>
+      </div>
       
       <!-- 核心指標四宮格 -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
@@ -216,33 +247,35 @@
         </div>
       </div>
 
-      <!-- 總收入與實質產值 Banner -->
+      <!-- 總收入與實質落袋淨利 Banner (含載具成本扣除) -->
       <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950/60 p-4 sm:p-6 rounded-2xl border border-emerald-500/30 shadow-xl space-y-3.5 sm:space-y-4">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-3 border-b border-slate-800">
           <div>
-            <span class="text-[10px] sm:text-xs text-slate-400 uppercase tracking-wider font-semibold">兩週週期最終實質總收入</span>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] sm:text-xs text-slate-400 uppercase tracking-wider font-semibold">實質落袋淨利 (扣除{{ currentVehicleConfig.name }}成本)</span>
+              <span v-if="totalVehicleCost > 0" class="text-[10px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-mono">成本 -${{ Math.round(totalVehicleCost) }}</span>
+            </div>
             <div class="text-2xl sm:text-4xl font-black font-mono text-emerald-300 mt-0.5">
-              NT$ {{ Math.round(totalIncome).toLocaleString() }}
+              NT$ {{ Math.round(netTotalIncome).toLocaleString() }}
             </div>
             <p class="text-[11px] sm:text-xs text-slate-400 mt-1">
-              基本 ${{ Math.round(totalBasePay) }} + 補貼 ${{ Math.round(subsidy) }} + 小費 ${{ Math.round(totalTips) }} + 獎勵 ${{ Math.round(totalIncentives) }}
+              毛額 ${{ Math.round(totalIncome) }} (基本${{ Math.round(totalBasePay) }} + 補貼${{ Math.round(subsidy) }} + 小費${{ Math.round(totalTips) }})
             </p>
           </div>
 
-          <!-- 實質產值時薪指標 -->
+          <!-- 實質落袋純時薪指標 -->
           <div class="bg-slate-950/80 p-3 sm:p-4 rounded-xl border border-slate-800">
             <div class="flex items-center justify-between text-[11px] sm:text-xs text-slate-400 mb-1">
-              <span>實質物理產值時薪</span>
+              <span>實質落袋純時薪</span>
               <span class="text-[10px] sm:text-xs px-2 py-0.5 rounded font-mono" :class="stackingMultiplier >= 1.5 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-300'">
                 {{ stackingMultiplier.toFixed(2) }}x 疊單倍數
               </span>
             </div>
             <div class="text-xl sm:text-2xl font-black font-mono text-teal-300">
-              NT$ {{ realHourlyRate.toFixed(1) }} <span class="text-xs font-normal text-slate-400">/ 物理時</span>
+              NT$ {{ netHourlyRate.toFixed(1) }} <span class="text-xs font-normal text-slate-400">/ 物理時</span>
             </div>
             <div class="mt-1 flex items-center gap-2 text-[10px] sm:text-xs text-slate-500">
-              <span>物理耗時:</span>
-              <span class="font-mono text-slate-300">{{ totalPhysicalHours.toFixed(2) }} 小時</span>
+              <span>毛時薪 NT${{ realHourlyRate.toFixed(1) }} · {{ totalPhysicalHours.toFixed(2) }}h</span>
             </div>
           </div>
         </div>
@@ -546,7 +579,24 @@
 
       <!-- 訂單明細列表 (卡片視圖與表格視圖) -->
       <div class="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
-        <div class="px-4 sm:px-5 py-3.5 border-b border-slate-800 flex justify-between items-center">
+        <div class="px-4 sm:px-5 py-3.5 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-1.5">
+              <span class="text-base">{{ currentVehicleConfig.icon }}</span>
+              <h3 class="text-xs sm:text-sm font-bold text-slate-200">訂單明細清單</h3>
+              <span class="text-xs text-slate-400 font-mono">({{ trips.length }} 筆)</span>
+            </div>
+            <!-- 載具快選 -->
+            <div class="flex items-center gap-1 p-0.5 bg-slate-950 rounded-lg border border-slate-800 text-[10px]">
+              <button type="button" @click="setGlobalVehicleMode('walk')" :class="vehicleMode === 'walk' ? 'bg-amber-500/20 text-amber-300 font-bold' : 'text-slate-400'" class="px-2 py-0.5 rounded transition">🚶 步行</button>
+              <button type="button" @click="setGlobalVehicleMode('bike')" :class="vehicleMode === 'bike' ? 'bg-emerald-500/20 text-emerald-300 font-bold' : 'text-slate-400'" class="px-2 py-0.5 rounded transition">🚲 電輔</button>
+              <button type="button" @click="setGlobalVehicleMode('motorcycle')" :class="vehicleMode === 'motorcycle' ? 'bg-cyan-500/20 text-cyan-300 font-bold' : 'text-slate-400'" class="px-2 py-0.5 rounded transition">🛵 機車</button>
+            </div>
+          </div>
+          <button v-if="trips.length > 0" @click="trips = []" class="text-xs text-rose-400 hover:text-rose-300 px-2.5 py-1 rounded bg-rose-500/10 active:bg-rose-500/20 transition self-end sm:self-auto">
+            清空明細
+          </button>
+        </div>
           <div class="flex items-center gap-2">
             <h3 class="text-xs sm:text-sm font-bold text-slate-200">訂單明細清單</h3>
             <span class="text-xs text-slate-400 font-mono">({{ trips.length }} 筆)</span>
@@ -1817,11 +1867,56 @@
         const copyBtnText = ref('複製完整戰報');
         const customPhysicalHours = ref(null);
 
-        // 模擬器參數（支援 步行 / 腳踏車 / 機車 三種載具模式切換）
-        const simVehicleMode = ref('motorcycle');
-        const simOrders = ref(3);
-        const simAvgTripMins = ref(18);
-        const simPhysicalMins = ref(25);
+        // 全域外送載具模式：步行 (walk) / 腳踏車與電輔車 (bike) / 機車 (motorcycle)
+        const vehicleMode = ref(localStorage.getItem('delivery_calc_vehicle_mode') || 'motorcycle');
+        const simVehicleMode = ref(vehicleMode.value);
+        const simOrders = ref(vehicleMode.value === 'motorcycle' ? 3 : 2);
+        const simAvgTripMins = ref(vehicleMode.value === 'bike' ? 24 : 18);
+        const simPhysicalMins = ref(vehicleMode.value === 'motorcycle' ? 25 : (vehicleMode.value === 'bike' ? 30 : 28));
+
+        const vehicleConfigMap = {
+          walk: {
+            name: '步行',
+            icon: '🚶',
+            speed: '4-5 km/h',
+            costPerKm: 0,
+            costPerHour: 0,
+            maxDist: 0.8,
+            redDist: 1.2,
+            desc: '極短距高密度、零油耗 100% 淨賺'
+          },
+          bike: {
+            name: '腳踏車/電輔車',
+            icon: '🚲',
+            speed: '15-25 km/h',
+            costPerKm: 0.15,
+            costPerHour: 2,
+            maxDist: 2.5,
+            redDist: 3.2,
+            desc: '2.5km 內雙疊/三疊，慢騎安全拉工時'
+          },
+          motorcycle: {
+            name: '機車',
+            icon: '🛵',
+            speed: '40-50 km/h',
+            costPerKm: 1.5,
+            costPerHour: 22,
+            maxDist: 5.0,
+            redDist: 6.0,
+            desc: '拒接長距單發，鎖定大商圈 3 疊高速吞吐'
+          }
+        };
+
+        const currentVehicleConfig = computed(() => vehicleConfigMap[vehicleMode.value] || vehicleConfigMap.motorcycle);
+
+        const setGlobalVehicleMode = (mode) => {
+          vehicleMode.value = mode;
+          simVehicleMode.value = mode;
+          try {
+            localStorage.setItem('delivery_calc_vehicle_mode', mode);
+          } catch(e){}
+          setVehicleMode(mode);
+        };
 
         const setVehicleMode = (mode) => {
           simVehicleMode.value = mode;
@@ -1980,18 +2075,34 @@
           return dur * multiplier;
         };
 
-        // 戰力標籤評定
+        // 戰力標籤評定（依全域載具模式動態判定）
         const getTierLabel = (t) => {
           const dur = Number(t.duration) || 0;
           const dist = Number(t.distance) || 0;
           const pay = Number(t.basePay) || 0;
           const stacks = Number(t.stacks) || 1;
+          const mode = vehicleMode.value;
 
-          if (dist >= 4.0 || dur >= 35) return '🚫 雷單';
-          if (dist >= 3.0) return '⚠️ 遠距單';
-          if ((stacks >= 2 && dist <= 2.5 && pay >= 90) || (dist > 0 && (pay/dist) >= 60)) return '🌟 SSR 黃金疊單';
-          if (dist <= 2.5 && dur <= 20) return '🎯 SR 黃金單';
-          return '⚡ 標準單';
+          if (mode === 'walk') {
+            if (dist > 1.2 || dur >= 30) return '🚫 步行超距雷單';
+            if (dist > 0.8) return '⚠️ 步行偏遠單';
+            if (stacks >= 2 && dist <= 0.8) return '🌟 SSR 步行黃金疊單';
+            if (dist <= 0.8 && dur <= 20) return '🎯 SR 步行短單';
+            return '⚡ 標準單';
+          } else if (mode === 'bike') {
+            if (dist >= 3.2 || dur >= 35) return '🚫 電輔超距雷單';
+            if (dist >= 2.5) return '⚠️ 電輔偏遠單';
+            if ((stacks >= 2 && dist <= 2.5 && pay >= 90) || (dist > 0 && (pay/dist) >= 60)) return '🌟 SSR 電輔黃金疊單';
+            if (dist <= 2.5 && dur <= 22) return '🎯 SR 電輔單';
+            return '⚡ 標準單';
+          } else {
+            // motorcycle
+            if ((stacks === 1 && dist >= 3.5) || dist >= 6.0 || dur >= 35) return '🚫 長距單發雷單';
+            if (dist >= 4.5 && stacks <= 2) return '⚠️ 跨區長距單';
+            if ((stacks >= 3 && dist <= 5.5) || (stacks >= 2 && dist <= 3.0 && pay >= 90)) return '🌟 SSR 機車黃金疊單';
+            if (dist <= 3.0 && dur <= 20) return '🎯 SR 商圈快單';
+            return '⚡ 標準單';
+          }
         };
 
         const getTierBadgeClass = (t) => {
@@ -2525,6 +2636,7 @@
 
 📊 【一、兩週週期收益結算總評】
 ------------------------------------------------------------
+• 外送載具模式：${currentVehicleConfig.value.name} (${currentVehicleConfig.value.speed})
 • 累計訂單總數：${trips.value.length} 趟 (共 ${totalOrdersCount.value} 單)
 • 物理服務總工時：${totalPhysicalHours.value.toFixed(2)} 小時 (${totalPhysicalMins.value.toFixed(1)} 分鐘)
 • 法定申報總工時 (T_total)：${totalStatutoryHours.value.toFixed(2)} 小時 (疊單工時放大率 ${stackingMultiplier.value.toFixed(2)}x)
@@ -2534,8 +2646,10 @@
 • 實領行程費用總額 (R_base)：NT$ ${Math.round(totalBasePay.value).toLocaleString()} (含基本加成 NT$${Math.round(totalBoostFare.value)})
 ------------------------------------------------------------
 💰 預估差額補貼款 (ΔR)：NT$ ${Math.round(subsidy.value).toLocaleString()}
-💵 實質最終總收入：NT$ ${Math.round(totalIncome.value).toLocaleString()} (含小費 NT$${Math.round(totalTips.value)}、獎勵 NT$${Math.round(totalIncentives.value)})
-⚡ 實質物理產值時薪：NT$ ${realHourlyRate.value.toFixed(1)} / 物理小時
+💵 兩週實質總收入 (毛額)：NT$ ${Math.round(totalIncome.value).toLocaleString()} (含小費 NT$${Math.round(totalTips.value)}、獎勵 NT$${Math.round(totalIncentives.value)})
+⛽ 預估載具營運成本：NT$ ${Math.round(totalVehicleCost.value).toLocaleString()} (每公里 NT$${currentVehicleConfig.value.costPerKm})
+💎 實質落袋純淨利：NT$ ${Math.round(netTotalIncome.value).toLocaleString()}
+⚡ 實質落袋純時薪：NT$ ${netHourlyRate.value.toFixed(1)} / 物理小時 (毛時薪 NT$${realHourlyRate.value.toFixed(1)})
 ⭐ 累計點數：${totalPoints.value} 點
 📈 每公里實質產值：NT$ ${perKmIncome.value.toFixed(1)} / km
 🏆 戰力評級分佈：SSR級 ${tierStats.value.ssr} 單 / SR級 ${tierStats.value.sr} 單 / 正常 ${tierStats.value.normal} 單 / 需改善 ${tierStats.value.warning} 單
@@ -2645,6 +2759,21 @@
         // 最終實質總收入
         const totalIncome = computed(() => totalBasePay.value + subsidy.value + totalTips.value + totalIncentives.value);
 
+        // 載具營運成本與實質落袋淨利（依載具模式動態計算）
+        const totalVehicleCost = computed(() => {
+          const kmCost = currentVehicleConfig.value.costPerKm;
+          return totalDistance.value * kmCost;
+        });
+
+        const netTotalIncome = computed(() => {
+          return Math.max(0, totalIncome.value - totalVehicleCost.value);
+        });
+
+        const netHourlyRate = computed(() => {
+          if (totalPhysicalHours.value <= 0) return 0;
+          return netTotalIncome.value / totalPhysicalHours.value;
+        });
+
         // 每公里效益
         const perKmIncome = computed(() => totalDistance.value > 0 ? (totalIncome.value / totalDistance.value) : 0);
         const perKmBase = computed(() => totalDistance.value > 0 ? (totalBasePay.value / totalDistance.value) : 0);
@@ -2690,110 +2819,139 @@
         });
 
 
-        // ── 每單智慧診斷引擎 ──
+        // ── 每單智慧診斷引擎（依載具模式客製化診斷） ──
         const tripInsights = computed(() => {
-          const rate = 245;
+          const rateVal = rate.value || 245;
+          const mode = vehicleMode.value;
+          const vCfg = currentVehicleConfig.value;
+
           return trips.value.map((t, idx) => {
             const dur      = Number(t.duration) || 0;
             const dist     = Number(t.distance) || 0;
             const stacks   = Math.min(10, Math.max(1, Number(t.stacks) || 1));
             const basePay  = Number(t.basePay)  || 0;
-            const multiplier = stackMultiplierMap[stacks] || 1;
+            const multiplier = stackMultiplierMap[stacks] || (1.0 + (stacks - 1) * 0.75);
             const statMins = dur * multiplier;
-            const legal    = (statMins / 60) * rate;
+            const legal    = (statMins / 60) * rateVal;
             const subsidy  = Math.max(0, legal - basePay);
-            const efficiency = dur > 0 ? (statMins / dur) : 1; // 工時放大倍數
-            const kmRate   = dist > 0 ? (legal / dist) : 0;    // 每公里法定產值
+            const efficiency = dur > 0 ? (statMins / dur) : 1;
+            const kmRate   = dist > 0 ? (legal / dist) : 0;
+            const tripCost = dist * vCfg.costPerKm;
+            const netPay   = Math.max(0, legal - tripCost);
 
             const tips = [];
             const warnings = [];
 
-            // 診斷 1：單發單 → 建議疊單
+            // 載具專屬診斷 1：距離與超距紅線
+            if (mode === 'walk') {
+              if (dist > 1.2) {
+                warnings.push({ type: 'dist_bad', icon: '🚫', text: `距離 ${dist.toFixed(1)}km 嚴重超出步行極限(0.8km)，來回消耗過多體力且無單，果斷拒接！` });
+              } else if (dist > 0.8) {
+                warnings.push({ type: 'dist_warn', icon: '⚠️', text: `距離 ${dist.toFixed(1)}km 偏長，建議鎖定百貨/夜市 800m 內短單` });
+              } else if (dist > 0) {
+                tips.push({ type: 'good_dist', icon: '🎯', text: `距離 ${dist.toFixed(1)}km 為步行黃金距離，零油耗 100% 淨賺！` });
+              }
+            } else if (mode === 'bike') {
+              if (dist > 3.2) {
+                warnings.push({ type: 'dist_bad', icon: '🚫', text: `距離 ${dist.toFixed(1)}km 超出電輔車舒適圈(2.5km)，回程耗電耗時，建議轉單` });
+              } else if (dist > 2.5) {
+                warnings.push({ type: 'dist_warn', icon: '⚠️', text: `距離 ${dist.toFixed(1)}km 稍遠，電輔車建議鎖定 2.5km 內商圈雙疊單` });
+              } else if (dist > 0 && stacks >= 2) {
+                tips.push({ type: 'good_dist', icon: '🚲', text: `距離 ${dist.toFixed(1)}km 搭配雙疊，慢騎拉工時最佳組合！` });
+              }
+            } else {
+              // motorcycle
+              if (stacks === 1 && dist > 3.5) {
+                warnings.push({ type: 'dist_bad', icon: '🚫', text: `單發單超過 ${dist.toFixed(1)}km 是標準雷單（回程空車耗油無收入），果斷轉單！` });
+              } else if (dist > 5.5) {
+                warnings.push({ type: 'dist_bad', icon: '⚠️', text: `距離 ${dist.toFixed(1)}km 跨區過遠，需確認終點是否鄰近下一商圈` });
+              } else if (stacks >= 3 && dist <= 5.5) {
+                tips.push({ type: 'good_dist', icon: '🚀', text: `機車高速三疊單（${dist.toFixed(1)}km），工時並聯 2.5x 最賺模式！` });
+              }
+            }
+
+            // 診斷 2：疊單升級潛尼
             if (stacks === 1) {
-              const gain2 = ((dur * 1.75 / 60) * rate) - legal;
-              const gain3 = ((dur * 2.50 / 60) * rate) - legal;
+              const gain2 = ((dur * 1.75 / 60) * rateVal) - legal;
+              const gain3 = ((dur * 2.50 / 60) * rateVal) - legal;
               warnings.push({ type: 'stack', icon: '⚡', text: `單發單，若升級為雙疊可多賺 NT$${Math.round(gain2)}，三疊可多賺 NT$${Math.round(gain3)}` });
             }
 
-            // 診斷 2：距離過遠（>3.5km）
-            if (dist > 3.5 && dist <= 5.0) {
-              warnings.push({ type: 'dist', icon: '⚠️', text: `距離 ${dist.toFixed(1)}km 稍遠，送完後空車回程消耗額外 ${Math.round(dist * 1.2)} 分鐘，建議下次接 2.5km 內同商圈單` });
-            } else if (dist > 5.0) {
-              warnings.push({ type: 'dist_bad', icon: '🚫', text: `距離 ${dist.toFixed(1)}km 超出紅線，建議果斷拒接此類遠單，改接 3km 內疊單` });
+            // 診斷 3：每公里產值
+            if (dist > 0 && kmRate >= 80) {
+              tips.push({ type: 'km_good', icon: '💎', text: `每公里法定產值 NT$${kmRate.toFixed(0)}，超高效率！` });
             }
 
-            // 診斷 3：工時放大倍數優秀
-            if (efficiency >= 2.3) {
-              tips.push({ type: 'good_stack', icon: '🌟', text: `疊單倍數 ${efficiency.toFixed(2)}x，本單為高產值黃金單，繼續保持！` });
-            } else if (efficiency >= 1.7 && efficiency < 2.3) {
-              tips.push({ type: 'ok_stack', icon: '✅', text: `疊單倍數 ${efficiency.toFixed(2)}x，產值良好，若加快接單銜接可再提升` });
-            }
-
-            // 診斷 4：每公里法定產值
-            if (dist > 0 && kmRate < 60) {
-              warnings.push({ type: 'km_low', icon: '📉', text: `每公里法定產值 NT$${kmRate.toFixed(0)}，偏低，建議縮短距離或提升疊單數` });
-            } else if (dist > 0 && kmRate >= 100) {
-              tips.push({ type: 'km_good', icon: '💎', text: `每公里法定產值 NT$${kmRate.toFixed(0)}，超高效率！此類短距疊單是最強作戰組合` });
-            }
-
-            // 診斷 5：服務時間過短（< 10分）
-            if (dur < 10 && dur > 0) {
-              warnings.push({ type: 'short_time', icon: '⏱️', text: `服務時間僅 ${dur} 分鐘，工時過短導致法定保底偏低，建議拉長接單半徑至 1.5km 以上` });
-            }
-
-            // 綜合評級
+            // 綜合評級 (依載具動態計算)
             let grade = 'C';
             let gradeColor = 'text-slate-400';
-            if (efficiency >= 2.3 && dist <= 3.0) { grade = 'SSR'; gradeColor = 'text-yellow-300'; }
-            else if (efficiency >= 1.7 && dist <= 4.0) { grade = 'A'; gradeColor = 'text-emerald-400'; }
-            else if (efficiency >= 1.3 && dist <= 4.5) { grade = 'B'; gradeColor = 'text-cyan-400'; }
-            else if (dist > 5.0 || stacks === 1) { grade = 'D'; gradeColor = 'text-rose-400'; }
+            if (mode === 'walk') {
+              if (stacks >= 2 && dist <= 0.8) { grade = 'SSR'; gradeColor = 'text-yellow-300'; }
+              else if (dist <= 0.8) { grade = 'A'; gradeColor = 'text-emerald-400'; }
+              else if (dist <= 1.2) { grade = 'B'; gradeColor = 'text-cyan-400'; }
+              else { grade = 'D'; gradeColor = 'text-rose-400'; }
+            } else if (mode === 'bike') {
+              if (stacks >= 2 && dist <= 2.5) { grade = 'SSR'; gradeColor = 'text-yellow-300'; }
+              else if (dist <= 2.5) { grade = 'A'; gradeColor = 'text-emerald-400'; }
+              else if (dist <= 3.2) { grade = 'B'; gradeColor = 'text-cyan-400'; }
+              else { grade = 'D'; gradeColor = 'text-rose-400'; }
+            } else {
+              if ((stacks >= 3 && dist <= 5.5) || (stacks >= 2 && dist <= 3.0)) { grade = 'SSR'; gradeColor = 'text-yellow-300'; }
+              else if (stacks >= 2 && dist <= 4.5) { grade = 'A'; gradeColor = 'text-emerald-400'; }
+              else if (dist <= 3.5) { grade = 'B'; gradeColor = 'text-cyan-400'; }
+              else { grade = 'D'; gradeColor = 'text-rose-400'; }
+            }
 
-            return { idx, t, dur, dist, stacks, basePay, statMins, legal, subsidy, efficiency, kmRate, tips, warnings, grade, gradeColor };
+            return { idx, t, dur, dist, stacks, basePay, statMins, legal, subsidy, efficiency, kmRate, tripCost, netPay, tips, warnings, grade, gradeColor };
           });
         });
 
-        // ── 整體週期戰略建議 ──
+        // ── 整體週期戰略建議（依載具模式分析） ──
         const globalInsights = computed(() => {
           if (!trips.value.length) return [];
           const insights = tripInsights.value;
           const results = [];
+          const mode = vehicleMode.value;
+          const vCfg = currentVehicleConfig.value;
 
-          const singleCount  = insights.filter(i => i.stacks === 1).length;
-          const farCount     = insights.filter(i => i.dist > 3.5).length;
-          const goodCount    = insights.filter(i => i.grade === 'SSR' || i.grade === 'A').length;
           const totalCount   = insights.length;
+          const singleCount  = insights.filter(i => i.stacks === 1).length;
+          const farCount     = insights.filter(i => i.dist > vCfg.maxDist).length;
+          const redCount     = insights.filter(i => i.dist > vCfg.redDist).length;
+          const goodCount    = insights.filter(i => i.grade === 'SSR' || i.grade === 'A').length;
           const singleRatio  = singleCount / totalCount;
           const avgEff       = insights.reduce((s, i) => s + i.efficiency, 0) / totalCount;
 
+          // 載具專屬戰略建言
+          if (mode === 'walk') {
+            results.push({ level: 'info', icon: '🚶', title: `目前為【步行外送模式】`, desc: `最佳半徑 ≤ 800m。本週期載具成本 NT$0 元，所有保底收入 100% 轉為純利。` });
+            if (redCount > 0) {
+              results.push({ level: 'danger', icon: '🚨', title: `${redCount} 張超出步行極限（>1.2km）`, desc: `步行超過 1.2km 耗時過長且空車回程體力負擔沉重，建議嚴格設定 800m 內短單。` });
+            }
+          } else if (mode === 'bike') {
+            results.push({ level: 'info', icon: '🚲', title: `目前為【腳踏車/電輔車模式】`, desc: `最佳半徑 1.0~2.5km。預估週期營運成本約 NT$${Math.round(totalVehicleCost.value)} 元。` });
+            if (farCount > 0) {
+              results.push({ level: 'warning', icon: '⚠️', title: `${farCount} 張訂單超出 2.5km`, desc: `電輔車超過 2.5km 會降低每小時雙疊率，建議專注 2.5km 內生活圈。` });
+            }
+          } else {
+            results.push({ level: 'info', icon: '🛵', title: `目前為【機車外送模式】`, desc: `時速 40~50km/h。預估週期油耗車損成本約 NT$${Math.round(totalVehicleCost.value)} 元（每公里 NT$1.5）。` });
+            if (singleCount > 0 && insights.some(i => i.stacks === 1 && i.dist > 3.0)) {
+              results.push({ level: 'danger', icon: '🚫', title: `偵測到長距單發雷單！`, desc: `機車單發單超過 3km 會因為空車折返導致時薪跌破 $180，務必果斷拒接/轉單！` });
+            }
+          }
+
           if (singleRatio > 0.5) {
-            results.push({ level: 'danger', icon: '🚨', title: '單發單比例過高', desc: `本週期 ${singleCount}/${totalCount} 張為單發單（${Math.round(singleRatio*100)}%），大量壓低整體時薪。建議優先等待疊單，或在尖峰時段集中接單以提高疊單機率。` });
+            results.push({ level: 'danger', icon: '🚨', title: '單發單比例過高', desc: `本週期 ${singleCount}/${totalCount} 張為單發單（${Math.round(singleRatio*100)}%），壓低整體時薪。建議優先等待疊單。` });
           }
-          if (farCount > 0) {
-            results.push({ level: 'warning', icon: '📍', title: `${farCount} 張遠距單需改善`, desc: `距離超過 3.5km 的訂單共 ${farCount} 張，每張都帶來回程空車時間損耗。下次遇到 4km 以上遠單建議直接拒接，改等商圈短疊單。` });
+
+          if (avgEff >= 1.8) {
+            results.push({ level: 'success', icon: '🏆', title: '整體疊單效率優秀', desc: `平均工時放大倍數 ${avgEff.toFixed(2)}x，實質淨時薪達 NT$${netHourlyRate.value.toFixed(1)}/時！` });
           }
-          if (avgEff >= 2.0) {
-            results.push({ level: 'success', icon: '🏆', title: '整體疊單效率優秀', desc: `本週期平均工時放大倍數 ${avgEff.toFixed(2)}x，已達高產值外送員標準！繼續維持此節奏。` });
-          } else if (avgEff < 1.3) {
-            results.push({ level: 'danger', icon: '📊', title: '整體工時效率偏低', desc: `平均工時放大倍數僅 ${avgEff.toFixed(2)}x，主因可能是單發單過多或距離過遠。專注 2.5km 內雙疊/三疊單可顯著提升。` });
-          }
-          if (goodCount >= totalCount * 0.6) {
-            results.push({ level: 'success', icon: '✨', title: '高產值單佔比優秀', desc: `本週期 SSR/A 級單佔 ${Math.round(goodCount/totalCount*100)}%，是優秀的接單策略！` });
-          }
-          // 模擬「若全部換成雙疊」的收益差距
-          const currentLegal = insights.reduce((s, i) => s + i.legal, 0);
-          const simulatedLegal = insights.reduce((s, i) => {
-            const simMins = i.dur * (i.stacks >= 2 ? stackMultiplierMap[i.stacks] : 1.75);
-            return s + (simMins / 60) * 245;
-          }, 0);
-          const potentialGain = simulatedLegal - currentLegal;
-          if (potentialGain > 50) {
-            results.push({ level: 'info', icon: '💡', title: `若單發單全升級雙疊，可多賺 NT$${Math.round(potentialGain)}`, desc: `本週期所有單發單若都升級為雙疊單，法定保底總額可從 NT$${Math.round(currentLegal)} 提升至 NT$${Math.round(simulatedLegal)}，增加 NT$${Math.round(potentialGain)} 元。` });
-          }
+
           return results;
         });
 
-        // 戰力統計
+                // 戰力統計
         const tierStats = computed(() => {
           let ssr = 0, sr = 0, normal = 0, warning = 0;
           for (let t of trips.value) {
@@ -2844,7 +3002,7 @@
           customOpenRouterKey, customNvidiaKey, activeOpenRouterKey, activeNvidiaKey,
           isDualAiActive, isAiEngineActive, saveAiSettings,
           isOcrLoading, ocrStatus, ocrProgress, copyBtnText, customPhysicalHours,
-          simVehicleMode, setVehicleMode, simOrders, simAvgTripMins, simPhysicalMins, simMultiplier, simRealHourlyWage, simVehicleCostPerHour, simNetHourlyWage,
+          vehicleMode, setGlobalVehicleMode, currentVehicleConfig, totalVehicleCost, netTotalIncome, netHourlyRate, simVehicleMode, setVehicleMode, simOrders, simAvgTripMins, simPhysicalMins, simMultiplier, simRealHourlyWage, simVehicleCostPerHour, simNetHourlyWage,
           totalPhysicalMins, totalPhysicalHours, totalStatutoryMins, totalStatutoryHours, totalOrdersCount,
           totalLegal, totalBasePay, totalBoostFare, totalTips, totalIncentives,
           totalPoints, totalDistance, avgBasePay, avgDistance, avgBoostRate,
