@@ -1083,144 +1083,438 @@
       </div>
 
       <!-- ══════════════════════════════════════════════════════════ -->
-      <!-- 3. 機車外送員實戰指南：打破「3 公里魔咒」與 5 大鐵律 -->
+      <!-- 3. 3 大載具專屬實戰作戰手冊（步行 / 腳踏車 / 機車） -->
       <!-- ══════════════════════════════════════════════════════════ -->
-      <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-cyan-950/40 p-4 sm:p-6 rounded-2xl border border-cyan-500/40 shadow-2xl space-y-4 sm:space-y-5">
+      <div class="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-slate-800 shadow-2xl space-y-4 sm:space-y-5">
         
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+        <!-- 頂部切換標頭 -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3.5">
           <div>
+            <h3 class="text-sm sm:text-base font-bold text-slate-200 flex items-center gap-2">
+              <span>📖</span> 載具專屬實戰作戰手冊
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">
+              依據步行、腳踏車與機車之物理極限、距離陷阱與高產值接單決策樹
+            </p>
+          </div>
+
+          <!-- 3 大載具手冊切換標籤 -->
+          <div class="flex items-center gap-1.5 p-1 bg-slate-950 rounded-xl border border-slate-800 self-start sm:self-auto flex-wrap">
+            <button type="button" @click="tacticsGuideTab = 'walk'"
+              :class="tacticsGuideTab === 'walk' ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
+              class="px-2.5 py-1 rounded-lg text-xs transition border flex items-center gap-1">
+              <span>🚶</span> <span>步行實戰</span>
+            </button>
+            <button type="button" @click="tacticsGuideTab = 'bike'"
+              :class="tacticsGuideTab === 'bike' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
+              class="px-2.5 py-1 rounded-lg text-xs transition border flex items-center gap-1">
+              <span>🚲</span> <span>腳踏車/電輔實戰</span>
+            </button>
+            <button type="button" @click="tacticsGuideTab = 'motorcycle'"
+              :class="tacticsGuideTab === 'motorcycle' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
+              class="px-2.5 py-1 rounded-lg text-xs transition border flex items-center gap-1">
+              <span>🛵</span> <span>機車實戰</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ────────────────────────────────────────────────────────── -->
+        <!-- 3-A. 🚶 步行外送員實戰指南 -->
+        <!-- ────────────────────────────────────────────────────────── -->
+        <div v-show="tacticsGuideTab === 'walk'" class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🚶</span>
+              <h4 class="text-sm font-bold text-amber-300">
+                步行帳號實戰：如何打破「走不動魔咒」與極致零成本高時薪？
+              </h4>
+            </div>
+            <span class="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold font-mono border border-amber-500/30">
+              步行專屬決策樹
+            </span>
+          </div>
+
+          <!-- 3 大步行距離與體能陷阱 -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="bg-slate-950 p-3 rounded-xl border border-rose-500/30 space-y-1">
+              <span class="text-rose-400 font-bold flex items-center gap-1 text-[11px]">
+                <span>🛑</span> 陷阱 1：超距體能崩潰（> 1.0km）
+              </span>
+              <p class="text-slate-400 text-[11px] leading-relaxed">
+                步行 1.2km 需走 18 分鐘，來回走 36 分鐘耗盡體力且回程無單，實質時薪直接暴跌至 <span class="text-rose-400 font-mono font-bold">$130/時</span>。
+              </p>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-xl border border-amber-500/30 space-y-1">
+              <span class="text-amber-400 font-bold flex items-center gap-1 text-[11px]">
+                <span>⚠️</span> 陷阱 2：垂直爬樓與巷弄迷宮
+              </span>
+              <p class="text-slate-400 text-[11px] leading-relaxed">
+                爬 5 樓無電梯公寓等同水平 300 公尺體能消耗，巷弄死胡同大幅拖慢步速，無法維持穩定服務時薪。
+              </p>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-xl border border-teal-500/30 space-y-1">
+              <span class="text-teal-400 font-bold flex items-center gap-1 text-[11px]">
+                <span>🎒</span> 陷阱 3：大體積與重物手搖飲
+              </span>
+              <p class="text-slate-400 text-[11px] leading-relaxed">
+                手提 6 杯以上飲料負重過大，步速驟降至 3km/h，且容易傾倒打翻，徒增爭議與時間損失。
+              </p>
+            </div>
+          </div>
+
+          <!-- 步行距離與單數決策矩陣 -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse font-sans">
+              <thead>
+                <tr class="bg-slate-950 text-slate-400 border-b border-slate-800 text-[11px]">
+                  <th class="p-2.5 font-bold">派單型態</th>
+                  <th class="p-2.5 font-bold">總里程</th>
+                  <th class="p-2.5 font-bold">送達環境</th>
+                  <th class="p-2.5 font-bold text-center">戰力評級</th>
+                  <th class="p-2.5 font-bold text-right">預估實質時薪</th>
+                  <th class="p-2.5 font-bold text-amber-300">步行司機實戰處置</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800 text-xs">
+                <tr class="hover:bg-slate-800/30 text-slate-300">
+                  <td class="p-2.5 font-bold text-rose-400 flex items-center gap-1"><span>❌</span> 遠距單發單</td>
+                  <td class="p-2.5 font-mono text-rose-300">&gt; 1.0 km</td>
+                  <td class="p-2.5 text-slate-400">住宅區 / 郊外無商圈</td>
+                  <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-bold">🚫 超級雷單</span></td>
+                  <td class="p-2.5 text-right font-mono text-rose-400 font-bold">$120 ～ $150</td>
+                  <td class="p-2.5 text-rose-300 font-bold">果斷轉單 / 拒接！（避免體能透支）</td>
+                </tr>
+                <tr class="hover:bg-slate-800/30 text-slate-300">
+                  <td class="p-2.5 font-bold text-amber-300 flex items-center gap-1"><span>🟡</span> 商圈一般短單</td>
+                  <td class="p-2.5 font-mono text-amber-300">500m ～ 800m</td>
+                  <td class="p-2.5 text-slate-400">同商圈隔壁街 / 辦公大樓</td>
+                  <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold">⚡ 標準單</span></td>
+                  <td class="p-2.5 text-right font-mono text-cyan-300 font-bold">$245 ～ $290</td>
+                  <td class="p-2.5 text-cyan-300">可以接！（等餐 8 分＋步行 10 分，拉滿 18 分工時）</td>
+                </tr>
+                <tr class="bg-amber-950/30 text-amber-200 border-amber-500/30">
+                  <td class="p-2.5 font-bold text-amber-300 flex items-center gap-1"><span>👑</span> 美食街/百貨雙疊</td>
+                  <td class="p-2.5 font-mono text-amber-300 font-bold">≤ 500 公尺</td>
+                  <td class="p-2.5 text-amber-100">同一商場 / 對街住商群</td>
+                  <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold">🌟 SSR 步行黃金單</span></td>
+                  <td class="p-2.5 text-right font-mono text-amber-300 font-black">NT$ 340 ～ $380</td>
+                  <td class="p-2.5 text-amber-300 font-black">秒接！零油耗 100% 純淨賺 🚀</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 步行司機 5 大接單鐵律 -->
+          <div class="bg-slate-950/80 p-4 rounded-xl border border-amber-500/30 space-y-3 text-xs">
+            <h4 class="text-amber-300 font-bold text-xs sm:text-sm flex items-center gap-1.5">
+              <span>💎</span> 步行司機收益最大化：5 大實戰接單鐵律
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] text-slate-300">
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+                <strong class="text-amber-400 block">1. 嚴格執行「步行過 800m 必轉」</strong>
+                <p class="text-slate-400 leading-relaxed">
+                  超過 800 公尺對步行是體能負擔，嚴格只接 800m 內短單，把精力留給核心熱區。
+                </p>
+              </div>
+
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+                <strong class="text-amber-400 block">2. 專注「百貨/美食街雙疊」同取同送</strong>
+                <p class="text-slate-400 leading-relaxed">
+                  百貨商場一次領兩單，室內有空調且步行距離極短，體能消耗最低、時薪產值最高。
+                </p>
+              </div>
+
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+                <strong class="text-emerald-300 block">3. 善用「等餐時間拉滿法」</strong>
+                <p class="text-slate-400 leading-relaxed">
+                  在店家吹冷氣等餐 8 分鐘，雙疊同步計時＝累積 16 分鐘專法工時，兼具舒適與收益。
+                </p>
+              </div>
+
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+                <strong class="text-emerald-300 block">4. 堅決拒接「大體積重物/多杯熱湯」</strong>
+                <p class="text-slate-400 leading-relaxed">
+                  保護雙手與膝蓋，輕裝快步維持 4.5km/h 巡航步速，避免傾倒打翻風險。
+                </p>
+              </div>
+
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1 sm:col-span-2">
+                <strong class="text-cyan-300 block">5. 定點守候「高密度捷運商圈/夜市」</strong>
+                <p class="text-slate-400 leading-relaxed">
+                  不在路邊漫無目的走動，定點在知名餐飲街或捷運美食圈守候，輪子不動但步步是黃金。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ────────────────────────────────────────────────────────── -->
+        <!-- 3-B. 🚲 腳踏車 / 電輔車外送員實戰指南 -->
+        <!-- ────────────────────────────────────────────────────────── -->
+        <div v-show="tacticsGuideTab === 'bike'" class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🚲</span>
+              <h4 class="text-sm font-bold text-emerald-300">
+                腳踏車/電輔實戰：如何打破「腿力耗竭魔咒」與悠閒高產值？
+              </h4>
+            </div>
+            <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold font-mono border border-emerald-500/30">
+              電輔車專屬決策樹
+            </span>
+          </div>
+
+          <!-- 3 大腳踏車距離與地形陷阱 -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="bg-slate-950 p-3 rounded-xl border border-rose-500/30 space-y-1">
+              <span class="text-rose-400 font-bold flex items-center gap-1 text-[11px]">
+                <span>🛑</span> 陷阱 1：長陡坡與山路爬升
+              </span>
+              <p class="text-slate-400 text-[11px] leading-relaxed">
+                爬坡時速跌至 8km/h，電池續航瞬間腰斬，回程無單空踩，實質時薪直接腰斬至 <span class="text-rose-400 font-mono font-bold">$160/時</span>。
+              </p>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-xl border border-amber-500/30 space-y-1">
+              <span class="text-amber-400 font-bold flex items-center gap-1 text-[11px]">
+                <span>⚠️</span> 陷阱 2：跨區主幹道長單（> 3.0km）
+              </span>
+              <p class="text-slate-400 text-[11px] leading-relaxed">
+                大馬路車速快停等紅燈久，超過 3km 易落入機車競爭區且回程耗電，效率大幅稀釋。
+              </p>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-xl border border-teal-500/30 space-y-1">
+              <span class="text-teal-400 font-bold flex items-center gap-1 text-[11px]">
+                <span>🔋</span> 陷阱 3：電量見底與空車重拖
+              </span>
+              <p class="text-slate-400 text-[11px] leading-relaxed">
+                電輔車沒電後車身重達 20kg+，踩踏阻力倍增導致後續跑單節奏與體能全毀。
+              </p>
+            </div>
+          </div>
+
+          <!-- 腳踏車/電輔距離與單數決策矩陣 -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse font-sans">
+              <thead>
+                <tr class="bg-slate-950 text-slate-400 border-b border-slate-800 text-[11px]">
+                  <th class="p-2.5 font-bold">派單型態</th>
+                  <th class="p-2.5 font-bold">總里程</th>
+                  <th class="p-2.5 font-bold">送達環境</th>
+                  <th class="p-2.5 font-bold text-center">戰力評級</th>
+                  <th class="p-2.5 font-bold text-right">預估實質時薪</th>
+                  <th class="p-2.5 font-bold text-emerald-300">電輔司機實戰處置</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800 text-xs">
+                <tr class="hover:bg-slate-800/30 text-slate-300">
+                  <td class="p-2.5 font-bold text-rose-400 flex items-center gap-1"><span>❌</span> 跨區長距單發</td>
+                  <td class="p-2.5 font-mono text-rose-300">&gt; 3.2 km</td>
+                  <td class="p-2.5 text-slate-400">跨橋 / 山坡住宅 / 偏遠死巷</td>
+                  <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-bold">🚫 超級雷單</span></td>
+                  <td class="p-2.5 text-right font-mono text-rose-400 font-bold">$160 ～ $200</td>
+                  <td class="p-2.5 text-rose-300 font-bold">果斷轉單 / 拒接！（讓機車去跑）</td>
+                </tr>
+                <tr class="hover:bg-slate-800/30 text-slate-300">
+                  <td class="p-2.5 font-bold text-amber-300 flex items-center gap-1"><span>🟡</span> 平路商圈單發</td>
+                  <td class="p-2.5 font-mono text-amber-300">1.5 ～ 2.5 km</td>
+                  <td class="p-2.5 text-slate-400">生活圈大馬路 / 捷運沿線</td>
+                  <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold">⚡ 標準合格單</span></td>
+                  <td class="p-2.5 text-right font-mono text-cyan-300 font-bold">$280 ～ $330</td>
+                  <td class="p-2.5 text-cyan-300">可以接！（悠閒巡航安全拉長工時）</td>
+                </tr>
+                <tr class="bg-emerald-950/30 text-emerald-200 border-emerald-500/30">
+                  <td class="p-2.5 font-bold text-emerald-300 flex items-center gap-1"><span>👑</span> 生活圈黃金雙疊/三疊</td>
+                  <td class="p-2.5 font-mono text-emerald-300 font-bold">1.0 ～ 2.5 km</td>
+                  <td class="p-2.5 text-emerald-100">核心商圈 / 順路住宅區</td>
+                  <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">🌟 SSR 電輔黃金單</span></td>
+                  <td class="p-2.5 text-right font-mono text-emerald-300 font-black">NT$ 390 ～ $440+</td>
+                  <td class="p-2.5 text-emerald-300 font-black">秒接！1.75x 工時並聯最高性價比 🚀</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 腳踏車/電輔司機 5 大接單鐵律 -->
+          <div class="bg-slate-950/80 p-4 rounded-xl border border-emerald-500/30 space-y-3 text-xs">
+            <h4 class="text-emerald-300 font-bold text-xs sm:text-sm flex items-center gap-1.5">
+              <span>💎</span> 腳踏車/電輔司機收益最大化：5 大實戰接單鐵律
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] text-slate-300">
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+                <strong class="text-emerald-400 block">1. 嚴守「2.5 公里生活圈舒適線」</strong>
+                <p class="text-slate-400 leading-relaxed">
+                  超過 3km 果斷轉單，讓機車去跑，自己專注在 2.5km 內密集生活圈。
+                </p>
+              </div>
+
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+                <strong class="text-emerald-400 block">2. 堅持「平路優先、避開陡坡」原則</strong>
+                <p class="text-slate-400 leading-relaxed">
+                  查看地圖走平緩巷弄，維持 18~20km/h 穩定巡航，維持體能與電池續航。
+                </p>
+              </div>
+
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+                <strong class="text-cyan-300 block">3. 善用「悠閒騎乘拉工時」戰術</strong>
+                <p class="text-slate-400 leading-relaxed">
+                  不需像機車一樣搶快飆速，多花 3 分鐘安全騎乘＝合法多賺 3 分鐘專法保障！
+                </p>
+              </div>
+
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+                <strong class="text-cyan-300 block">4. 必備「雙電池輪替或快充策略」</strong>
+                <p class="text-slate-400 leading-relaxed">
+                  確保電輔車隨時維持充沛動力輸出，避免電池見底造成腳踩重拖。
+                </p>
+              </div>
+
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1 sm:col-span-2">
+                <strong class="text-amber-300 block">5. 掌握「巷弄穿梭直接靠門取餐」優勢</strong>
+                <p class="text-slate-400 leading-relaxed">
+                  省去機車找車位與移車的 2~4 分鐘，將時間全數轉化為有效服務工時，積少成多。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ────────────────────────────────────────────────────────── -->
+        <!-- 3-C. 🛵 機車外送員實戰指南 -->
+        <!-- ────────────────────────────────────────────────────────── -->
+        <div v-show="tacticsGuideTab === 'motorcycle'" class="space-y-4">
+          <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="text-xl">🛵</span>
-              <h3 class="text-sm sm:text-base font-bold text-cyan-300">
-                實戰指南：如何打破「3 公里魔咒」？
-              </h3>
+              <h4 class="text-sm font-bold text-cyan-300">
+                機車帳號實戰：如何打破「3 公里魔咒」？
+              </h4>
             </div>
-            <p class="text-[11px] text-slate-400 mt-1">
-              第一原理深度解析：機車時速 40～50 km/h 的物理特性、距離陷阱與高產值接單決策樹
-            </p>
-          </div>
-          <span class="inline-flex items-center gap-1 self-start sm:self-auto px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-bold font-mono border border-cyan-500/30">
-            距離與單數決策樹
-          </span>
-        </div>
-
-        <!-- 3 大距離陷阱圖解 -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div class="bg-slate-950 p-3 rounded-xl border border-rose-500/30 space-y-1">
-            <span class="text-rose-400 font-bold flex items-center gap-1 text-[11px]">
-              <span>🛑</span> 陷阱 1：空車折返零計費
+            <span class="px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-bold font-mono border border-cyan-500/30">
+              機車專屬決策樹
             </span>
-            <p class="text-slate-400 text-[11px] leading-relaxed">
-              專法只保障「送餐中」工時。送完 4.5km 遠單後，騎回熱區的 8 分鐘是 <strong>0 元空窗</strong>，實質時薪直接腰斬至 <span class="text-rose-400 font-mono font-bold">$160/時</span>。
-            </p>
           </div>
 
-          <div class="bg-slate-950 p-3 rounded-xl border border-amber-500/30 space-y-1">
-            <span class="text-amber-400 font-bold flex items-center gap-1 text-[11px]">
-              <span>⚠️</span> 陷阱 2：單發單無法並聯
-            </span>
-            <p class="text-slate-400 text-[11px] leading-relaxed">
-              遠距單若只有 1 單，工時倍率永遠鎖死在 <span class="text-amber-300 font-mono font-bold">1.0x</span>，無法享受專法「多單時間重疊獨立累加」的倍數紅利。
-            </p>
+          <!-- 3 大距離陷阱圖解 -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="bg-slate-950 p-3 rounded-xl border border-rose-500/30 space-y-1">
+              <span class="text-rose-400 font-bold flex items-center gap-1 text-[11px]">
+                <span>🛑</span> 陷阱 1：空車折返零計費
+              </span>
+              <p class="text-slate-400 text-[11px] leading-relaxed">
+                專法只保障「送餐中」工時。送完 4.5km 遠單後，騎回熱區的 8 分鐘是 <strong>0 元空窗</strong>，實質時薪直接腰斬至 <span class="text-rose-400 font-mono font-bold">$160/時</span>。
+              </p>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-xl border border-amber-500/30 space-y-1">
+              <span class="text-amber-400 font-bold flex items-center gap-1 text-[11px]">
+                <span>⚠️</span> 陷阱 2：單發單無法並聯
+              </span>
+              <p class="text-slate-400 text-[11px] leading-relaxed">
+                遠距單若只有 1 單，工時倍率永遠鎖死在 <span class="text-amber-300 font-mono font-bold">1.0x</span>，無法享受專法「多單時間重疊獨立累加」的倍數紅利。
+              </p>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-xl border border-teal-500/30 space-y-1">
+              <span class="text-teal-400 font-bold flex items-center gap-1 text-[11px]">
+                <span>⛽</span> 陷阱 3：油耗與磨耗流失
+              </span>
+              <p class="text-slate-400 text-[11px] leading-relaxed">
+                機車每公里實體成本約 <strong>NT$ 1.5～2.0 元</strong>（油錢 + 機油輪胎損耗）。單張遠距單來回 9km 直接吃掉 NT$15+ 純利。
+              </p>
+            </div>
           </div>
 
-          <div class="bg-slate-950 p-3 rounded-xl border border-teal-500/30 space-y-1">
-            <span class="text-teal-400 font-bold flex items-center gap-1 text-[11px]">
-              <span>⛽</span> 陷阱 3：油耗與磨耗流失
-            </span>
-            <p class="text-slate-400 text-[11px] leading-relaxed">
-              機車每公里實體成本約 <strong>NT$ 1.5～2.0 元</strong>（油錢 + 機油輪胎損耗）。單張遠距單來回 9km 直接吃掉 NT$15+ 純利。
-            </p>
+          <!-- 機車帳號距離與單數決策矩陣 -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse font-sans">
+              <thead>
+                <tr class="bg-slate-950 text-slate-400 border-b border-slate-800 text-[11px]">
+                  <th class="p-2.5 font-bold">派單型態</th>
+                  <th class="p-2.5 font-bold">總里程</th>
+                  <th class="p-2.5 font-bold">終點環境</th>
+                  <th class="p-2.5 font-bold text-center">戰力評級</th>
+                  <th class="p-2.5 font-bold text-right">預估實質時薪</th>
+                  <th class="p-2.5 font-bold text-emerald-400">機車司機實戰處置</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800 text-xs">
+                <tr class="hover:bg-slate-800/30 text-slate-300">
+                  <td class="p-2.5 font-bold text-rose-400 flex items-center gap-1"><span>❌</span> 長距單發單</td>
+                  <td class="p-2.5 font-mono text-rose-300">3.5 ～ 6.0 km</td>
+                  <td class="p-2.5 text-slate-400">偏遠住宅區 / 郊區死胡同</td>
+                  <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-bold">🚫 超級雷單</span></td>
+                  <td class="p-2.5 text-right font-mono text-rose-400 font-bold">$150 ～ $180</td>
+                  <td class="p-2.5 text-rose-300 font-bold">果斷拒接 / 轉單！（避免產能死鎖）</td>
+                </tr>
+                <tr class="hover:bg-slate-800/30 text-slate-300">
+                  <td class="p-2.5 font-bold text-amber-300 flex items-center gap-1"><span>🟡</span> 雙疊中長距</td>
+                  <td class="p-2.5 font-mono text-amber-300">3.0 ～ 4.5 km</td>
+                  <td class="p-2.5 text-slate-400">鄰近下一個次級商圈/大馬路</td>
+                  <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold">⚡ 標準合格單</span></td>
+                  <td class="p-2.5 text-right font-mono text-cyan-300 font-bold">$380 ～ $420</td>
+                  <td class="p-2.5 text-cyan-300">可以接！（1.75x 並聯工時覆蓋距離成本）</td>
+                </tr>
+                <tr class="bg-emerald-950/40 text-emerald-200 border-emerald-500/30">
+                  <td class="p-2.5 font-bold text-emerald-300 flex items-center gap-1"><span>👑</span> 三疊商圈巡航</td>
+                  <td class="p-2.5 font-mono text-emerald-300 font-bold">3.5 ～ 5.5 km</td>
+                  <td class="p-2.5 text-emerald-100">市區主幹道 / 繁華美食圈</td>
+                  <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold">🌟 SSR 黃金單</span></td>
+                  <td class="p-2.5 text-right font-mono text-emerald-300 font-black">NT$ 480 ～ $550+</td>
+                  <td class="p-2.5 text-emerald-300 font-black">秒接！機車高速吞吐最賺模式 🚀</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </div>
 
-        <!-- 機車帳號距離與單數決策矩陣 -->
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs border-collapse font-sans">
-            <thead>
-              <tr class="bg-slate-950 text-slate-400 border-b border-slate-800 text-[11px]">
-                <th class="p-2.5 font-bold">派單型態</th>
-                <th class="p-2.5 font-bold">總里程</th>
-                <th class="p-2.5 font-bold">終點環境</th>
-                <th class="p-2.5 font-bold text-center">戰力評級</th>
-                <th class="p-2.5 font-bold text-right">預估實質時薪</th>
-                <th class="p-2.5 font-bold text-emerald-400">機車司機實戰處置</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-800 text-xs">
-              <tr class="hover:bg-slate-800/30 text-slate-300">
-                <td class="p-2.5 font-bold text-rose-400 flex items-center gap-1"><span>❌</span> 長距單發單</td>
-                <td class="p-2.5 font-mono text-rose-300">3.5 ～ 6.0 km</td>
-                <td class="p-2.5 text-slate-400">偏遠住宅區 / 郊區死胡同</td>
-                <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-bold">🚫 超級雷單</span></td>
-                <td class="p-2.5 text-right font-mono text-rose-400 font-bold">$150 ～ $180</td>
-                <td class="p-2.5 text-rose-300 font-bold">果斷拒接 / 轉單！（避免產能死鎖）</td>
-              </tr>
-              <tr class="hover:bg-slate-800/30 text-slate-300">
-                <td class="p-2.5 font-bold text-amber-300 flex items-center gap-1"><span>🟡</span> 雙疊中長距</td>
-                <td class="p-2.5 font-mono text-amber-300">3.0 ～ 4.5 km</td>
-                <td class="p-2.5 text-slate-400">鄰近下一個次級商圈/大馬路</td>
-                <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold">⚡ 標準合格單</span></td>
-                <td class="p-2.5 text-right font-mono text-cyan-300 font-bold">$380 ～ $420</td>
-                <td class="p-2.5 text-cyan-300">可以接！（1.75x 並聯工時覆蓋距離成本）</td>
-              </tr>
-              <tr class="bg-emerald-950/40 text-emerald-200 border-emerald-500/30">
-                <td class="p-2.5 font-bold text-emerald-300 flex items-center gap-1"><span>👑</span> 三疊商圈巡航</td>
-                <td class="p-2.5 font-mono text-emerald-300 font-bold">3.5 ～ 5.5 km</td>
-                <td class="p-2.5 text-emerald-100">市區主幹道 / 繁華美食圈</td>
-                <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold">🌟 SSR 黃金單</span></td>
-                <td class="p-2.5 text-right font-mono text-emerald-300 font-black">NT$ 480 ～ $550+</td>
-                <td class="p-2.5 text-emerald-300 font-black">秒接！機車高速吞吐最賺模式 🚀</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+          <!-- 機車司機 5 大接單鐵律 -->
+          <div class="bg-slate-950/80 p-4 rounded-xl border border-cyan-500/30 space-y-3 text-xs">
+            <h4 class="text-cyan-300 font-bold text-xs sm:text-sm flex items-center gap-1.5">
+              <span>💎</span> 機車司機收益最大化：5 大實戰接單鐵律
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] text-slate-300">
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+                <strong class="text-emerald-400 block">1. 嚴格執行「單發過 3km 必轉」</strong>
+                <p class="text-slate-400 leading-relaxed">
+                  看到單發單超過 3 公里請毫不猶豫拒接或轉單，把寶貴的時間留給商圈內的雙疊或三疊單。
+                </p>
+              </div>
 
-        <!-- 🚀 5 大接單鐵律 -->
-        <div class="bg-slate-950/80 p-4 rounded-xl border border-cyan-500/30 space-y-3 text-xs">
-          <h4 class="text-cyan-300 font-bold text-xs sm:text-sm flex items-center gap-1.5">
-            <span>💎</span> 機車司機收益最大化：5 大實戰接單鐵律
-          </h4>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] text-slate-300">
-            <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
-              <strong class="text-emerald-400 block">1. 嚴格執行「單發過 3km 必轉」</strong>
-              <p class="text-slate-400 leading-relaxed">
-                看到單發單超過 3 公里請毫不猶豫拒接或轉單，把寶貴的時間留給商圈內的雙疊或三疊單。
-              </p>
-            </div>
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+                <strong class="text-emerald-400 block">2. 善用機車速度優勢「大膽接 4~5km 三疊」</strong>
+                <p class="text-slate-400 leading-relaxed">
+                  機車時速 50km/h 跑 4km 僅需 5 分鐘，搭配三疊單 2.5x 工時並聯，能將小時時薪直接推上 $500+。
+                </p>
+              </div>
 
-            <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
-              <strong class="text-emerald-400 block">2. 善用機車速度優勢「大膽接 4~5km 三疊」</strong>
-              <p class="text-slate-400 leading-relaxed">
-                機車時速 50km/h 跑 4km 僅需 5 分鐘，搭配三疊單 2.5x 工時並聯，能將小時時薪直接推上 $500+。
-              </p>
-            </div>
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+                <strong class="text-cyan-300 block">3. 堅持「終點熱區預判」原則</strong>
+                <p class="text-slate-400 leading-relaxed">
+                  接單前快速看終點地圖：如果終點周圍 500 公尺有其他連鎖餐飲，即可大膽接；若是荒涼斷頭路則需謹慎。
+                </p>
+              </div>
 
-            <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
-              <strong class="text-cyan-300 block">3. 堅持「終點熱區預判」原則</strong>
-              <p class="text-slate-400 leading-relaxed">
-                接單前快速看終點地圖：如果終點周圍 500 公尺有其他連鎖餐飲，即可大膽接；若是荒涼斷頭路則需謹慎。
-              </p>
-            </div>
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+                <strong class="text-cyan-300 block">4. 善用「等餐時間槓桿」</strong>
+                <p class="text-slate-400 leading-relaxed">
+                  三疊單在店等餐 6 分鐘＝3 單同時跳表＝累積 18 分鐘法定工時（賺 NT$73.5），等餐不再是浪費時間！
+                </p>
+              </div>
 
-            <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
-              <strong class="text-cyan-300 block">4. 善用「等餐時間槓桿」</strong>
-              <p class="text-slate-400 leading-relaxed">
-                三疊單在店等餐 6 分鐘＝3 單同時跳表＝累積 18 分鐘法定工時（賺 NT$73.5），等餐不再是浪費時間！
-              </p>
-            </div>
-
-            <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1 sm:col-span-2">
-              <strong class="text-amber-300 block">5. 送達前 2 分鐘「無縫預接下一組」</strong>
-              <p class="text-slate-400 leading-relaxed">
-                在即將送達最後一單前 2 分鐘，若系統彈出下一組商圈疊單立即按下接受，消除任何零工時空窗，讓機車輪子每一分鐘都在賺取法定保底！
-              </p>
+              <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1 sm:col-span-2">
+                <strong class="text-amber-300 block">5. 送達前 2 分鐘「無縫預接下一組」</strong>
+                <p class="text-slate-400 leading-relaxed">
+                  在即將送達最後一單前 2 分鐘，若系統彈出下一組商圈疊單立即按下接受，消除任何零工時空窗，讓機車輪子每一分鐘都在賺取法定保底！
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
       </div>
-
       <!-- ══════════════════════════════════════════════════════════ -->
       <!-- 4. 觀念核心：手錶時間（物理工時） vs 帳單工時（法定工時） -->
       <!-- ══════════════════════════════════════════════════════════ -->
@@ -1705,6 +1999,7 @@
         // 全域外送載具模式：步行 (walk) / 腳踏車與電輔車 (bike) / 機車 (motorcycle)
         const vehicleMode = ref(localStorage.getItem('delivery_calc_vehicle_mode') || 'motorcycle');
         const simVehicleMode = ref(vehicleMode.value);
+        const tacticsGuideTab = ref(vehicleMode.value);
         const simOrders = ref(vehicleMode.value === 'motorcycle' ? 3 : 2);
         const simAvgTripMins = ref(vehicleMode.value === 'bike' ? 24 : 18);
         const simPhysicalMins = ref(vehicleMode.value === 'motorcycle' ? 25 : (vehicleMode.value === 'bike' ? 30 : 28));
@@ -1747,6 +2042,7 @@
         const setGlobalVehicleMode = (mode) => {
           vehicleMode.value = mode;
           simVehicleMode.value = mode;
+          tacticsGuideTab.value = mode;
           try {
             localStorage.setItem('delivery_calc_vehicle_mode', mode);
           } catch(e){}
@@ -1755,6 +2051,7 @@
 
         const setVehicleMode = (mode) => {
           simVehicleMode.value = mode;
+          tacticsGuideTab.value = mode;
           if (mode === 'walk') {
             simOrders.value = 2;
             simAvgTripMins.value = 18;
@@ -2837,7 +3134,7 @@
           customOpenRouterKey, customNvidiaKey, activeOpenRouterKey, activeNvidiaKey,
           isDualAiActive, isAiEngineActive, saveAiSettings,
           isOcrLoading, ocrStatus, ocrProgress, copyBtnText, customPhysicalHours,
-          vehicleMode, setGlobalVehicleMode, currentVehicleConfig, totalVehicleCost, netTotalIncome, netHourlyRate, simVehicleMode, setVehicleMode, simOrders, simAvgTripMins, simPhysicalMins, simMultiplier, simRealHourlyWage, simVehicleCostPerHour, simNetHourlyWage,
+          vehicleMode, setGlobalVehicleMode, currentVehicleConfig, totalVehicleCost, netTotalIncome, netHourlyRate, simVehicleMode, setVehicleMode, tacticsGuideTab, simOrders, simAvgTripMins, simPhysicalMins, simMultiplier, simRealHourlyWage, simVehicleCostPerHour, simNetHourlyWage,
           totalPhysicalMins, totalPhysicalHours, totalStatutoryMins, totalStatutoryHours, totalOrdersCount,
           totalLegal, totalBasePay, totalBoostFare, totalTips, totalIncentives,
           totalPoints, totalDistance, avgBasePay, avgDistance, avgBoostRate,
