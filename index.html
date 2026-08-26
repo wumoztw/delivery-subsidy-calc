@@ -371,7 +371,7 @@
             </template>
           </div>
         </div>
-      </template>      </template>
+      </template>
       <template v-else>
         <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 text-center text-slate-500 text-xs">
           🥧 新增訂單資料後，此處將自動顯示收入組成圓餅圖
@@ -605,14 +605,6 @@
             </div>
           </div>
           <button v-if="trips.length > 0" @click="trips = []" class="text-xs text-rose-400 hover:text-rose-300 px-2.5 py-1 rounded bg-rose-500/10 active:bg-rose-500/20 transition self-end sm:self-auto">
-            清空明細
-          </button>
-        </div>
-          <div class="flex items-center gap-2">
-            <h3 class="text-xs sm:text-sm font-bold text-slate-200">訂單明細清單</h3>
-            <span class="text-xs text-slate-400 font-mono">({{ trips.length }} 筆)</span>
-          </div>
-          <button v-if="trips.length > 0" @click="trips = []" class="text-xs text-rose-400 hover:text-rose-300 px-2.5 py-1 rounded bg-rose-500/10 active:bg-rose-500/20 transition">
             清空明細
           </button>
         </div>
