@@ -11,10 +11,14 @@
   <meta name="theme-color" content="#020617">
   <!-- 閃電高質感 SVG Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
-  <!-- Google Fonts: 🌿 思源黑體 (Noto Sans TC) & 數字專用 (JetBrains Mono) -->
+  <!-- ═══ Google Fonts 最佳化載入 ═══ -->
+  <!-- 1. DNS 預連線 (Preconnect)：消除 DNS/TLS 延遲 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800;900&family=Noto+Sans+TC:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- 2. 精簡字重載入：僅載入實際使用的字重 (400/500/700/900) -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <!-- 3. 非同步載入 JetBrains Mono (非首屏關鍵字體) 降低阻塞 -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" onload="this.rel='stylesheet'">
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Vue 3 高速多線路備援 CDN (cdnjs ➔ jsdelivr ➔ unpkg) -->
@@ -39,7 +43,7 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"Noto Sans TC"', '-apple-system', 'BlinkMacSystemFont', '"PingFang TC"', '"Microsoft JhengHei"', 'sans-serif'],
+            sans: ['"Noto Sans TC"', '"Noto Sans TC Fallback"', '-apple-system', 'BlinkMacSystemFont', '"PingFang TC"', '"Microsoft JhengHei"', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
           },
           colors: {
@@ -58,14 +62,48 @@
     }
   </script>
   <style>
-    body, button, input, select, textarea {
-      font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    /* ═══ 字體渲染最佳化 ═══ */
+
+    /* CLS 防護：size-adjust 系統備援字體，使備援字體與 Noto Sans TC 幾何寬高一致，
+       消除 Google Fonts 載入完成後的版面位移 (Cumulative Layout Shift) */
+    @font-face {
+      font-family: 'Noto Sans TC Fallback';
+      src: local('PingFang TC'), local('Microsoft JhengHei'), local('sans-serif');
+      size-adjust: 100%;
+      ascent-override: 90%;
+      descent-override: 22%;
+      line-gap-override: 0%;
     }
+
+    /* 全域字型堆疊：Noto Sans TC ➔ size-adjust 備援 ➔ 系統原生 */
+    body, button, input, select, textarea {
+      font-family: 'Noto Sans TC', 'Noto Sans TC Fallback', -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    }
+
+    /* 全域次像素抗鋸齒與文字渲染最佳化 */
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      font-optical-sizing: auto;
+      text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    /* 數字等寬字體：JetBrains Mono + tabular-nums 表格對齊 */
     .font-mono, [class*="font-mono"] {
       font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
-      font-feature-settings: "tnum";
+      font-feature-settings: "tnum" 1, "cv01" 1;
       font-variant-numeric: tabular-nums;
     }
+
+    /* 標題與數字強化：啟用 kerning 精密字距微調 */
+    h1, h2, h3, h4, h5, h6,
+    .font-bold, .font-black, .font-semibold {
+      font-kerning: normal;
+      letter-spacing: -0.01em;
+    }
+
     [v-cloak] { display: none !important; }
     [v-cloak] * { display: none !important; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
