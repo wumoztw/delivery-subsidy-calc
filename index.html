@@ -858,10 +858,12 @@
     </div>
 
     <!-- 分頁 3: 疊單產值與作戰模擬 -->
-    <div v-show="activeTab === 'tactics'" class="space-y-4 sm:space-y-6">
+    <div v-show="activeTab === 'tactics'" class="space-y-5 sm:space-y-6">
       
-      <!-- 即時跑單模擬器（三種載具計算建議：步行 / 腳踏車 / 機車） -->
-      <div class="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4 sm:space-y-6">
+      <!-- ══════════════════════════════════════════════════════════ -->
+      <!-- 1. 即時跑單模擬器（3 大載具模式動態切換） -->
+      <!-- ══════════════════════════════════════════════════════════ -->
+      <div class="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4 sm:space-y-5">
         
         <!-- 標頭與模式選擇器 -->
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800 pb-4">
@@ -870,7 +872,7 @@
               <span>⚡</span> 跑單實質時薪產值模擬推算器
             </h2>
             <p class="text-[11px] sm:text-xs text-slate-400 mt-1">
-              依據載具物理特性（時速、距離、成本）進行第一原理工時並聯試算與接單作戰建議
+              依據載具物理特性（時速、舒適半徑、營運成本）進行第一原理工時並聯試算
             </p>
           </div>
 
@@ -894,7 +896,7 @@
           </div>
         </div>
 
-        <!-- 載具專屬作戰建議 Banner -->
+        <!-- 載具動態作戰建議 Banner -->
         <div class="p-3.5 sm:p-4 rounded-xl border text-xs leading-relaxed"
           :class="{
             'bg-amber-950/30 border-amber-500/30 text-amber-200': simVehicleMode === 'walk',
@@ -906,13 +908,13 @@
           <div v-if="simVehicleMode === 'walk'" class="space-y-1.5">
             <div class="flex items-center justify-between">
               <strong class="text-amber-300 font-bold flex items-center gap-1.5 text-xs sm:text-sm">
-                <span>🚶</span> 步行模式作戰建議（極致短距、零成本淨利）
+                <span>🚶</span> 步行模式作戰指南（極致短距、零成本純淨利）
               </strong>
               <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-mono font-bold border border-amber-500/30">作戰半徑 ≤ 800m</span>
             </div>
-            <p class="text-slate-300 text-[11px]">
-              • <strong>最佳場景</strong>：夜市美食街、百貨美食街、超高密度住商大樓群。<br>
-              • <strong>核心戰術</strong>：嚴格限制只接 800 公尺以內短單，優先雙疊。等餐 8 分鐘＋步行 10 分鐘將單張服務時間拉滿至 18 分鐘，2 單法定工時 36 分鐘，物理 28 分鐘完成，<strong>零油錢零車損，淨賺 100% 專法保底！</strong>
+            <p class="text-slate-300 text-[11px] leading-relaxed">
+              • <strong>最佳戰場</strong>：夜市、百貨美食街、超高密度住商大樓群。<br>
+              • <strong>核心戰術</strong>：嚴格限制只接 800 公尺以內短單，優先雙疊。等餐 8 分鐘＋步行 10 分鐘將單張服務時間拉至 18 分鐘，2 單法定工時 36 分鐘，物理 28 分鐘完成，<strong>零油錢零車損，專法保底 100% 純落袋！</strong>
             </p>
           </div>
 
@@ -920,12 +922,12 @@
           <div v-else-if="simVehicleMode === 'bike'" class="space-y-1.5">
             <div class="flex items-center justify-between">
               <strong class="text-emerald-300 font-bold flex items-center gap-1.5 text-xs sm:text-sm">
-                <span>🚲</span> 腳踏車 / 電輔車模式作戰建議（慢騎拉工時、黃金雙疊）
+                <span>🚲</span> 腳踏車 / 電輔車模式作戰指南（慢騎拉工時、黃金雙疊）
               </strong>
               <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold border border-emerald-500/30">作戰半徑 1.0 ～ 2.5km</span>
             </div>
-            <p class="text-slate-300 text-[11px]">
-              • <strong>最佳場景</strong>：市中心密集商圈、校園周邊、捷運站沿線 2.5 公里生活圈。<br>
+            <p class="text-slate-300 text-[11px] leading-relaxed">
+              • <strong>最佳戰場</strong>：市中心密集商圈、校園周邊、捷運站沿線 2.5 公里生活圈。<br>
               • <strong>核心戰術</strong>：鎖定 2.5km 內雙疊單，以 15~20km/h 悠閒安全騎乘，透過等餐 6~8 分鐘將每單服務時間拉滿至 24 分鐘（雙疊法定工時 48 分鐘），物理 30 分鐘完成，<strong>放大倍數 1.6x，時薪保底 NT$390+ 且體力負擔最低！</strong>
             </p>
           </div>
@@ -934,12 +936,12 @@
           <div v-else class="space-y-1.5">
             <div class="flex items-center justify-between">
               <strong class="text-cyan-300 font-bold flex items-center gap-1.5 text-xs sm:text-sm">
-                <span>🛵</span> 機車模式作戰建議（高速三疊吞吐、無縫銜接）
+                <span>🛵</span> 機車模式作戰指南（高速三疊吞吐、無縫銜接）
               </strong>
               <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-mono font-bold border border-cyan-500/30">作戰半徑 3.5 ～ 5.0km</span>
             </div>
-            <p class="text-slate-300 text-[11px]">
-              • <strong>最佳場景</strong>：跨商圈主幹道、大型熱門連鎖餐飲群、多疊單熱區。<br>
+            <p class="text-slate-300 text-[11px] leading-relaxed">
+              • <strong>最佳戰場</strong>：跨商圈主幹道、大型熱門連鎖餐飲群、多疊單熱區。<br>
               • <strong>核心戰術</strong>：果斷拒接單發長距單，專注 4~5km 內三疊單（2.5x 工時並聯）！以 50km/h 大路巡航，25 分鐘吞吐 3 單（法定工時 54 分鐘），送達前 2 分鐘預接下組，<strong>扣除油損後淨時薪穩拿 NT$500+ 終極天花板！</strong>
             </p>
           </div>
@@ -988,7 +990,7 @@
           </div>
         </div>
 
-        <!-- 模擬結果輸出卡片 (4 宮格，含載具淨利扣除) -->
+        <!-- 模擬結果輸出卡片 (4 宮格) -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
           
           <div class="bg-slate-950 p-3 sm:p-3.5 rounded-xl border border-slate-800">
@@ -1017,8 +1019,8 @@
 
           <div class="bg-emerald-950/60 p-3 sm:p-3.5 rounded-xl border border-emerald-500/40 shadow">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] sm:text-[11px] text-emerald-400 font-bold block">實質淨利時薪</span>
-              <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 font-mono">扣油耗-${{ simVehicleCostPerHour }}</span>
+              <span class="text-[10px] sm:text-[11px] text-emerald-400 font-bold block">實質落袋淨時薪</span>
+              <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 font-mono">扣成本-${{ simVehicleCostPerHour }}</span>
             </div>
             <div class="text-lg sm:text-2xl font-black font-mono text-emerald-300 mt-1">
               NT$ {{ Math.round(simNetHourlyWage).toLocaleString() }} <span class="text-[10px] font-normal text-slate-400">/ 時</span>
@@ -1028,7 +1030,20 @@
 
         </div>
 
-        <!-- 3 大載具模式第一原理綜合對照表 -->
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════ -->
+      <!-- 2. 3 大載具模式第一原理實戰規格矩陣 -->
+      <!-- ══════════════════════════════════════════════════════════ -->
+      <div class="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-slate-800 shadow-xl space-y-3 sm:space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">📊</span>
+            <h3 class="text-sm sm:text-base font-bold text-slate-200">3 大載具第一原理作戰規格矩陣</h3>
+          </div>
+          <span class="text-[10px] text-slate-400 font-mono">點擊下方任一列可快速套用設定</span>
+        </div>
+
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs border-collapse font-sans">
             <thead>
@@ -1036,9 +1051,10 @@
                 <th class="p-2.5 font-bold">載具模式</th>
                 <th class="p-2.5 font-bold">巡航速度</th>
                 <th class="p-2.5 font-bold">最佳作戰半徑</th>
-                <th class="p-2.5 font-bold">核心賺錢策略</th>
+                <th class="p-2.5 font-bold">拒接紅線</th>
                 <th class="p-2.5 font-bold text-right">每小時成本</th>
                 <th class="p-2.5 font-bold text-right text-emerald-400">預估實質淨時薪</th>
+                <th class="p-2.5 font-bold">核心賺錢法門</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-800 text-xs">
@@ -1046,99 +1062,37 @@
                 <td class="p-2.5 font-bold text-amber-300 flex items-center gap-1"><span>🚶</span> 1. 步行</td>
                 <td class="p-2.5 font-mono text-slate-300">4 ～ 5 km/h</td>
                 <td class="p-2.5 font-mono text-amber-300">≤ 800 公尺</td>
-                <td class="p-2.5 text-slate-300">美食街高密度短雙疊、零油耗 100% 淨賺</td>
+                <td class="p-2.5 font-mono text-rose-400">&gt; 1.2 公里</td>
                 <td class="p-2.5 text-right font-mono text-emerald-400">NT$ 0 元</td>
                 <td class="p-2.5 text-right font-mono text-amber-300 font-bold">NT$ 315 ～ $380</td>
+                <td class="p-2.5 text-slate-300">美食街高密度短雙疊、零油耗 100% 淨賺</td>
               </tr>
               <tr :class="simVehicleMode === 'bike' ? 'bg-emerald-500/10' : 'hover:bg-slate-800/30'" class="transition cursor-pointer" @click="setVehicleMode('bike')">
                 <td class="p-2.5 font-bold text-emerald-300 flex items-center gap-1"><span>🚲</span> 2. 腳踏車/電輔</td>
                 <td class="p-2.5 font-mono text-slate-300">15 ～ 25 km/h</td>
                 <td class="p-2.5 font-mono text-emerald-300">1.0 ～ 2.5 公里</td>
-                <td class="p-2.5 text-slate-300">專注 2.5km 內雙疊/三疊，慢騎安全拉工時</td>
+                <td class="p-2.5 font-mono text-rose-400">&gt; 3.2 公里</td>
                 <td class="p-2.5 text-right font-mono text-emerald-400">約 NT$ 2 元</td>
                 <td class="p-2.5 text-right font-mono text-emerald-300 font-bold">NT$ 390 ～ $440</td>
+                <td class="p-2.5 text-slate-300">專注 2.5km 內雙疊/三疊，慢騎安全拉工時</td>
               </tr>
               <tr :class="simVehicleMode === 'motorcycle' ? 'bg-cyan-500/10' : 'hover:bg-slate-800/30'" class="transition cursor-pointer" @click="setVehicleMode('motorcycle')">
                 <td class="p-2.5 font-bold text-cyan-300 flex items-center gap-1"><span>🛵</span> 3. 機車</td>
                 <td class="p-2.5 font-mono text-slate-300">40 ～ 50 km/h</td>
                 <td class="p-2.5 font-mono text-cyan-300">3.5 ～ 5.0 公里</td>
-                <td class="p-2.5 text-slate-300">拒接長距單發，鎖定大商圈 3 疊高速吞吐</td>
+                <td class="p-2.5 font-mono text-rose-400">&gt; 6.0 km (單發&gt;3.5km)</td>
                 <td class="p-2.5 text-right font-mono text-rose-400">約 NT$ 22 元</td>
                 <td class="p-2.5 text-right font-mono text-cyan-300 font-black">NT$ 480 ～ $550+ 🚀</td>
+                <td class="p-2.5 text-slate-300">拒接長距單發，鎖定大商圈 3 疊高速吞吐</td>
               </tr>
             </tbody>
           </table>
         </div>
-
-        <!-- 第一原理深度戰術解讀（外送實務盲點） -->
-        <div class="bg-slate-950 p-4 rounded-xl border border-amber-500/30 text-xs text-slate-300 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <h3 class="text-amber-400 font-bold flex items-center gap-1.5 text-xs sm:text-sm">
-              <span>💡</span> 第一原理深度戰術解讀（外送實務盲點）
-            </h3>
-            <span :class="simMultiplier >= 1.5 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : (simMultiplier > 1.05 ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' : 'bg-rose-500/20 text-rose-300 border-rose-500/40')" class="px-2 py-0.5 rounded text-[10px] font-bold border font-mono">
-              {{ simMultiplier >= 1.5 ? '🌟 黃金並聯（超高產值）' : (simMultiplier > 1.05 ? '⚡ 輕度重疊（有效增益）' : '⚠️ 完全串聯（零重疊效益）') }}
-            </span>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-[11px] text-slate-300">
-            <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
-              <strong class="text-amber-300 block">🛑 實務盲點 1：接了疊單 ≠ 自動賺到高時薪</strong>
-              <p class="text-slate-400 leading-relaxed">
-                若 2 單每單 25 分鐘，實際卻花了 50 分鐘才送完，表示兩單在時間軸上<strong>完全無重疊</strong>（完全串聯跑單），放大倍數跌回 <span class="text-rose-400 font-mono font-bold">1.00 倍</span>，實質時薪僅有專法法定保底底線 NT$245/時。
-              </p>
-            </div>
-
-            <div class="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
-              <strong class="text-emerald-300 block">🎯 核心精髓：物理時間壓縮率是第一關鍵</strong>
-              <p class="text-slate-400 leading-relaxed">
-                疊單超高產值的本質是<strong>「並聯壓縮物理工時」</strong>。若能透過同店家取餐、順路短距將 50 分鐘的法定工時壓縮在 30 分鐘送完，放大倍數立即躍升為 <span class="text-emerald-400 font-mono font-bold">1.67 倍</span>，實質時薪直接飆上 NT$408/時！
-              </p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-      <!-- 作戰參數標準與拒接紅線對照表 -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-        
-        <!-- 黃金標準 -->
-        <div class="bg-slate-900 p-4 sm:p-5 rounded-2xl border border-emerald-500/30 space-y-2.5">
-          <h3 class="text-xs sm:text-sm font-bold text-emerald-400 flex items-center gap-1.5">
-            <span>🎯</span> 疊單黃金作戰標準（最大化產值）
-          </h3>
-          <ul class="text-xs text-slate-300 space-y-2">
-            <li class="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-              <strong class="text-emerald-300">2 疊單標準：</strong>
-              <div class="text-slate-400 mt-0.5 text-[11px]">總里程 2.5 公里以內、耗時 20 分鐘以內、等餐 5～8 分鐘（雙倍計時最佳區）。</div>
-            </li>
-            <li class="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-              <strong class="text-emerald-300">3 疊單標準：</strong>
-              <div class="text-slate-400 mt-0.5 text-[11px]">總里程 3.5 公里以內、耗時 30 分鐘以內、等餐 8～12 分鐘（超高工時產值區）。</div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- 拒接紅線 -->
-        <div class="bg-slate-900 p-4 sm:p-5 rounded-2xl border border-rose-500/30 space-y-2.5">
-          <h3 class="text-xs sm:text-sm font-bold text-rose-400 flex items-center gap-1.5">
-            <span>🚫</span> 拒接紅線指標（避免效率稀釋）
-          </h3>
-          <ul class="text-xs text-slate-300 space-y-2">
-            <li class="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-              <strong class="text-rose-300">2 疊單紅線：</strong>
-              <div class="text-slate-400 mt-0.5 text-[11px]">總里程超過 3.0 公里建議果斷拒接（避免里程過長拉低時薪）。</div>
-            </li>
-            <li class="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-              <strong class="text-rose-300">3 疊單紅線：</strong>
-              <div class="text-slate-400 mt-0.5 text-[11px]">總里程超過 4.0 公里或送達點脫離核心熱區之訂單一律拒接。</div>
-            </li>
-          </ul>
-        </div>
-
       </div>
 
-      <!-- 🛵 機車外送員實戰指南：打破「3 公里魔咒」與收益最大化戰略 -->
+      <!-- ══════════════════════════════════════════════════════════ -->
+      <!-- 3. 機車外送員實戰指南：打破「3 公里魔咒」與 5 大鐵律 -->
+      <!-- ══════════════════════════════════════════════════════════ -->
       <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-cyan-950/40 p-4 sm:p-6 rounded-2xl border border-cyan-500/40 shadow-2xl space-y-4 sm:space-y-5">
         
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
@@ -1146,7 +1100,7 @@
             <div class="flex items-center gap-2">
               <span class="text-xl">🛵</span>
               <h3 class="text-sm sm:text-base font-bold text-cyan-300">
-                機車帳號實戰：如何打破「3 公里魔咒」？
+                實戰指南：如何打破「3 公里魔咒」？
               </h3>
             </div>
             <p class="text-[11px] text-slate-400 mt-1">
@@ -1154,18 +1108,8 @@
             </p>
           </div>
           <span class="inline-flex items-center gap-1 self-start sm:self-auto px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-bold font-mono border border-cyan-500/30">
-            機車專屬作戰手冊
+            距離與單數決策樹
           </span>
-        </div>
-
-        <!-- 為什麼機車容易接到超過 3 公里的單？ -->
-        <div class="bg-slate-950 p-3.5 sm:p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
-          <div class="font-bold text-slate-200 flex items-center gap-1.5 text-xs sm:text-sm">
-            <span>❓</span> 為什麼機車帳號特別容易接到超過 3 公里的訂單？
-          </div>
-          <p class="text-slate-400 leading-relaxed text-[11px]">
-            平台演算法會依據載具速度（機車 40~50 km/h vs 腳踏車/電輔車 15 km/h）分配單量。短距單優先派給慢速載具，而 <strong class="text-cyan-300">3 公里以上的跨區單則大量傾斜給機車</strong>。但超過 3 公里<strong>「不代表一定是雷單」</strong>，關鍵在於它是<span class="text-rose-400 font-bold">「單發單」</span>還是<span class="text-emerald-400 font-bold">「多疊單」</span>！
-          </p>
         </div>
 
         <!-- 3 大距離陷阱圖解 -->
@@ -1240,7 +1184,7 @@
           </table>
         </div>
 
-        <!-- 🚀 機車司機收益最大化：5 大接單鐵律 -->
+        <!-- 🚀 5 大接單鐵律 -->
         <div class="bg-slate-950/80 p-4 rounded-xl border border-cyan-500/30 space-y-3 text-xs">
           <h4 class="text-cyan-300 font-bold text-xs sm:text-sm flex items-center gap-1.5">
             <span>💎</span> 機車司機收益最大化：5 大實戰接單鐵律
@@ -1285,135 +1229,23 @@
 
       </div>
 
-      <!-- 👑 60分鐘極限效益接單樣板（黃金並聯 ＋ 無縫串接實戰藍圖） -->
-      <div class="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-amber-500/40 shadow-2xl space-y-4 sm:space-y-5">
-        
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
-          <div>
-            <h3 class="text-sm sm:text-base font-bold text-amber-300 flex items-center gap-2">
-              <span>👑</span> 60 分鐘極限效益接單樣板（黃金並聯 ＋ 無縫串接實戰藍圖）
-            </h3>
-            <p class="text-[11px] text-slate-400 mt-0.5">
-              第一原理實戰解構：如何善用專法「各單獨立計時」特性，在 60 分鐘內將實質時薪拉升至 NT$480+！
-            </p>
-          </div>
-          <span class="inline-flex items-center gap-1 self-start sm:self-auto px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold font-mono border border-amber-500/30">
-            ⚡ 放大倍數 1.67x ～ 2.0x
-          </span>
-        </div>
-
-        <!-- 3 大接單模式 60 分鐘效益比較 -->
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs border-collapse font-sans">
-            <thead>
-              <tr class="bg-slate-950 text-slate-400 border-b border-slate-800 text-[11px]">
-                <th class="p-2.5 font-bold">接單模式</th>
-                <th class="p-2.5 font-bold">60 分鐘接單組合</th>
-                <th class="p-2.5 font-bold text-right">累計法定工時</th>
-                <th class="p-2.5 font-bold text-right">工時放大倍數</th>
-                <th class="p-2.5 font-bold text-right">專法保底時薪</th>
-                <th class="p-2.5 font-bold text-right text-emerald-400">實領時薪 (含小費/獎勵)</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-800 text-xs">
-              <tr class="hover:bg-slate-800/30 text-slate-300">
-                <td class="p-2.5 font-bold text-rose-400 flex items-center gap-1"><span>❌</span> 低效串聯單</td>
-                <td class="p-2.5 text-slate-400">單發 2 單 ＋ 中間等單 10 分鐘</td>
-                <td class="p-2.5 text-right font-mono text-cyan-300">50 分鐘</td>
-                <td class="p-2.5 text-right font-mono text-rose-400 font-bold">0.83 倍</td>
-                <td class="p-2.5 text-right font-mono">$204 元</td>
-                <td class="p-2.5 text-right font-mono text-slate-400">約 $220 元</td>
-              </tr>
-              <tr class="hover:bg-slate-800/30 text-slate-300">
-                <td class="p-2.5 font-bold text-slate-200 flex items-center gap-1"><span>🟡</span> 緊湊單發單</td>
-                <td class="p-2.5 text-slate-400">單發 3 單（完全無縫接單、無疊單）</td>
-                <td class="p-2.5 text-right font-mono text-cyan-300">60 分鐘</td>
-                <td class="p-2.5 text-right font-mono text-amber-300 font-bold">1.00 倍</td>
-                <td class="p-2.5 text-right font-mono">$245 元</td>
-                <td class="p-2.5 text-right font-mono text-slate-300">約 $285 元</td>
-              </tr>
-              <tr class="bg-emerald-950/40 text-emerald-200 border-emerald-500/30">
-                <td class="p-2.5 font-bold text-emerald-300 flex items-center gap-1"><span>👑</span> 極限黃金並聯</td>
-                <td class="p-2.5 text-emerald-100 font-semibold">雙疊單 × 2 組（共 4 單短距並聯）</td>
-                <td class="p-2.5 text-right font-mono text-emerald-300 font-black">100 分鐘</td>
-                <td class="p-2.5 text-right font-mono text-emerald-300 font-black">1.67 倍</td>
-                <td class="p-2.5 text-right font-mono text-emerald-300 font-black">$408 元</td>
-                <td class="p-2.5 text-right font-mono text-emerald-300 font-black">NT$ 480 ～ 520 元 🚀</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- 實戰作戰時間軸剖析 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-          
-          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="font-bold text-cyan-300 flex items-center gap-1.5">
-                <span>📍</span> 前半小時（00:00 ～ 00:30）：第一戰役
-              </span>
-              <span class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono">耗時 30 分</span>
-            </div>
-            <div class="text-slate-300 space-y-1 text-[11px] leading-relaxed">
-              <div>• <strong>接單型態</strong>：商圈美食街雙疊單（單 A ＋ 單 B）。</div>
-              <div>• <strong>行程路線</strong>：同地點取餐，順路 2.3 公里，耗時 30 分鐘全部交付。</div>
-              <div>• <strong>工時累加</strong>：單 A (25分) ＋ 單 B (25分) ＝ <span class="text-cyan-300 font-mono font-bold">50 分鐘法定工時</span>！</div>
-            </div>
-          </div>
-
-          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="font-bold text-purple-300 flex items-center gap-1.5">
-                <span>📍</span> 後半小時（00:30 ～ 01:00）：第二戰役
-              </span>
-              <span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">耗時 30 分</span>
-            </div>
-            <div class="text-slate-300 space-y-1 text-[11px] leading-relaxed">
-              <div>• <strong>無縫技巧</strong>：在送達單 B 前 2 分鐘（00:28），預先接下下一組雙疊單（單 C ＋ 單 D）。</div>
-              <div>• <strong>行程路線</strong>：同商圈手搖飲＋炸雞雙取，順路 2.1 公里交付。</div>
-              <div>• <strong>工時累加</strong>：單 C (25分) ＋ 單 D (25分) ＝ <span class="text-purple-300 font-mono font-bold">50 分鐘法定工時</span>！</div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- 戰術總結：3要與3不守則 -->
-        <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 text-[11px] grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div class="space-y-1">
-            <strong class="text-emerald-400 flex items-center gap-1"><span>✅</span> 最大化效益「3 要原則」：</strong>
-            <ul class="text-slate-400 space-y-0.5 list-disc list-inside">
-              <li><strong>要鎖定核心短距商圈</strong>（2.5km 內最容易達成雙單時間並聯）。</li>
-              <li><strong>要優先接雙疊/三疊</strong>（同店家或鄰近商圈取餐一律優先接）。</li>
-              <li><strong>要在交付前預接單</strong>（維持輪子持續滾動，消除零產值空等）。</li>
-            </ul>
-          </div>
-          <div class="space-y-1">
-            <strong class="text-rose-400 flex items-center gap-1"><span>🚫</span> 避免產值稀釋「3 不守則」：</strong>
-            <ul class="text-slate-400 space-y-0.5 list-disc list-inside">
-              <li><strong>不接遠距單</strong>（超過 3.5km 會拉長物理時間，放大倍數降回 1.0x）。</li>
-              <li><strong>不原地乾等單</strong>（空等 10 分鐘會直接將放大倍數拉到 0.8x 以下）。</li>
-              <li><strong>不接偏遠跨區單</strong>（送至荒郊野外將中斷無縫銜接鏈）。</li>
-            </ul>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- ⏱️ 觀念秒懂：手錶時間（實際跑單耗時） vs 帳單工時（每單服務時間） -->
+      <!-- ══════════════════════════════════════════════════════════ -->
+      <!-- 4. 觀念核心：手錶時間（物理工時） vs 帳單工時（法定工時） -->
+      <!-- ══════════════════════════════════════════════════════════ -->
       <div class="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-cyan-500/40 shadow-2xl space-y-4">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <h3 class="text-sm sm:text-base font-bold text-cyan-300 flex items-center gap-2">
-            <span>⏱️</span> 觀念秒懂：手錶時間（實際跑單耗時） vs 帳單工時（每單服務時間）
+            <span>⏱️</span> 觀念秒懂：手錶時間（物理工時） vs 帳單工時（法定工時）
           </h3>
           <span class="px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-bold font-mono border border-cyan-500/30">
-            核心專法觀念
+            專法核心精髓
           </span>
         </div>
 
         <p class="text-xs text-slate-300 leading-relaxed">
           這兩個概念是專法精算中<strong>最核心、也最容易混淆的關鍵差異</strong>。簡單一句話區分：
-          <span class="text-teal-300 font-bold">「實際跑單耗時」＝ 看手錶</span>，
-          <span class="text-cyan-300 font-bold">「每單服務時間」＝ 看 App 帳單明細</span>。
+          <span class="text-teal-300 font-bold">「實際跑單耗時」＝ 看手錶（物理肉體付出）</span>，
+          <span class="text-cyan-300 font-bold">「每單服務時間」＝ 看 App 帳單明細（政府合法承認）</span>。
         </p>
 
         <!-- 情境對照卡片 -->
@@ -1427,7 +1259,7 @@
               <span class="text-[10px] px-1.5 py-0.5 rounded bg-teal-500/20 text-teal-300 font-bold font-mono">肉體真實付出</span>
             </div>
             <div class="text-slate-300 text-[11px] space-y-1.5 leading-relaxed">
-              <div>• <strong>定義</strong>：您手錶上看著時間從 12:00 走到 12:30，在物理世界真實騎車花費的時間。</div>
+              <div>• <strong>定義</strong>：您手錶上看著時間從 12:00 走到 12:30，在物理世界真實花費的時間。</div>
               <div>• <strong>實例</strong>：12:00 在便當店同時領取雙疊單（單 A ＋ 單 B），12:30 將兩單全部送完。</div>
               <div>• ⏱️ <strong>您的實際耗時</strong>：剛好就是 <strong class="text-teal-300 font-mono">30 分鐘</strong>。</div>
             </div>
