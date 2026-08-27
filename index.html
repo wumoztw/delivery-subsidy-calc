@@ -2431,31 +2431,47 @@
           return dur * multiplier;
         };
 
-        // 戰力標籤評定（依全域載具模式動態判定）
+        // 戰力標籤評定（升級：整合第一原理多疊密度豁免演算法）
         const getTierLabel = (t) => {
           const dur = Number(t.duration) || 0;
           const dist = Number(t.distance) || 0;
           const pay = Number(t.basePay) || 0;
-          const stacks = Number(t.stacks) || 1;
+          const stacks = Math.min(10, Math.max(1, Number(t.stacks) || 1));
           const mode = vehicleMode.value;
+          const rateVal = rate.value || 245;
+
+          const multiplier = stackMultiplierMap[stacks] || (1.0 + (stacks - 1) * 0.75);
+          const statMins = dur * multiplier;
+          const legal = (statMins / 60) * rateVal;
+          const kmRate = dist > 0 ? (legal / dist) : 0;
+          const avgDistPerStack = dist / stacks;
+          const isMultiStack = stacks >= 2;
 
           if (mode === 'walk') {
-            if (dist > 1.2 || dur >= 30) return '🚫 步行超距雷單';
-            if (dist > 0.8) return '⚠️ 步行偏遠單';
-            if (stacks >= 2 && dist <= 0.8) return '🌟 SSR 步行黃金疊單';
+            // 步行模式：密度豁免 (均單 <= 0.8km)
+            if (isMultiStack && avgDistPerStack <= 0.8) {
+              return stacks >= 3 ? '👑 SSR 步行群單神單' : '🌟 SSR 步行黃金疊單';
+            }
+            if (stacks === 1 && (dist > 1.0 || dur >= 30)) return '🚫 步行超距雷單';
+            if (avgDistPerStack > 0.8) return '⚠️ 步行偏遠單';
             if (dist <= 0.8 && dur <= 20) return '🎯 SR 步行短單';
             return '⚡ 標準單';
           } else if (mode === 'bike') {
-            if (dist >= 3.2 || dur >= 35) return '🚫 電輔超距雷單';
-            if (dist >= 2.5) return '⚠️ 電輔偏遠單';
-            if ((stacks >= 2 && dist <= 2.5 && pay >= 90) || (dist > 0 && (pay/dist) >= 60)) return '🌟 SSR 電輔黃金疊單';
+            // 電輔模式：密度豁免 (均單 <= 2.5km，如 5 疊 6km 均單 1.2km)
+            if (isMultiStack && avgDistPerStack <= 2.5) {
+              return (stacks >= 4 || kmRate >= 80) ? '👑 SSR 5疊奇蹟神單' : '🌟 SSR 電輔黃金疊單';
+            }
+            if (stacks === 1 && (dist >= 3.2 || dur >= 35)) return '🚫 電輔超距雷單';
+            if (avgDistPerStack > 2.5) return '⚠️ 電輔偏遠單';
             if (dist <= 2.5 && dur <= 22) return '🎯 SR 電輔單';
             return '⚡ 標準單';
           } else {
-            // motorcycle
-            if ((stacks === 1 && dist >= 3.5) || dist >= 6.0 || dur >= 35) return '🚫 長距單發雷單';
-            if (dist >= 4.5 && stacks <= 2) return '⚠️ 跨區長距單';
-            if ((stacks >= 3 && dist <= 5.5) || (stacks >= 2 && dist <= 3.0 && pay >= 90)) return '🌟 SSR 機車黃金疊單';
+            // 機車模式：密度豁免 (均單 <= 3.5km，如 4 疊 8km 均單 2.0km)
+            if (isMultiStack && avgDistPerStack <= 3.5) {
+              return (stacks >= 4 || kmRate >= 70) ? '👑 SSR 機車高速群單' : '🌟 SSR 機車黃金疊單';
+            }
+            if (stacks === 1 && (dist >= 3.5 || dur >= 35)) return '🚫 長距單發雷單';
+            if (avgDistPerStack > 4.0) return '⚠️ 跨區長距單';
             if (dist <= 3.0 && dur <= 20) return '🎯 SR 商圈快單';
             return '⚡ 標準單';
           }
