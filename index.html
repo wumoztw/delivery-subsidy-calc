@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW" class="dark">
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="外送專法精算">
-  <meta name="theme-color" content="#020617">
+  <meta name="theme-color" content="#f8fafc">
   <!-- 閃電高質感 SVG Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
   <!-- ═══ Google Fonts 最佳化載入 ═══ -->
@@ -39,7 +39,6 @@
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
@@ -47,14 +46,77 @@
             mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
           },
           colors: {
-            brand: {
+            // ═══ 方案四：【日間抗反光紙白】(Paper Clean Light) 專業日間配色 ═══
+            slate: {
+              50: '#f8fafc',   // 純淨紙白外框
+              100: '#0f172a',  // 最高對比標題深墨色 (Obsidian Ink)
+              200: '#1e293b',  // 重要文字與次標題 (Deep Slate)
+              300: '#334155',  // 正文內文 (Body Charcoal)
+              400: '#475569',  // 輔助說明文字 (Readable Slate)
+              500: '#64748b',  // 備註與圖標 (Muted Slate)
+              600: '#94a3b8',  // 次要邊框與分隔線
+              700: '#cbd5e1',  // 輸入框邊框 (Light Border)
+              800: '#e2e8f0',  // 卡片外框與分割線 (Card Border)
+              900: '#ffffff',  // 卡片白色背景 (Pure Card White)
+              950: '#f8fafc',  // 頁面畫布底色 (Paper Canvas)
+            },
+            emerald: {
               50: '#ecfdf5',
-              100: '#d1fae5',
-              400: '#34d399',
-              500: '#10b981',
-              600: '#059669',
-              900: '#064e3b',
-              950: '#022c22',
+              100: '#064e3b',
+              200: '#047857',
+              300: '#059669',
+              400: '#047857',  // 日間抗反光深林翡翠綠
+              500: '#059669',
+              600: '#047857',
+              700: '#065f46',
+              800: '#064e3b',
+              900: '#ecfdf5',  // 徽章與標籤柔和淺綠底
+              950: '#f0fdf4',
+            },
+            cyan: {
+              50: '#f0f9ff',
+              100: '#0c4a6e',
+              200: '#0369a1',
+              300: '#0284c7',
+              400: '#0369a1',  // 疊單藍 (High-Contrast Sky Blue)
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+              900: '#f0f9ff',  // 疊單徽章淺藍底
+              950: '#f0f9ff',
+            },
+            amber: {
+              50: '#fffbeb',
+              100: '#78350f',
+              200: '#92400e',
+              300: '#b45309',
+              400: '#b45309',  // 警示琥珀金 (Deep Warm Amber)
+              500: '#d97706',
+              600: '#b45309',
+              700: '#92400e',
+              900: '#fffbeb',  // 警示徽章淺金底
+              950: '#fffbeb',
+            },
+            rose: {
+              50: '#fff1f2',
+              100: '#881337',
+              200: '#9f1239',
+              300: '#be123c',
+              400: '#be123c',  // 成本扣除與雷單深紅 (Crisp Crimson)
+              500: '#e11d48',
+              600: '#be123c',
+              700: '#9f1239',
+              900: '#fff1f2',  // 扣除成本徽章淺紅底
+              950: '#fff1f2',
+            },
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              400: '#047857',
+              500: '#059669',
+              600: '#047857',
+              900: '#ecfdf5',
+              950: '#f8fafc',
             }
           }
         }
@@ -118,12 +180,21 @@
       line-height: 1.35;
     }
 
-    /* 7. 暗色模式對比度與易讀性提升 (防止次要文字過暗造成視覺疲勞) */
+    /* 7. 日間紙白高對比度與抗反光優化 (陽光下依然清晰銳利) */
     .text-slate-500 {
-      color: #94a3b8 !important; /* 提升至 slate-400 等級，確保在深色底色下清晰可讀 */
+      color: #64748b !important; /* 日間清晰深石墨灰，高對比不反光 */
     }
     .text-slate-400 {
-      color: #cbd5e1 !important; /* 提升至 slate-300 等級，閱讀長文更省力 */
+      color: #475569 !important; /* 日間標準內文石墨黑，清晰省力 */
+    }
+    .text-slate-300 {
+      color: #334155 !important;
+    }
+    .text-slate-200 {
+      color: #1e293b !important;
+    }
+    .text-slate-100 {
+      color: #0f172a !important; /* 最高對比深黑墨色 */
     }
 
     /* 8. 微型標籤字級保護 (防止手機戶外反光時小字模糊) */
@@ -140,10 +211,14 @@
       letter-spacing: 0.015em;
     }
 
-    /* 9. 柔和選取高亮配色 */
+    /* 9. 日間清新選取高亮配色 */
     ::selection {
-      background-color: rgba(16, 185, 129, 0.35);
-      color: #ffffff;
+      background-color: rgba(5, 150, 105, 0.2);
+      color: #064e3b;
+    }
+    /* 卡片立體微陰影優化 (提升紙張層次感) */
+    .shadow-xl, .shadow-2xl, .shadow-lg {
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
     }
 
     [v-cloak] { display: none !important; }
@@ -1833,7 +1908,7 @@
     </aside>
 
     <!-- 彈窗 1：原況文字 / 剪貼簿一鍵秒貼解析彈窗 -->
-    <div v-if="showPasteModal" v-cloak class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/80 backdrop-blur-sm">
+    <div v-if="showPasteModal" v-cloak class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-900/50 backdrop-blur-sm">
       <div class="bg-slate-900 border border-cyan-500/40 rounded-2xl w-full max-w-lg p-5 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <div class="flex items-center gap-2">
@@ -1903,7 +1978,7 @@
     </div>
 
     <!-- 彈窗 2：手動新增單筆彈窗 -->
-    <div v-if="showManualModal" v-cloak class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/80 backdrop-blur-sm">
+    <div v-if="showManualModal" v-cloak class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-900/50 backdrop-blur-sm">
       <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-lg p-5 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <div class="flex items-center gap-2">
@@ -1971,7 +2046,7 @@
     </div>
 
     <!-- 彈窗 3：AI 視覺辨識設定彈窗 (支援雙 AI 引擎) -->
-    <div v-if="showAiSettingsModal" v-cloak class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/80 backdrop-blur-sm">
+    <div v-if="showAiSettingsModal" v-cloak class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-900/50 backdrop-blur-sm">
       <div class="bg-slate-900 border border-emerald-500/40 rounded-2xl w-full max-w-lg p-5 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <div class="flex items-center gap-2">
