@@ -319,7 +319,7 @@
           <button type="button" @click="setGlobalVehicleMode('bike')"
             :class="vehicleMode === 'bike' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
             class="px-2.5 py-1 rounded-lg text-xs transition border flex items-center gap-1">
-            <span>🚲</span> <span>腳踏車/電輔</span>
+            <span>🚲</span> <span>腳踏車</span>
           </button>
           <button type="button" @click="setGlobalVehicleMode('motorcycle')"
             :class="vehicleMode === 'motorcycle' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
@@ -767,7 +767,7 @@
             <!-- 載具快選 -->
             <div class="flex items-center gap-1 p-0.5 bg-slate-950 rounded-lg border border-slate-800 text-[10px]">
               <button type="button" @click="setGlobalVehicleMode('walk')" :class="vehicleMode === 'walk' ? 'bg-amber-500/20 text-amber-300 font-bold' : 'text-slate-400'" class="px-2 py-0.5 rounded transition">🚶 步行</button>
-              <button type="button" @click="setGlobalVehicleMode('bike')" :class="vehicleMode === 'bike' ? 'bg-emerald-500/20 text-emerald-300 font-bold' : 'text-slate-400'" class="px-2 py-0.5 rounded transition">🚲 電輔</button>
+              <button type="button" @click="setGlobalVehicleMode('bike')" :class="vehicleMode === 'bike' ? 'bg-emerald-500/20 text-emerald-300 font-bold' : 'text-slate-400'" class="px-2 py-0.5 rounded transition">🚲 腳踏車</button>
               <button type="button" @click="setGlobalVehicleMode('motorcycle')" :class="vehicleMode === 'motorcycle' ? 'bg-cyan-500/20 text-cyan-300 font-bold' : 'text-slate-400'" class="px-2 py-0.5 rounded transition">🛵 機車</button>
             </div>
           </div>
@@ -1045,7 +1045,7 @@
             <button type="button" @click="setVehicleMode('bike')"
               :class="simVehicleMode === 'bike' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
               class="px-3 py-1.5 rounded-lg text-xs transition border flex items-center gap-1.5">
-              <span>🚲</span> <span>2. 腳踏車/電輔 (15-25 km/h)</span>
+              <span>🚲</span> <span>2. 腳踏車 (15-25 km/h)</span>
             </button>
             <button type="button" @click="setVehicleMode('motorcycle')"
               :class="simVehicleMode === 'motorcycle' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
@@ -1077,11 +1077,11 @@
             </p>
           </div>
 
-          <!-- 腳踏車/電輔車專屬建議 -->
+          <!-- 腳踏車專屬建議 -->
           <div v-else-if="simVehicleMode === 'bike'" class="space-y-1.5">
             <div class="flex items-center justify-between">
               <strong class="text-emerald-300 font-bold flex items-center gap-1.5 text-xs sm:text-sm">
-                <span>🚲</span> 腳踏車 / 電輔車模式作戰指南（慢騎拉工時、黃金雙疊）
+                <span>🚲</span> 腳踏車模式作戰指南（慢騎拉工時、黃金雙疊）
               </strong>
               <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold border border-emerald-500/30">作戰半徑 1.0 ～ 2.5km</span>
             </div>
@@ -1227,7 +1227,7 @@
                 <td class="p-2.5 text-slate-300">美食街高密度短雙疊、零油耗 100% 淨賺</td>
               </tr>
               <tr :class="simVehicleMode === 'bike' ? 'bg-emerald-500/10' : 'hover:bg-slate-800/30'" class="transition cursor-pointer" @click="setVehicleMode('bike')">
-                <td class="p-2.5 font-bold text-emerald-300 flex items-center gap-1"><span>🚲</span> 2. 腳踏車/電輔</td>
+                <td class="p-2.5 font-bold text-emerald-300 flex items-center gap-1"><span>🚲</span> 2. 腳踏車</td>
                 <td class="p-2.5 font-mono text-slate-300">15 ～ 25 km/h</td>
                 <td class="p-2.5 font-mono text-emerald-300">1.0 ～ 2.5 公里</td>
                 <td class="p-2.5 font-mono text-rose-400">&gt; 3.2 公里</td>
@@ -1324,7 +1324,7 @@
                 <span>1.</span> 嚴格執行「微距極限主義」（將空車死時間壓縮為 0）
               </strong>
               <p class="text-slate-400 text-[11px] leading-relaxed">
-                步行只接 300~500m、電輔只接 1.0~1.8km、機車只接 1.5~2.5km。送達點就在下個熱點隔壁，<strong>送完瞬間車輪就在下一家店門口，全天 0 分鐘浪費在無薪折返跑上！</strong>
+                步行只接 300~500m、腳踏車只接 1.0~1.8km、機車只接 1.5~2.5km。送達點就在下個熱點隔壁，<strong>送完瞬間車輪就在下一家店門口，全天 0 分鐘浪費在無薪折返跑上！</strong>
               </p>
             </div>
 
@@ -1351,7 +1351,7 @@
                 <span>4.</span> 避開所有「長距孤島單」（單發過長一律拒接）
               </strong>
               <p class="text-slate-400 text-[11px] leading-relaxed">
-                沒有疊單倍率覆蓋時，單發超過機車 3km、電輔 2.5km、步行 800m 絕不能接。任何將你帶離商圈的長單，都會讓你陷入「去程賺車資、回程做白工」的慢性失血。
+                沒有疊單倍率覆蓋時，單發超過機車 3km、腳踏車 2.5km、步行 800m 絕不能接。任何將你帶離商圈的長單，都會讓你陷入「去程賺車資、回程做白工」的慢性失血。
               </p>
             </div>
           </div>
@@ -1380,9 +1380,9 @@
                 <td class="p-2.5 text-right font-mono text-amber-300 font-bold">NT$ 210 ～ $245</td>
                 <td class="p-2.5 text-slate-300">守在百貨美食街/捷運出口，只接對街大樓短單，<strong>0 成本 100% 落袋</strong></td>
               </tr>
-              <!-- 電輔車 -->
+              <!-- 腳踏車 -->
               <tr class="hover:bg-slate-800/30 text-slate-300">
-                <td class="p-2.5 font-bold text-emerald-300 flex items-center gap-1"><span>🚲</span> 腳踏車/電輔</td>
+                <td class="p-2.5 font-bold text-emerald-300 flex items-center gap-1"><span>🚲</span> 腳踏車</td>
                 <td class="p-2.5 font-mono text-emerald-300 font-bold">1.0km ～ 2.0km (生活圈)</td>
                 <td class="p-2.5 text-slate-300">等餐 6 分 + 悠閒巡航 8 分 + 交付 2 分 = <span class="font-mono text-emerald-300 font-bold">16 分鐘</span></td>
                 <td class="p-2.5 font-mono text-slate-200">2.8 ～ 3.2 趟 / hr</td>
@@ -1466,7 +1466,7 @@
             <button type="button" @click="tacticsGuideTab = 'bike'"
               :class="tacticsGuideTab === 'bike' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
               class="px-2.5 py-1 rounded-lg text-xs transition border flex items-center gap-1">
-              <span>🚲</span> <span>腳踏車/電輔實戰</span>
+              <span>🚲</span> <span>腳踏車實戰</span>
             </button>
             <button type="button" @click="tacticsGuideTab = 'motorcycle'"
               :class="tacticsGuideTab === 'motorcycle' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
@@ -1653,18 +1653,18 @@
         </div>
 
         <!-- ────────────────────────────────────────────────────────── -->
-        <!-- 3-B. 🚲 腳踏車 / 電輔車外送員實戰指南 -->
+        <!-- 3-B. 🚲 腳踏車外送員實戰指南 -->
         <!-- ────────────────────────────────────────────────────────── -->
         <div v-show="tacticsGuideTab === 'bike'" class="space-y-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="text-xl">🚲</span>
               <h4 class="text-sm font-bold text-emerald-300">
-                腳踏車/電輔實戰：如何打破「腿力耗竭魔咒」與悠閒高產值？
+                腳踏車實戰：如何打破「腿力耗竭魔咒」與悠閒高產值？
               </h4>
             </div>
             <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold font-mono border border-emerald-500/30">
-              電輔車專屬決策樹
+              腳踏車專屬決策樹
             </span>
           </div>
 
@@ -1693,12 +1693,12 @@
                 <span>🔋</span> 陷阱 3：電量見底與空車重拖
               </span>
               <p class="text-slate-400 text-[11px] leading-relaxed">
-                電輔車沒電後車身重達 20kg+，踩踏阻力倍增導致後續跑單節奏與體能全毀。
+                腳踏車在體能透支後，踩踏阻力倍增導致後續跑單節奏與體能全毀。
               </p>
             </div>
           </div>
 
-          <!-- 腳踏車/電輔距離與單數決策矩陣 -->
+          <!-- 腳踏車距離與單數決策矩陣 -->
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs border-collapse font-sans">
               <thead>
@@ -1708,7 +1708,7 @@
                   <th class="p-2.5 font-bold">送達環境</th>
                   <th class="p-2.5 font-bold text-center">戰力評級</th>
                   <th class="p-2.5 font-bold text-right">預估實質時薪</th>
-                  <th class="p-2.5 font-bold text-emerald-300">電輔司機實戰處置</th>
+                  <th class="p-2.5 font-bold text-emerald-300">腳踏車司機實戰處置</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-800 text-xs">
@@ -1732,7 +1732,7 @@
                   <td class="p-2.5 font-bold text-emerald-300 flex items-center gap-1"><span>👑</span> 生活圈黃金雙疊/三疊</td>
                   <td class="p-2.5 font-mono text-emerald-300 font-bold">1.0 ～ 2.5 km</td>
                   <td class="p-2.5 text-emerald-100">核心商圈 / 順路住宅區</td>
-                  <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">🌟 SSR 電輔黃金單</span></td>
+                  <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">🌟 SSR 腳踏車黃金單</span></td>
                   <td class="p-2.5 text-right font-mono text-emerald-300 font-black">NT$ 390 ～ $440+</td>
                   <td class="p-2.5 text-emerald-300 font-black">秒接！1.75x~2.5x 工時並聯最高性價比 🚀</td>
                 </tr>
@@ -1748,10 +1748,10 @@
             </table>
           </div>
 
-          <!-- 腳踏車/電輔司機 5 大接單鐵律 -->
+          <!-- 腳踏車司機 5 大接單鐵律 -->
           <div class="bg-slate-950/80 p-4 rounded-xl border border-emerald-500/30 space-y-3 text-xs">
             <h4 class="text-emerald-300 font-bold text-xs sm:text-sm flex items-center gap-1.5">
-              <span>💎</span> 腳踏車/電輔司機收益最大化：5 大實戰接單鐵律
+              <span>💎</span> 腳踏車司機收益最大化：5 大實戰接單鐵律
             </h4>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px] text-slate-300">
               <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
@@ -1778,7 +1778,7 @@
               <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
                 <strong class="text-cyan-300 block">4. 必備「雙電池輪替或快充策略」</strong>
                 <p class="text-slate-400 leading-relaxed">
-                  確保電輔車隨時維持充沛動力輸出，避免電池見底造成腳踩重拖。
+                  確保腳踏車隨時維持平順穩定踏頻，避免重踩造成腿部提早疲乏。
                 </p>
               </div>
 
@@ -2428,7 +2428,7 @@
         const copyBtnText = ref('複製完整戰報');
         const customPhysicalHours = ref(null);
 
-        // 全域外送載具模式：步行 (walk) / 腳踏車與電輔車 (bike) / 機車 (motorcycle)
+        // 全域外送載具模式：步行 (walk) / 腳踏車 (bike) / 機車 (motorcycle)
         const vehicleMode = ref(localStorage.getItem('delivery_calc_vehicle_mode') || 'motorcycle');
         const simVehicleMode = ref(vehicleMode.value);
         const tacticsGuideTab = ref(vehicleMode.value);
@@ -2448,7 +2448,7 @@
             desc: '極短距高密度、零油耗 100% 淨賺'
           },
           bike: {
-            name: '腳踏車/電輔車',
+            name: '腳踏車',
             icon: '🚲',
             speed: '15-25 km/h',
             costPerKm: 0.15,
@@ -2665,13 +2665,13 @@
             if (dist <= 0.8 && dur <= 20) return '🎯 SR 步行短單';
             return '⚡ 標準單';
           } else if (mode === 'bike') {
-            // 電輔模式：密度豁免 (均單 <= 2.5km，如 5 疊 6km 均單 1.2km)
+            // 腳踏車模式：密度豁免 (均單 <= 2.5km，如 5 疊 6km 均單 1.2km)
             if (isMultiStack && avgDistPerStack <= 2.5) {
-              return (stacks >= 4 || kmRate >= 80) ? '👑 SSR 5疊奇蹟神單' : '🌟 SSR 電輔黃金疊單';
+              return (stacks >= 4 || kmRate >= 80) ? '👑 SSR 5疊奇蹟神單' : '🌟 SSR 腳踏車黃金疊單';
             }
-            if (stacks === 1 && (dist >= 3.2 || dur >= 35)) return '🚫 電輔超距雷單';
-            if (avgDistPerStack > 2.5) return '⚠️ 電輔偏遠單';
-            if (dist <= 2.5 && dur <= 22) return '🎯 SR 電輔單';
+            if (stacks === 1 && (dist >= 3.2 || dur >= 35)) return '🚫 腳踏車超距雷單';
+            if (avgDistPerStack > 2.5) return '⚠️ 腳踏車偏遠單';
+            if (dist <= 2.5 && dur <= 22) return '🎯 SR 腳踏車單';
             return '⚡ 標準單';
           } else {
             // 機車模式：密度豁免 (均單 <= 3.5km，如 4 疊 8km 均單 2.0km)
@@ -3444,11 +3444,11 @@
               }
             } else if (mode === 'bike') {
               if (isHighDensityStack) {
-                tips.push({ type: 'stack_god', icon: '🌟', text: `[SSR 電輔工時並聯] ${stacks} 疊工時並聯！平均每單僅 ${avgDistPerStack.toFixed(2)}km (總距 ${dist.toFixed(1)}km)，每公里法定產值 NT$${kmRate.toFixed(0)}，完美吃滿專法工時倍率！` });
+                tips.push({ type: 'stack_god', icon: '🌟', text: `[SSR 腳踏車工時並聯] ${stacks} 疊工時並聯！平均每單僅 ${avgDistPerStack.toFixed(2)}km (總距 ${dist.toFixed(1)}km)，每公里法定產值 NT$${kmRate.toFixed(0)}，完美吃滿專法工時倍率！` });
               } else if (stacks === 1 && dist > 3.0) {
-                warnings.push({ type: 'dist_bad', icon: '🚫', text: `單發單超過 ${dist.toFixed(1)}km 超出電輔車舒適圈(2.5km)，回程耗電耗時，建議轉單` });
+                warnings.push({ type: 'dist_bad', icon: '🚫', text: `單發單超過 ${dist.toFixed(1)}km 超出腳踏車舒適圈(2.5km)，回程耗時費力，建議轉單` });
               } else if (dist > 3.2 && avgDistPerStack > 2.5) {
-                warnings.push({ type: 'dist_warn', icon: '⚠️', text: `總距離 ${dist.toFixed(1)}km 偏遠 (均單 ${avgDistPerStack.toFixed(1)}km)，電輔車建議鎖定 2.5km 內生活圈` });
+                warnings.push({ type: 'dist_warn', icon: '⚠️', text: `總距離 ${dist.toFixed(1)}km 偏遠 (均單 ${avgDistPerStack.toFixed(1)}km)，腳踏車建議鎖定 2.5km 內生活圈` });
               } else if (dist > 0 && stacks >= 2) {
                 tips.push({ type: 'good_dist', icon: '🚲', text: `距離 ${dist.toFixed(1)}km 搭配雙疊，慢騎拉工時最佳組合！` });
               }
@@ -3526,9 +3526,9 @@
               results.push({ level: 'danger', icon: '🚨', title: `${redCount} 張超出步行極限（>1.2km）`, desc: `步行超過 1.2km 耗時過長且空車回程體力負擔沉重，建議嚴格設定 800m 內短單。` });
             }
           } else if (mode === 'bike') {
-            results.push({ level: 'info', icon: '🚲', title: `目前為【腳踏車/電輔車模式】`, desc: `最佳半徑 1.0~2.5km。預估週期營運成本約 NT$${Math.round(totalVehicleCost.value)} 元。` });
+            results.push({ level: 'info', icon: '🚲', title: `目前為【腳踏車模式】`, desc: `最佳半徑 1.0~2.5km。預估週期營運成本約 NT$${Math.round(totalVehicleCost.value)} 元。` });
             if (farCount > 0) {
-              results.push({ level: 'warning', icon: '⚠️', title: `${farCount} 張訂單超出 2.5km`, desc: `電輔車超過 2.5km 會降低每小時雙疊率，建議專注 2.5km 內生活圈。` });
+              results.push({ level: 'warning', icon: '⚠️', title: `${farCount} 張訂單超出 2.5km`, desc: `腳踏車超過 2.5km 會降低每小時雙疊率，建議專注 2.5km 內生活圈。` });
             }
           } else {
             results.push({ level: 'info', icon: '🛵', title: `目前為【機車外送模式】`, desc: `時速 40~50km/h。預估週期油耗車損成本約 NT$${Math.round(totalVehicleCost.value)} 元（每公里 NT$1.5）。` });
@@ -3585,7 +3585,7 @@
 
         const simVehicleCostPerHour = computed(() => {
           if (simVehicleMode.value === 'motorcycle') return 22; // 油錢 10元 + 機油輪胎折舊 12元
-          if (simVehicleMode.value === 'bike') return 2;        // 電輔車充電 + 微量耗損 2元
+          if (simVehicleMode.value === 'bike') return 2;        // 腳踏車保養 + 微量耗損 2元
           return 0;                                             // 步行 0元成本
         });
 
