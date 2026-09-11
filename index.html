@@ -1045,7 +1045,7 @@
             <button type="button" @click="setVehicleMode('bike')"
               :class="simVehicleMode === 'bike' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
               class="px-3 py-1.5 rounded-lg text-xs transition border flex items-center gap-1.5">
-              <span>🚲</span> <span>2. 腳踏車 (15-25 km/h)</span>
+              <span>🚲</span> <span>2. 腳踏車 (12-18 km/h)</span>
             </button>
             <button type="button" @click="setVehicleMode('motorcycle')"
               :class="simVehicleMode === 'motorcycle' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
@@ -1087,7 +1087,7 @@
             </div>
             <p class="text-slate-300 text-[11px] leading-relaxed">
               • <strong>最佳戰場</strong>：市中心密集商圈、校園周邊、捷運站沿線 2.5 公里生活圈。<br>
-              • <strong>核心戰術</strong>：鎖定 2.5km 內雙疊單，以 15~20km/h 悠閒安全騎乘，透過等餐 6~8 分鐘將每單服務時間拉滿至 24 分鐘（雙疊法定工時 48 分鐘），物理 30 分鐘完成，<strong>放大倍數 1.6x，時薪保底 NT$390+ 且體力負擔最低！</strong>
+              • <strong>核心戰術</strong>：鎖定 2.5km 內雙疊單，以 15~18km/h 悠閒平穩騎乘，搭配輕齒比高踏頻避免體力過度耗竭，透過等餐 6~8 分鐘將每單服務時間拉滿至 24 分鐘（雙疊法定工時 48 分鐘），物理 30 分鐘完成，<strong>放大倍數 1.6x，時薪保底 NT$390+ 且體力負擔最低！</strong>
             </p>
           </div>
 
@@ -1228,12 +1228,12 @@
               </tr>
               <tr :class="simVehicleMode === 'bike' ? 'bg-emerald-500/10' : 'hover:bg-slate-800/30'" class="transition cursor-pointer" @click="setVehicleMode('bike')">
                 <td class="p-2.5 font-bold text-emerald-300 flex items-center gap-1"><span>🚲</span> 2. 腳踏車</td>
-                <td class="p-2.5 font-mono text-slate-300">15 ～ 25 km/h</td>
+                <td class="p-2.5 font-mono text-slate-300">12 ～ 18 km/h</td>
                 <td class="p-2.5 font-mono text-emerald-300">1.0 ～ 2.5 公里</td>
                 <td class="p-2.5 font-mono text-rose-400">&gt; 3.2 公里</td>
                 <td class="p-2.5 text-right font-mono text-emerald-400">約 NT$ 2 元</td>
                 <td class="p-2.5 text-right font-mono text-emerald-300 font-bold">NT$ 390 ～ $440</td>
-                <td class="p-2.5 text-slate-300">專注 2.5km 內雙疊/三疊，慢騎安全拉工時</td>
+                <td class="p-2.5 text-slate-300">專注 2.5km 內生活圈雙疊/三疊，輕齒比慢騎持久拉工時</td>
               </tr>
               <tr :class="simVehicleMode === 'motorcycle' ? 'bg-cyan-500/10' : 'hover:bg-slate-800/30'" class="transition cursor-pointer" @click="setVehicleMode('motorcycle')">
                 <td class="p-2.5 font-bold text-cyan-300 flex items-center gap-1"><span>🛵</span> 3. 機車</td>
@@ -1387,7 +1387,7 @@
                 <td class="p-2.5 text-slate-300">等餐 6 分 + 悠閒巡航 8 分 + 交付 2 分 = <span class="font-mono text-emerald-300 font-bold">16 分鐘</span></td>
                 <td class="p-2.5 font-mono text-slate-200">2.8 ～ 3.2 趟 / hr</td>
                 <td class="p-2.5 text-right font-mono text-emerald-300 font-bold">NT$ 225 ～ $250</td>
-                <td class="p-2.5 text-slate-300">平路 18km/h 悠閒巡航不急躁，巷弄靠門取餐，<strong>體力負擔最低、合法賺滿工時</strong></td>
+                <td class="p-2.5 text-slate-300">平路 15~18km/h 悠閒平穩巡航，輕齒比防抽筋，巷弄靠門取餐，<strong>體能消耗最低、合法賺滿工時</strong></td>
               </tr>
               <!-- 機車 -->
               <tr class="hover:bg-slate-800/30 text-slate-300">
@@ -1792,7 +1792,7 @@
               <div class="p-3 rounded-lg bg-emerald-950/40 border border-emerald-500/40 space-y-1 sm:col-span-2">
                 <strong class="text-emerald-300 block">🎯 單張訂單 (單發) 專屬致勝戰術：生活圈平路悠閒巡航法 (1.0 ~ 2.0km)</strong>
                 <p class="text-slate-300 leading-relaxed">
-                  沒有疊單時，<strong>嚴格拒接 >2.5km 單發長單</strong>！專注在 1.0~2.0km 生活圈：等餐 6 分鐘 ＋ 維持 16~18km/h 悠閒平穩騎乘 8 分鐘 ＋ 交付 2 分鐘 ＝ <strong>單趟服務時間 16 分鐘（專法保障 NT$ 65.3）</strong>。回程僅 1.5km 騎 4 分鐘即可重返熱區，一小時跑 3 趟，<strong>淨時薪穩守 NT$ 225~250 且體力完全不疲累</strong>！
+                  沒有疊單時，<strong>嚴格拒接 >2.5km 單發長單</strong>！專注在 1.0~2.0km 生活圈：等餐 6 分鐘 ＋ 維持 15~18km/h 悠閒平穩騎乘 8 分鐘 ＋ 交付 2 分鐘 ＝ <strong>單趟服務時間 16 分鐘（專法保障 NT$ 65.3）</strong>。回程僅 1.5km 騎 4 分鐘即可重返熱區，一小時跑 3 趟，<strong>淨時薪穩守 NT$ 225~250 且體力完全不疲累</strong>！
                 </p>
               </div>
             </div>
@@ -2450,12 +2450,12 @@
           bike: {
             name: '腳踏車',
             icon: '🚲',
-            speed: '15-25 km/h',
+            speed: '12-18 km/h',
             costPerKm: 0.15,
             costPerHour: 2,
             maxDist: 2.5,
             redDist: 3.2,
-            desc: '2.5km 內雙疊/三疊，慢騎安全拉工時'
+            desc: '2.5km 內生活圈雙疊/三疊，輕齒比慢騎持久拉工時'
           },
           motorcycle: {
             name: '機車',
