@@ -35,8 +35,7 @@
   </script>
   <!-- PapaParse for CSV -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-  <!-- Tesseract.js OCR -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <!-- Tesseract.js OCR：僅在使用者真的觸發「離線 OCR 備援」時才動態載入，避免拖慢首屏 -->
   <script>
     tailwind.config = {
       theme: {
@@ -611,7 +610,7 @@
             <h3 class="text-sm font-bold text-slate-200">每單逐筆診斷報告</h3>
           </div>
           <div class="space-y-3">
-            <template v-for="ins in tripInsights" :key="ins.idx">
+            <template v-for="ins in tripInsights" :key="ins.t.id">
               <div class="bg-slate-950/70 rounded-xl border border-slate-800 overflow-hidden">
                 <!-- 訂單標頭列 -->
                 <div class="flex items-center justify-between px-3 py-2 border-b border-slate-800/60">
@@ -778,7 +777,7 @@
 
         <!-- 模式 A：手機版進階卡片視圖 -->
         <div class="sm:hidden p-3 space-y-2.5 max-h-[540px] overflow-y-auto">
-          <div v-for="(t, idx) in trips" :key="idx" class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 space-y-2">
+          <div v-for="(t, idx) in trips" :key="t.id" class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 space-y-2">
             <div class="flex items-center justify-between text-xs">
               <div class="flex items-center gap-1.5 flex-wrap">
                 <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center font-mono text-[10px]">{{ idx + 1 }}</span>
@@ -924,7 +923,7 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-800 font-mono">
-              <tr v-for="(t, idx) in trips" :key="idx" class="hover:bg-slate-800/40 transition">
+              <tr v-for="(t, idx) in trips" :key="t.id" class="hover:bg-slate-800/40 transition">
                 <td class="p-3 text-slate-500 font-sans">{{ idx + 1 }}</td>
                 <td class="p-3">
                   <select v-model.number="t.stacks" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-cyan-300 font-mono text-xs focus:outline-none focus:border-cyan-400 cursor-pointer">
@@ -2393,6 +2392,18 @@
 
     const STORAGE_KEY = 'delivery_subsidy_calc_v3';
 
+    // 產生穩定的訂單 id（供 v-for :key 使用，避免刪除/重排時用陣列 index 造成 DOM 錯位）
+    let __tripIdCounter = 0;
+    const makeTripId = () => {
+      if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+        return window.crypto.randomUUID();
+      }
+      __tripIdCounter += 1;
+      return `trip-${Date.now()}-${__tripIdCounter}`;
+    };
+    // 確保單筆訂單物件擁有 id，沒有的話（例如舊資料、CSV 匯入）就補一個
+    const ensureTripId = (t) => (t && t.id ? t : { ...t, id: makeTripId() });
+
     createApp({
       setup() {
         const activeTab = ref('dashboard');
@@ -2537,7 +2548,7 @@
               const data = JSON.parse(saved);
               if (data.rate) rate.value = data.rate;
               if (Array.isArray(data.trips)) {
-                trips.value = data.trips.map(t => ({
+                trips.value = data.trips.map(t => ensureTripId({
                   ...t,
                   baseFare: t.baseFare !== undefined ? t.baseFare : Math.max(0, (Number(t.basePay) || 0) - (Number(t.boostFare) || 0)),
                   boostFare: Number(t.boostFare) || 0
@@ -2554,14 +2565,15 @@
               try {
                 const data = JSON.parse(event.newValue);
                 if (data.rate) rate.value = data.rate;
-                if (Array.isArray(data.trips)) trips.value = data.trips;
+                if (Array.isArray(data.trips)) trips.value = data.trips.map(ensureTripId);
               } catch (e) {}
             }
           });
         });
 
-        // 自動保存至 LocalStorage
-        watch([rate, trips], () => {
+        // 自動保存至 LocalStorage（防抖 400ms：避免逐筆訂單打字時每個按鍵都整包序列化）
+        let saveToStorageTimer = null;
+        const persistToStorage = () => {
           try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify({
               rate: rate.value,
@@ -2570,7 +2582,22 @@
           } catch (e) {
             console.error('儲存至 LocalStorage 失敗:', e);
           }
+        };
+        watch([rate, trips], () => {
+          clearTimeout(saveToStorageTimer);
+          saveToStorageTimer = setTimeout(persistToStorage, 400);
         }, { deep: true });
+
+        // 頁面關閉/切背景前，若還有排隊中的儲存立即補寫一次，避免防抖期間資料遺失
+        window.addEventListener('beforeunload', () => {
+          if (saveToStorageTimer) { clearTimeout(saveToStorageTimer); persistToStorage(); }
+        });
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'hidden' && saveToStorageTimer) {
+            clearTimeout(saveToStorageTimer);
+            persistToStorage();
+          }
+        });
 
         // 新增單筆
         const addTrip = () => {
@@ -2580,6 +2607,7 @@
           const bPay = Number(newTrip.value.basePay) || (bFare + bBoost);
 
           trips.value.push({
+            id: makeTripId(),
             duration: Number(newTrip.value.duration) || 0,
             distance: Number(newTrip.value.distance) || 0,
             baseFare: bFare || (bPay ? Math.max(0, bPay - bBoost) : 0),
@@ -2711,6 +2739,7 @@
                 if (!bPay && (bFare || bBoost)) bPay = bFare + bBoost;
 
                 return {
+                  id: makeTripId(),
                   duration: dur,
                   distance: dist,
                   baseFare: bFare || (bPay ? Math.max(0, bPay - bBoost) : 0),
@@ -2880,7 +2909,7 @@
         const confirmPasteTrip = () => {
           const t = parsedPasteTrip.value;
           if (t.duration > 0 || t.basePay > 0) {
-            trips.value.push({ ...t });
+            trips.value.push({ ...t, id: makeTripId() });
             showPasteModal.value = false;
             pasteText.value = '';
             alert('已成功秒貼並加入訂單清單！');
@@ -2892,7 +2921,29 @@
         // 輔助函式：非同步微暫停（流量調節用）
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-        // 輔助函式：圖片壓縮轉為 Base64（限制長寬 1800px 內，0.88 最佳壓縮比，大幅減輕 API 傳輸負載）
+        // 延遲載入 Tesseract.js（僅在真正需要離線 OCR 備援時才下載，避免拖慢首屏載入）
+        let tesseractLoadPromise = null;
+        const ensureTesseractLoaded = () => {
+          if (window.Tesseract) return Promise.resolve();
+          if (tesseractLoadPromise) return tesseractLoadPromise;
+          const sources = [
+            'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.0/tesseract.min.js',
+            'https://unpkg.com/tesseract.js@5/dist/tesseract.min.js'
+          ];
+          const loadFrom = (i) => new Promise((resolve, reject) => {
+            if (i >= sources.length) { reject(new Error('Tesseract.js 所有 CDN 來源皆載入失敗')); return; }
+            const s = document.createElement('script');
+            s.src = sources[i];
+            s.onload = () => resolve();
+            s.onerror = () => { s.remove(); loadFrom(i + 1).then(resolve, reject); };
+            document.head.appendChild(s);
+          });
+          tesseractLoadPromise = loadFrom(0).catch(err => { tesseractLoadPromise = null; throw err; });
+          return tesseractLoadPromise;
+        };
+
+        // 輔助函式：圖片壓縮轉為 Base64（限制長寬 1024px 內，JPEG 品質 0.82，大幅減輕 API 傳輸負載）
         const imageFileToBase64 = (file) => {
           return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -2900,8 +2951,7 @@
               const img = new Image();
               img.onload = () => {
                 const canvas = document.createElement('canvas');
-                // 限制最長邊為 1800px 以保有極高文字銳利度
-                const maxDim = 1024; // App 截圖文字夠清晰，縮小體積加快 API 傳輸
+                // 限制最長邊為 1024px：App 截圖文字夠清晰，縮小體積加快 API 傳輸
                 let w = img.width;
                 let h = img.height;
                 if (w > maxDim || h > maxDim) {
@@ -2917,8 +2967,8 @@
                 canvas.height = h;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, w, h);
-                // 0.88 JPEG 壓縮比，體積大幅降至 ~200KB，文字邊緣依然 100% 銳利
-                resolve(canvas.toDataURL('image/jpeg', 0.82)); // 文字不受影響，體積降至 ~100KB
+                // JPEG 品質 0.82，體積大幅降至 ~100KB，文字邊緣依然清晰
+                resolve(canvas.toDataURL('image/jpeg', 0.82));
               };
               img.onerror = () => resolve(e.target.result);
               img.src = e.target.result;
@@ -3147,6 +3197,8 @@
 
               // 2. 若未設定 AI Key 或雙 AI 皆失敗，降級至本機 Canvas 銳化 + Tesseract.js 離線 OCR
               if (!extracted || (!extracted.duration && !extracted.basePay)) {
+                ocrStatus.value = `離線 OCR 準備中 (${completed + 1}/${total})...`;
+                await ensureTesseractLoaded();
                 ocrStatus.value = `離線 OCR 降噪辨識中 (${completed + 1}/${total})...`;
                 const preprocessedBlob = await preprocessImageForOCR(file);
                 const res = await Tesseract.recognize(preprocessedBlob, 'chi_tra+eng');
@@ -3165,7 +3217,7 @@
               const results = await Promise.all(chunk.map((f, idx) => processSingleFile(f, i + idx)));
               for (const item of results) {
                 if (item && (item.duration > 0 || item.basePay > 0)) {
-                  trips.value.push(item);
+                  trips.value.push({ ...item, id: makeTripId() });
                   successCount++;
                 }
               }
@@ -3195,10 +3247,10 @@
         // 載入預設示範數據
         const loadSampleData = () => {
           trips.value = [
-            { duration: 14.2, distance: 2.1, baseFare: 60, boostFare: 12, basePay: 72, tips: 35, incentives: 0, points: 2, stacks: 1, merchant: '熱門便當店 (示範單)' },
-            { duration: 21.5, distance: 2.4, baseFare: 93, boostFare: 22, basePay: 115, tips: 0, incentives: 0, points: 4, stacks: 2, merchant: '連鎖鍋物 (示範雙疊)' },
-            { duration: 28.0, distance: 3.2, baseFare: 127, boostFare: 28, basePay: 155, tips: 40, incentives: 20, points: 6, stacks: 3, merchant: '百貨美食街 (示範三疊)' },
-            { duration: 12.0, distance: 1.3, baseFare: 50, boostFare: 0, basePay: 50, tips: 15, incentives: 0, points: 2, stacks: 1, merchant: '人氣手搖茶 (示範單)' }
+            { id: makeTripId(), duration: 14.2, distance: 2.1, baseFare: 60, boostFare: 12, basePay: 72, tips: 35, incentives: 0, points: 2, stacks: 1, merchant: '熱門便當店 (示範單)' },
+            { id: makeTripId(), duration: 21.5, distance: 2.4, baseFare: 93, boostFare: 22, basePay: 115, tips: 0, incentives: 0, points: 4, stacks: 2, merchant: '連鎖鍋物 (示範雙疊)' },
+            { id: makeTripId(), duration: 28.0, distance: 3.2, baseFare: 127, boostFare: 28, basePay: 155, tips: 40, incentives: 20, points: 6, stacks: 3, merchant: '百貨美食街 (示範三疊)' },
+            { id: makeTripId(), duration: 12.0, distance: 1.3, baseFare: 50, boostFare: 0, basePay: 50, tips: 15, incentives: 0, points: 2, stacks: 1, merchant: '人氣手搖茶 (示範單)' }
           ];
           alert('已載入示範跑單數據（含基本行程費、加成與小費拆解）！');
         };
@@ -3454,7 +3506,7 @@
               }
             } else {
               // motorcycle
-              if (isHighDensityStack && stacks >= 3) {
+              if (isHighDensityStack) {
                 tips.push({ type: 'stack_god', icon: '🌟', text: `[SSR 機車高速多疊] ${stacks} 疊工時並聯！平均每單僅 ${avgDistPerStack.toFixed(2)}km (總距 ${dist.toFixed(1)}km)，每公里法定產值 NT$${kmRate.toFixed(0)}，高速吞吐最佳神單！` });
               } else if (stacks === 1 && dist > 3.5) {
                 warnings.push({ type: 'dist_bad', icon: '🚫', text: `單發單超過 ${dist.toFixed(1)}km 是標準雷單（回程空車耗油無收入），果斷轉單！` });
@@ -3492,8 +3544,8 @@
               else if (dist <= 3.2 || avgDistPerStack <= 2.8) { grade = 'B'; gradeColor = 'text-cyan-400'; }
               else { grade = 'D'; gradeColor = 'text-rose-400'; }
             } else {
-              if ((isHighDensityStack && stacks >= 3) || (stacks >= 3 && dist <= 5.5) || (stacks >= 2 && dist <= 3.0)) { grade = 'SSR'; gradeColor = 'text-yellow-300'; }
-              else if (isHighDensityStack || (stacks >= 2 && dist <= 5.5)) { grade = 'A'; gradeColor = 'text-emerald-400'; }
+              if (isHighDensityStack || (stacks >= 3 && dist <= 5.5) || (stacks >= 2 && dist <= 3.0)) { grade = 'SSR'; gradeColor = 'text-yellow-300'; }
+              else if (stacks >= 2 && dist <= 5.5) { grade = 'A'; gradeColor = 'text-emerald-400'; }
               else if (dist <= 3.5 || avgDistPerStack <= 3.0) { grade = 'B'; gradeColor = 'text-cyan-400'; }
               else { grade = 'D'; gradeColor = 'text-rose-400'; }
             }
