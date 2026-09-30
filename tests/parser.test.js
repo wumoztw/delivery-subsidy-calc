@@ -71,11 +71,11 @@ describe('外送剪貼簿解析引擎測試 (Parser Test Suite)', () => {
   });
 
   it('備援金額不會把小費或活動獎勵誤認為行程費用', () => {
-    const tipOnly = parseDeliveryText('小費 NT5\n14 分鐘 12 秒');
+    const tipOnly = parseDeliveryText('小費 NT$35\n14 分鐘 12 秒');
     assert.equal(tipOnly.basePay, 0);
     assert.equal(tipOnly.found.basePay, false);
 
-    const incentiveOnly = parseDeliveryText('活動獎勵 NT50\n14 分鐘');
+    const incentiveOnly = parseDeliveryText('活動獎勵 NT$150\n14 分鐘');
     assert.equal(incentiveOnly.basePay, 0);
     assert.equal(incentiveOnly.found.basePay, false);
 
