@@ -34,6 +34,7 @@ describe('三合一社群戰報產生器', () => {
     const draft = generateLaborComplaintDraft(summary, trips, cycle);
     assert.ok(draft.length > 0);
     assert.match(draft, /245\/h/);
+    assert.ok(draft.includes('《外送員權益保障及外送平臺管理法》第 3、5 條規範'));
     assert.match(draft, /實際跑單總工時/);
     assert.match(draft, /初估尚應補足差額/);
     assert.match(draft, /NT\$/);

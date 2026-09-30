@@ -36,6 +36,10 @@
     const cycleIndex = Math.floor(weeksSinceAnchor / 2);
     const cycleStart = addCalendarDays(ANCHOR, cycleIndex * 14);
     const cycleEnd = addCalendarDays(cycleStart, 14); // 結束界線（不含）／下一期起點
+    const walletCreditDate = addCalendarDays(cycleEnd, 3); // 週期結束當週週四
+    walletCreditDate.setHours(0, 0, 0, 0);
+    const bankPayoutDate = addCalendarDays(cycleEnd, 7); // 週期結束後次週週一
+    bankPayoutDate.setHours(0, 0, 0, 0);
 
     // 以週期錨點切日，因此每一天都是當地時間 04:00 至翌日 04:00。
     const activeDayStart = new Date(current);
@@ -47,6 +51,8 @@
     return {
       cycleStart,
       cycleEnd,
+      walletCreditDate,
+      bankPayoutDate,
       dayInCycle,
       daysRemaining: 14 - dayInCycle,
       nextPayoutDate: new Date(cycleEnd),

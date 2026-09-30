@@ -10,7 +10,7 @@ describe('14 天雙週對帳週期', () => {
         const info = getBiweeklyCycleInfo(date);
         assert.ok(info.dayInCycle >= 1 && info.dayInCycle <= 14);
         assert.ok(info.daysRemaining >= 0 && info.daysRemaining <= 13);
-        for (const key of ['cycleStart', 'cycleEnd', 'nextPayoutDate']) {
+        for (const key of ['cycleStart', 'cycleEnd', 'walletCreditDate', 'bankPayoutDate', 'nextPayoutDate']) {
           assert.ok(info[key] instanceof Date);
           assert.ok(Number.isFinite(info[key].getTime()));
         }
@@ -18,6 +18,10 @@ describe('14 天雙週對帳週期', () => {
         assert.equal(info.cycleStart.getHours(), 4);
         assert.equal(info.cycleEnd.getDate(), new Date(info.cycleStart.getFullYear(), info.cycleStart.getMonth(), info.cycleStart.getDate() + 14).getDate());
         assert.equal(info.nextPayoutDate.getTime(), info.cycleEnd.getTime());
+        assert.equal(info.walletCreditDate.getDay(), 4);
+        assert.equal(info.walletCreditDate.getTime(), new Date(info.cycleEnd.getFullYear(), info.cycleEnd.getMonth(), info.cycleEnd.getDate() + 3).getTime());
+        assert.equal(info.bankPayoutDate.getDay(), 1);
+        assert.equal(info.bankPayoutDate.getTime(), new Date(info.cycleEnd.getFullYear(), info.cycleEnd.getMonth(), info.cycleEnd.getDate() + 7).getTime());
       }
     }
   });
