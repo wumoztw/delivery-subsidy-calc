@@ -35,6 +35,8 @@
   </script>
   <!-- PapaParse for CSV -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <!-- 本機/離線容錯解析模組 -->
+  <script src="js/parser.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -2410,33 +2412,44 @@
         };
 
         // 從 LocalStorage 載入資料與監聽跨分頁同步
+        let persistBlocked = false;
+
         onMounted(() => {
+          let saved = null;
           try {
-            const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('delivery_subsidy_calc_v2');
+            saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('delivery_subsidy_calc_v2');
             if (saved) {
               const data = JSON.parse(saved);
-              if (data.rate) rate.value = data.rate;
+              if (data.rate && Number(data.rate) > 0) rate.value = Number(data.rate);
               if (data.statutoryMode === 'independent' || data.statutoryMode === 'table') {
                 statutoryMode.value = data.statutoryMode;
               }
               if (Array.isArray(data.trips)) {
                 trips.value = data.trips.map(t => ensureTripId({
                   ...t,
-                  baseFare: t.baseFare !== undefined ? t.baseFare : Math.max(0, (Number(t.basePay) || 0) - (Number(t.boostFare) || 0)),
-                  boostFare: Number(t.boostFare) || 0
+                  baseFare: t.baseFare !== undefined ? Number(t.baseFare) || 0 : Math.max(0, (Number(t.basePay) || 0) - (Number(t.boostFare) || 0)),
+                  boostFare: Number(t.boostFare) || 0,
+                  stacks: Math.min(10, Math.max(1, Math.round(Number(t.stacks) || 1)))
                 }));
               }
             }
           } catch (e) {
-            console.error('載入 LocalStorage 失敗:', e);
+            console.error('載入 LocalStorage 失敗 (資料損毀防禦已啟動):', e);
+            persistBlocked = true;
+            try {
+              if (saved) {
+                localStorage.setItem(`${STORAGE_KEY}__corrupt_${Date.now()}`, saved);
+              }
+            } catch (err) {}
           }
 
           // 跨分頁即時資料同步
           window.addEventListener('storage', (event) => {
+            if (persistBlocked) return;
             if ((event.key === STORAGE_KEY || event.key === 'delivery_subsidy_calc_v2') && event.newValue) {
               try {
                 const data = JSON.parse(event.newValue);
-                if (data.rate) rate.value = data.rate;
+                if (data.rate && Number(data.rate) > 0) rate.value = Number(data.rate);
                 if (data.statutoryMode === 'independent' || data.statutoryMode === 'table') {
                   statutoryMode.value = data.statutoryMode;
                 }
@@ -2449,6 +2462,10 @@
         // 自動保存至 LocalStorage（防抖 400ms：避免逐筆訂單打字時每個按鍵都整包序列化）
         let saveToStorageTimer = null;
         const persistToStorage = () => {
+          if (persistBlocked) {
+            console.warn('因先前偵測到儲存損毀，已暫停自動儲存以防資料覆蓋。');
+            return;
+          }
           try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify({
               rate: rate.value,
@@ -2466,6 +2483,9 @@
 
         // 頁面關閉/切背景前，若還有排隊中的儲存立即補寫一次，避免防抖期間資料遺失
         window.addEventListener('beforeunload', () => {
+          if (saveToStorageTimer) { clearTimeout(saveToStorageTimer); persistToStorage(); }
+        });
+        window.addEventListener('pagehide', () => {
           if (saveToStorageTimer) { clearTimeout(saveToStorageTimer); persistToStorage(); }
         });
         document.addEventListener('visibilitychange', () => {
@@ -2684,134 +2704,26 @@
           setTimeout(() => URL.revokeObjectURL(url), 1500);
         };
 
-        // 正則字元模糊修復與正規化（統一全形/半形符號、常見用字差異）
-        const cleanAndNormalizeText = (raw) => {
-          if (!raw) return '';
-          let str = raw;
-          str = str.replace(/[：]/g, ':').replace(/[,，]/g, '.');
-          str = str.replace(/分鍾/g, '分鐘').replace(/秒鐘/g, '秒').replace(/公裏/g, '公里');
-          str = str.replace(/已賺取|已賺|賺取|獲得點數|賺得/g, '已賺取');
-          str = str.replace(/基本行程費|基本車資|基本行程/g, '基本行程費用');
-          str = str.replace(/基本加成|報酬加成|基本報酬/g, '基本報酬加成');
-          str = str.replace(/本趟行程的預估費用為|本趟行程預估費用為/g, '行程費用');
-          return str;
-        };
-
-        // 純文字解析器（貼上原況文字，容錯率最高）
+        // 委託獨立測試模組 js/parser.js 解析（若離線未載入則提供兜底）
         const parseDeliveryText = (rawText) => {
-          const text = cleanAndNormalizeText(rawText);
-          let duration = 0;
-          let distance = 0;
-          let baseFare = 0;
-          let boostFare = 0;
-          let basePay = 0;
-          let tips = 0;
-          let incentives = 0;
-          let points = 0;
-          let stacks = 1;
-          let merchant = '';
-          const found = {
-            duration: false,
-            distance: false,
-            baseFare: false,
-            boostFare: false,
-            basePay: false,
-            tips: false,
-            incentives: false,
-            points: false,
-            merchant: false
+          if (window.DSC && window.DSC.parser && typeof window.DSC.parser.parseDeliveryText === 'function') {
+            return window.DSC.parser.parseDeliveryText(rawText);
+          }
+          // 兜底簡易解析
+          return {
+            duration: 0,
+            distance: 0,
+            baseFare: 0,
+            boostFare: 0,
+            basePay: 0,
+            tips: 0,
+            incentives: 0,
+            points: 0,
+            stacks: 1,
+            merchant: '',
+            found: {},
+            warnings: []
           };
-
-          // 1. 匹配時間 (分+秒 或 純分鐘 或 mm:ss)
-          const minSecMatch = text.match(/(\d+)\s*(?:分鐘|分|mins?)\s*(\d+)\s*(?:秒|secs?)/i);
-          const colonTimeMatch = text.match(/(?:時間|歷時|耗時)?\s*(\d{1,2}):(\d{2})/);
-          
-          if (minSecMatch) {
-            const mins = parseInt(minSecMatch[1], 10);
-            const secs = parseInt(minSecMatch[2], 10);
-            duration = parseFloat((mins + (secs / 60)).toFixed(2));
-            found.duration = duration > 0;
-          } else if (colonTimeMatch) {
-            const mins = parseInt(colonTimeMatch[1], 10);
-            const secs = parseInt(colonTimeMatch[2], 10);
-            duration = parseFloat((mins + (secs / 60)).toFixed(2));
-            found.duration = duration > 0;
-          } else {
-            const minOnlyMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:分鐘|分|mins?)/i);
-            if (minOnlyMatch) {
-              duration = parseFloat(minOnlyMatch[1]);
-              found.duration = duration > 0;
-            }
-          }
-
-          // 2. 匹配距離 (公里)
-          const distMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:公里|公里路程|km)/i);
-          if (distMatch) {
-            distance = parseFloat(distMatch[1]);
-            found.distance = distance > 0;
-          }
-
-          // 3. 匹配小費
-          const tipMatch = text.match(/(?:包含小費|顧客小費|額外小費|小費)[^\d$NT]*[\$NT\s]*(\d+(?:\.\d+)?)/i);
-          if (tipMatch) {
-            tips = parseFloat(tipMatch[1]);
-            found.tips = tips > 0;
-          }
-
-          // 4. 匹配基本行程費用 (淨基本費)
-          const baseFareMatch = text.match(/基本行程費用[^\d$NT]*[\$NT\s]*(\d+(?:\.\d+)?)/i);
-          if (baseFareMatch) {
-            baseFare = parseFloat(baseFareMatch[1]);
-            found.baseFare = baseFare > 0;
-          }
-
-          // 5. 匹配基本報酬加成
-          const boostMatch = text.match(/基本報酬加成[^\d$NT]*[\$NT\s]*(\d+(?:\.\d+)?)/i);
-          if (boostMatch) {
-            boostFare = parseFloat(boostMatch[1]);
-            found.boostFare = boostFare > 0;
-          }
-
-          // 6. 匹配行程費用 (總計)
-          const fareMatch = text.match(/(?:行程費用|基本報酬|車資|本趟行程總計)[^\d$NT]*[\$NT\s]*(\d+(?:\.\d+)?)/i);
-          if (fareMatch) {
-            basePay = parseFloat(fareMatch[1]);
-            found.basePay = basePay > 0;
-          } else {
-            const generalAmounts = text.match(/(?:\$|NT\$)\s*(\d+(?:\.\d+)?)/g);
-            if (generalAmounts && generalAmounts.length > 0) {
-              basePay = parseFloat(generalAmounts[0].replace(/[^\d.]/g, ''));
-              found.basePay = basePay > 0;
-            }
-          }
-
-          if (!baseFare && basePay) {
-            baseFare = Math.max(0, basePay - boostFare);
-          }
-          if (!basePay && baseFare) {
-            basePay = baseFare + boostFare;
-            found.basePay = basePay > 0;
-          }
-
-          // 7. 匹配 Uber Pro 點數（疊單數固定預設為 1 單，由外送員在明細清單中 100% 手動精確切換）
-          const ptsMatch = text.match(/(?:已賺取|賺取|獲得|點數)\s*(\d+)\s*點/i) || text.match(/(\d+)\s*點/i);
-          if (ptsMatch) {
-            points = parseInt(ptsMatch[1], 10);
-            found.points = points > 0;
-          }
-          stacks = 1;
-
-          // 8. 匹配商家名稱
-          const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-          for (let l of lines) {
-            if (l.includes('館') || l.includes('店') || l.includes('鍋') || l.includes('餐') || l.includes('茶') || l.includes('堂') || l.includes('門市')) {
-              merchant = l.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '').slice(0, 16);
-              found.merchant = !!merchant;
-              break;
-            }
-          }
-
-          return { duration, distance, baseFare, boostFare, basePay, tips, incentives, points, stacks, merchant, found };
         };
 
         // 即時計算秒貼萃取結果
@@ -2991,7 +2903,13 @@
 
         const totalOrdersCount = computed(() => trips.value.reduce((sum, t) => sum + (Number(t.stacks) || 1), 0));
 
-        const totalLegal = computed(() => totalStatutoryHours.value * rate.value);
+        // 有效保底費率（防止輸入框清空時 totalLegal 與補貼款靜默歸零）
+        const effectiveRate = computed(() => {
+          const r = Number(rate.value);
+          return Number.isFinite(r) && r > 0 ? r : 245;
+        });
+
+        const totalLegal = computed(() => totalStatutoryHours.value * effectiveRate.value);
         const totalBasePay = computed(() => trips.value.reduce((sum, t) => sum + (Number(t.basePay) || 0), 0));
         const totalBoostFare = computed(() => trips.value.reduce((sum, t) => sum + (Number(t.boostFare) || 0), 0));
         const totalTips = computed(() => trips.value.reduce((sum, t) => sum + (Number(t.tips) || 0), 0));
