@@ -479,6 +479,11 @@
 
         <!-- 快捷操作按鈕 (整合完整戰報複製與下載) -->
         <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 pt-1">
+          <select v-model="reportCopyMode" aria-label="戰報複製格式" class="px-2 py-2 bg-slate-800 text-slate-200 text-xs rounded-xl border border-slate-700">
+            <option value="short">短貼</option>
+            <option value="full">完整社團戰報</option>
+            <option value="complaint">申訴草稿</option>
+          </select>
           <button @click="copyReport" class="px-3.5 py-2 bg-slate-800 active:bg-slate-700 hover:bg-slate-700 text-slate-200 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition">
             <span>📋</span> <span class="truncate font-mono">{{ copyBtnText }}</span>
           </button>
@@ -2322,7 +2327,8 @@
         const showManualModal = ref(false);
         const pasteText = ref('');
 
-        const copyBtnText = ref('複製完整戰報');
+        const copyBtnText = ref('複製完整社團戰報');
+        const reportCopyMode = ref('full');
         const customPhysicalHours = ref(null);
 
         // 全域外送載具模式：步行 (walk) / 腳踏車 (bike) / 機車 (motorcycle)
@@ -2441,7 +2447,15 @@
             persistBlocked = true;
             try {
               if (saved) {
-                localStorage.setItem(`${STORAGE_KEY}__corrupt_${Date.now()}`, saved);
+                const backupPrefix = `${STORAGE_KEY}__corrupt_`;
+                const history = [];
+                for (let i = 0; i < localStorage.length; i += 1) {
+                  const key = localStorage.key(i);
+                  if (key && key.startsWith(backupPrefix)) history.push(key);
+                }
+                history.sort((a, b) => Number(a.slice(backupPrefix.length)) - Number(b.slice(backupPrefix.length)));
+                while (history.length >= 3) localStorage.removeItem(history.shift());
+                localStorage.setItem(`${backupPrefix}${Date.now()}`, saved);
               }
             } catch (err) {}
           }
@@ -2786,94 +2800,50 @@
           alert('已載入示範跑單數據（含基本行程費、加成與小費拆解）！');
         };
 
-                // 產生完整綜合戰報（整合兩週結算總表 + 戰略診斷方針 + 每單逐筆評級建議）
+                // 將畫面結算資料交由共用戰報模組產生，避免 UI 與報表各自計算。
+        const getReportSummary = () => ({
+          totalOrdersCount: totalOrdersCount.value,
+          totalPhysicalHours: totalPhysicalHours.value,
+          totalPhysicalMins: totalPhysicalMins.value,
+          totalStatutoryHours: totalStatutoryHours.value,
+          totalLegal: totalLegal.value,
+          totalBasePay: totalBasePay.value,
+          subsidy: subsidy.value,
+          totalIncome: totalIncome.value,
+          totalTips: totalTips.value,
+          totalIncentives: totalIncentives.value,
+          effectiveRate: effectiveRate.value
+        });
+        const getReportCycle = () => window.DSC.cycle.getBiweeklyCycleInfo();
+        const getReportContext = () => ({ rate: effectiveRate.value, statutoryMode: statutoryMode.value });
+
         const generateFullReportText = () => {
-          const now = new Date();
-          const dateStr = `${now.getFullYear()}年${String(now.getMonth() + 1).padStart(2, '0')}月${String(now.getDate()).padStart(2, '0')}日`;
-          
-          let report = `============================================================
-【外送專法綜合結算與戰略診斷戰報】
-產生日期：${dateStr}
-分析樣本：${trips.value.length} 趟訂單 (共 ${totalOrdersCount.value} 單)
-============================================================
-
-📊 【一、兩週週期收益結算總評】
-------------------------------------------------------------
-• 法定工時模式：${statutoryModeLabel.value}
-• 外送載具模式：${currentVehicleConfig.value.name} (${currentVehicleConfig.value.speed})
-• 累計訂單總數：${trips.value.length} 趟 (共 ${totalOrdersCount.value} 單)
-• 物理服務總工時：${totalPhysicalHours.value.toFixed(2)} 小時 (${totalPhysicalMins.value.toFixed(1)} 分鐘)
-• 法定申報總工時 (T_total)：${totalStatutoryHours.value.toFixed(2)} 小時 (疊單工時放大率 ${stackingMultiplier.value.toFixed(2)}x)
-• 累計總跑單里程：${totalDistance.value.toFixed(2)} km (均趟 ${avgDistance.value.toFixed(2)} km)
-• 法定保障時薪費率 (P_rate)：NT$ ${rate.value} / 小時
-• 法定最低應得保障 (Total_legal)：NT$ ${Math.round(totalLegal.value).toLocaleString()}
-• 實領行程費用總額 (R_base)：NT$ ${Math.round(totalBasePay.value).toLocaleString()} (含基本加成 NT$${Math.round(totalBoostFare.value)})
-------------------------------------------------------------
-💰 預估差額補貼款 (ΔR)：NT$ ${Math.round(subsidy.value).toLocaleString()}
-💵 兩週實質總收入 (毛額)：NT$ ${Math.round(totalIncome.value).toLocaleString()} (含小費 NT$${Math.round(totalTips.value)}、獎勵 NT$${Math.round(totalIncentives.value)})
-⛽ 預估載具營運成本：NT$ ${Math.round(totalVehicleCost.value).toLocaleString()} (每公里 NT$${currentVehicleConfig.value.costPerKm})
-💎 實質落袋純淨利：NT$ ${Math.round(netTotalIncome.value).toLocaleString()}
-⚡ 實質落袋純時薪：NT$ ${netHourlyRate.value.toFixed(1)} / 物理小時 (毛時薪 NT$${realHourlyRate.value.toFixed(1)})
-⭐ 累計點數：${totalPoints.value} 點
-📈 每公里實質產值：NT$ ${perKmIncome.value.toFixed(1)} / km
-🏆 戰力評級分佈：SSR級 ${tierStats.value.ssr} 單 / SR級 ${tierStats.value.sr} 單 / 正常 ${tierStats.value.normal} 單 / 需改善 ${tierStats.value.warning} 單
-
-============================================================
-🧠 【二、週期戰略診斷與改善方針】
-============================================================
-`;
-
-          if (globalInsights.value.length === 0) {
-            report += `（目前資料量正常，無異常警示）\n\n`;
-          } else {
-            globalInsights.value.forEach((item, idx) => {
-              report += `【${idx + 1}】${item.icon} ${item.title}\n說明：${item.desc}\n\n`;
-            });
-          }
-
-          report += `============================================================
-🔍 【三、每單逐筆診斷報告與改進建議】
-============================================================
-`;
-
-          tripInsights.value.forEach((ins) => {
-            report += `------------------------------------------------------------
-[單 #${ins.idx + 1}] ${ins.t.merchant || '未填商家'}
-• 派單型態：${ins.stacks} 疊單 | 里程：${ins.dist.toFixed(1)} km | 服務時間：${ins.dur} 分鐘
-• 戰力評級：[${ins.grade}] | 工時放大倍率：${ins.efficiency.toFixed(2)}x
-• 法定最低保障：NT$ ${Math.round(ins.legal)} | 表定車資：NT$ ${ins.basePay} | 差額補貼：+NT$ ${Math.round(ins.subsidy)}
-• 診斷分析與建議：\n`;
-
-            if (ins.warnings.length === 0 && ins.tips.length === 0) {
-              report += `  - 數據表現平穩，符合常態標準。\n`;
-            } else {
-              ins.warnings.forEach(w => {
-                report += `  - ⚠️ [警示/改善] ${w.text}\n`;
-              });
-              ins.tips.forEach(tip => {
-                report += `  - 🌟 [優勢/保持] ${tip.text}\n`;
-              });
-            }
-            report += `\n`;
-          });
-
-          report += `============================================================
-產生自：外送專法與疊單收益精算系統 · ${dateStr}
-============================================================\n`;
-
-          return report;
+          const report = window.DSC && window.DSC.report;
+          if (!report) return '戰報模組尚未載入。';
+          return report.generateFullReport(getReportSummary(), trips.value, getReportCycle(), getReportContext());
         };
 
-        // 一鍵複製完整戰報
+        // 一鍵複製所選戰報格式
         const copyReport = () => {
           if (trips.value.length === 0) {
             alert('目前尚無訂單資料！');
             return;
           }
-          const text = generateFullReportText();
+          const report = window.DSC && window.DSC.report;
+          if (!report) {
+            alert('戰報模組尚未載入，請重新整理頁面。');
+            return;
+          }
+          const args = [getReportSummary(), trips.value, getReportCycle(), getReportContext()];
+          const text = reportCopyMode.value === 'short'
+            ? report.generateShortPost(...args)
+            : reportCopyMode.value === 'complaint'
+              ? report.generateLaborComplaintDraft(...args)
+              : report.generateFullReport(...args);
+          const label = reportCopyMode.value === 'short' ? '短貼' : reportCopyMode.value === 'complaint' ? '申訴草稿' : '完整社團戰報';
           navigator.clipboard.writeText(text).then(() => {
-            copyBtnText.value = '✅ 已複製完整戰報！';
-            setTimeout(() => { copyBtnText.value = '複製完整戰報'; }, 2500);
+            copyBtnText.value = `✅ 已複製${label}！`;
+            setTimeout(() => { copyBtnText.value = '複製完整社團戰報'; }, 2500);
           });
         };
 
@@ -3186,7 +3156,7 @@
         return {
           activeTab, rate, statutoryMode, statutoryModeLabel, trips, newTrip,
           showPasteModal, showManualModal, pasteText, parsedPasteTrip, pasteFieldStatus,
-          copyBtnText, customPhysicalHours,
+          copyBtnText, reportCopyMode, customPhysicalHours,
           vehicleMode, setGlobalVehicleMode, currentVehicleConfig, totalVehicleCost, netTotalIncome, netHourlyRate, simVehicleMode, setVehicleMode, tacticsGuideTab, simOrders, simAvgTripMins, simPhysicalMins, simMultiplier, simRealHourlyWage, simVehicleCostPerHour, simNetHourlyWage,
           totalPhysicalMins, totalPhysicalHours, totalStatutoryMins, totalStatutoryHours, totalOrdersCount,
           totalLegal, totalBasePay, totalBoostFare, totalTips, totalIncentives,

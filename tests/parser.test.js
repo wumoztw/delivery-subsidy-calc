@@ -42,12 +42,29 @@ describe('外送剪貼簿解析引擎測試 (Parser Test Suite)', () => {
     assert.equal(res.found.basePay, true);
   });
 
-  it('測試 4: 樣本 D - 排除日期與時刻時間戳（14:05 完成不被誤認為歷時）', () => {
-    const raw = `2026/09/30 下午 14:05 完成`;
+  it('測試 4: 排除日期與完成事件時刻（完成時間 14:05 不被誤認為歷時）', () => {
+    const raw = `完成時間 14:05`;
     const res = parseDeliveryText(raw);
     assert.equal(res.durationSec, null);
     assert.equal(res.duration, 0);
     assert.equal(res.found.duration, false);
+  });
+
+  it('測試 4a: 千分位與無逗號四位數完整解析', () => {
+    assert.equal(parseAmountIn('NT$1,200'), 1200);
+    assert.equal(parseAmountIn('NT$1200'), 1200);
+    assert.equal(parseAmountIn('NT$3,000'), 3000);
+    assert.equal(parseAmountIn('NT$3000'), 3000);
+    assert.equal(parseAmountIn('1234.5'), 1234.5);
+    assert.equal(parseDeliveryText('行程費用 1234.5').basePay, 1234.5);
+    assert.equal(parseDeliveryText('行程費用 NT$1200').basePay, 1200);
+    assert.equal(parseDeliveryText('行程費用 NT$3000').basePay, 3000);
+  });
+
+  it('備援金額抓取只接受明確幣別符號', () => {
+    const res = parseDeliveryText('訂單編號 12345');
+    assert.equal(res.basePay, 0);
+    assert.equal(res.found.basePay, false);
   });
 
   it('測試 5: 基本報酬不被誤認為加成', () => {

@@ -13,6 +13,12 @@
     if (trip && trip.duration != null) return Math.max(0, number(trip.duration));
     return Math.max(0, number(trip && trip.durationSec) / 60);
   };
+  const calcTrip = (trip, ctx) => {
+    const calculator = root.DSC && root.DSC.calc
+      ? root.DSC.calc
+      : (typeof require === 'function' ? require('./calc.js') : null);
+    return calculator ? calculator.calcTrip(trip, ctx) : trip;
+  };
 
   function collect(summary = {}, trips = [], cycleInfo = {}) {
     const list = Array.isArray(trips) ? trips : [];
@@ -40,16 +46,17 @@
     return Array.from(text).slice(0, 280).join('');
   }
 
-  function generateFullReport(summary, trips, cycleInfo) {
+  function generateFullReport(summary, trips, cycleInfo, ctx = {}) {
     const s = collect(summary, trips, cycleInfo);
     const details = s.list.length
       ? s.list.map((trip, index) => {
+        const calculated = calcTrip(trip, { ...ctx, rate: ctx.rate || s.rate });
         const mins = durationMins(trip);
+        const statutoryMins = number(calculated.statMins);
         const stacks = Math.max(1, number(trip.stacks, 1));
-        const multiplier = trip.statMins != null ? number(trip.statMins) / (mins || 1) : 1 + (Math.min(10, stacks) - 1) * 0.75;
-        const legal = number(trip.legal, mins * multiplier / 60 * s.rate);
-        const pay = number(trip.basePay);
-        return `${String(index + 1).padStart(2, '0')}. ${stacks}單疊單｜服務${mins.toFixed(1)}分｜車資NT$${money(pay)}｜保底NT$${money(legal)}｜差額NT$${money(Math.max(0, legal - pay))}`;
+        const legal = number(calculated.legal);
+        const pay = number(calculated.basePay);
+        return `${String(index + 1).padStart(2, '0')}. ${stacks}單疊單｜服務${mins.toFixed(1)}分（法定${statutoryMins.toFixed(1)}分）｜車資NT$${money(pay)}｜保底NT$${money(legal)}｜差額NT$${money(Math.max(0, calculated.gap))}`;
       }).join('\n')
       : '目前沒有匯入訂單明細。';
 
@@ -70,14 +77,15 @@
     ].join('\n');
   }
 
-  function generateLaborComplaintDraft(summary, trips, cycleInfo) {
+  function generateLaborComplaintDraft(summary, trips, cycleInfo, ctx = {}) {
     const s = collect(summary, trips, cycleInfo);
     const evidence = s.list.map((trip, index) => {
+      const calculated = calcTrip(trip, { ...ctx, rate: ctx.rate || s.rate });
       const mins = durationMins(trip);
+      const statutoryMins = number(calculated.statMins);
       const stacks = Math.max(1, number(trip.stacks, 1));
-      const multiplier = trip.statMins != null ? number(trip.statMins) / (mins || 1) : 1 + (Math.min(10, stacks) - 1) * 0.75;
-      const legal = number(trip.legal, mins * multiplier / 60 * s.rate);
-      return `${index + 1}. 工時${mins.toFixed(1)}分鐘、${stacks}單；平台基本車資NT$${money(trip.basePay)}，試算保底NT$${money(legal)}，差額NT$${money(Math.max(0, legal - number(trip.basePay)))}`;
+      const legal = number(calculated.legal);
+      return `${index + 1}. 實際工時${mins.toFixed(1)}分鐘、法定工時${statutoryMins.toFixed(1)}分鐘、${stacks}單；平台基本車資NT$${money(calculated.basePay)}，試算保底NT$${money(legal)}，差額NT$${money(Math.max(0, calculated.gap))}`;
     }).join('\n') || '（請附上逐筆訂單、服務時間與報酬紀錄）';
 
     return [

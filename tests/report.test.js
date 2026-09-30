@@ -30,6 +30,20 @@ describe('三合一社群戰報產生器', () => {
     assert.match(report, /逐筆對帳/);
   });
 
+  it('independent 模式逐筆 legal 加總與戰報表頭一致', () => {
+    const independentTrips = [
+      { duration: 60, stacks: 2, basePay: 50 },
+      { duration: 60, stacks: 1, basePay: 60 }
+    ];
+    const independentSummary = calcSummary(independentTrips, { rate: 60, statutoryMode: 'independent' });
+    const report = generateFullReport(independentSummary, independentTrips, cycle, { rate: 60, statutoryMode: 'independent' });
+    const headerLegal = Number(report.match(/法定最低保底：NT\$([\d,]+)/)[1].replace(/,/g, ''));
+    const details = [...report.matchAll(/保底NT\$([\d,]+)/g)];
+    const detailLegal = details.reduce((sum, match) => sum + Number(match[1].replace(/,/g, '')), 0);
+    assert.equal(headerLegal, 180);
+    assert.equal(detailLegal, headerLegal);
+  });
+
   it('申訴草稿列出 245/h 底線、總工時與應補差額', () => {
     const draft = generateLaborComplaintDraft(summary, trips, cycle);
     assert.ok(draft.length > 0);

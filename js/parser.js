@@ -22,11 +22,9 @@
   // 2. 擷取金額數字（支援千分位 NT$1,200、純數字、小數點）
   const parseAmountIn = (str) => {
     if (!str) return null;
-    const m = /(?:\$|NT\$|NT)?\s*(\d{1,3}(?:,\d{3})*|\d+)(?:\.(\d+))?/i.exec(str);
+    const m = /(?:\$|NT\$|NT)?\s*(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)/i.exec(str);
     if (!m) return null;
-    const integerPart = m[1].replace(/,/g, '');
-    const decimalPart = m[2] ? '.' + m[2] : '';
-    return Number(integerPart + decimalPart);
+    return Number(m[1].replace(/,/g, ''));
   };
 
   // 3. 欄位匹配規則定義（行內單獨匹配，不跨行亂抓）
@@ -70,7 +68,7 @@
   function extractDurationSec(lines) {
     for (const line of lines) {
       // 排除日期時刻時間戳（例：2026/09/30 下午 14:05 完成）
-      if (/上午|下午|AM|PM|\d{4}[\/-]\d{1,2}[\/-]\d{1,2}/i.test(line)) continue;
+      if (/上午|下午|AM|PM|完成|結束|時刻|\d{4}[\/-]\d{1,2}[\/-]\d{1,2}/i.test(line)) continue;
 
       const h = /(\d+)\s*(?:小時|hrs?|h)(?![a-z])/i.exec(line);
       const m = /(\d+)\s*(?:分鐘|分|mins?)(?![a-z])/i.exec(line);
@@ -80,7 +78,7 @@
       }
 
       // 服務時間 12:30 或 耗時 14:05 格式（必須帶有服務時間/歷時/耗時前綴）
-      const c = /(?:服務時間|歷時|耗時|時間)\s*[:：]?\s*(\d{1,2}):(\d{2})(?![:\d])/.exec(line);
+      const c = /(?:服務時間|歷時|耗時)\s*[:：]?\s*(\d{1,2}):(\d{2})(?![\d:])/.exec(line);
       if (c) {
         return +c[1] * 60 + +c[2];
       }
@@ -184,6 +182,7 @@
     // 備援：若都沒有抓到標籤，嘗試抓取第一個金額作為 basePay
     if (basePay == null) {
       for (const line of lines) {
+        if (!/(?:\$|NT\$)/i.test(line)) continue;
         const amt = parseAmountIn(line);
         if (amt !== null && amt >= 10) {
           basePay = amt;
