@@ -182,6 +182,7 @@
     // 備援：若都沒有抓到標籤，嘗試抓取第一個金額作為 basePay
     if (basePay == null) {
       for (const line of lines) {
+        if (FIELDS.tips.test(line) || FIELDS.incentives.test(line) || FIELDS.boostFare.test(line)) continue;
         if (!/(?:\$|NT\$)/i.test(line)) continue;
         const amt = parseAmountIn(line);
         if (amt !== null && amt >= 10) {
@@ -193,6 +194,7 @@
     }
 
     const duration = durationSec != null ? Number((durationSec / 60).toFixed(2)) : 0;
+    const fallbackUsed = derived.includes('basePayFallback');
 
     const out = {
       durationSec,
@@ -211,7 +213,7 @@
         distance: distance != null,
         baseFare: finalBaseFare != null,
         boostFare: boostFare != null,
-        basePay: basePay != null,
+        basePay: basePay != null && basePay > 0 && !fallbackUsed,
         tips: tips != null,
         incentives: incentives != null,
         points: points != null,
@@ -222,6 +224,9 @@
     };
 
     out.warnings = sanityCheck(out);
+    if (fallbackUsed) {
+      out.warnings.push('行程費用為推測值（取自含 NT$ 的第一行），請確認');
+    }
     return out;
   }
 

@@ -288,6 +288,11 @@
       </div>
     </header>
 
+    <div v-if="storageStatus !== 'ok'" class="bg-red-900/90 text-red-100 text-xs p-3 rounded-xl mb-3 border border-red-700">
+      ⚠️ 資料未能儲存（{{ storageStatus === 'corrupt' ? '偵測到資料損毀，已停止覆寫以保護原文' : '瀏覽器儲存空間寫入失敗或無痕模式限制' }}）。
+      請先 <button @click="exportCSV" class="underline font-bold text-amber-300">匯出 CSV</button> 進行備份。
+    </div>
+
     <!-- 主選單分頁切換 -->
     <div class="overflow-x-auto no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0">
       <nav class="flex border-b border-slate-800 gap-1 sm:gap-4 text-xs sm:text-sm font-medium min-w-max">
@@ -482,7 +487,6 @@
           <select v-model="reportCopyMode" aria-label="戰報複製格式" class="px-2 py-2 bg-slate-800 text-slate-200 text-xs rounded-xl border border-slate-700">
             <option value="short">短貼</option>
             <option value="full">完整社團戰報</option>
-            <option value="complaint">申訴草稿</option>
           </select>
           <button @click="copyReport" class="px-3.5 py-2 bg-slate-800 active:bg-slate-700 hover:bg-slate-700 text-slate-200 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition">
             <span>📋</span> <span class="truncate font-mono">{{ copyBtnText }}</span>
@@ -2320,6 +2324,7 @@
         const rate = ref(245);
         const statutoryMode = ref('table'); // 'independent' | 'table'
         const trips = ref([]);
+        const storageStatus = ref('ok'); // 'ok' | 'corrupt' | 'write_failed'
         const newTrip = ref({ duration: '', distance: '', baseFare: '', boostFare: '', basePay: '', tips: '', incentives: '', points: '', stacks: 1, merchant: '' });
         
         // 彈窗控制
@@ -2445,6 +2450,7 @@
           } catch (e) {
             console.error('載入 LocalStorage 失敗 (資料損毀防禦已啟動):', e);
             persistBlocked = true;
+            storageStatus.value = 'corrupt';
             try {
               if (saved) {
                 const backupPrefix = `${STORAGE_KEY}__corrupt_`;
@@ -2479,18 +2485,15 @@
         // 自動保存至 LocalStorage（防抖 400ms：避免逐筆訂單打字時每個按鍵都整包序列化）
         let saveToStorageTimer = null;
         const persistToStorage = () => {
-          if (persistBlocked) {
-            console.warn('因先前偵測到儲存損毀，已暫停自動儲存以防資料覆蓋。');
-            return;
-          }
+          if (persistBlocked) return false;
           try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({
-              rate: rate.value,
-              statutoryMode: statutoryMode.value,
-              trips: trips.value
-            }));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ rate: rate.value, statutoryMode: statutoryMode.value, trips: trips.value }));
+            storageStatus.value = 'ok';
+            return true;
           } catch (e) {
-            console.error('儲存至 LocalStorage 失敗:', e);
+            console.error('儲存失敗:', e);
+            storageStatus.value = 'write_failed';
+            return false;
           }
         };
         watch([rate, statutoryMode, trips], () => {
@@ -3154,7 +3157,7 @@
         });
 
         return {
-          activeTab, rate, statutoryMode, statutoryModeLabel, trips, newTrip,
+          activeTab, rate, statutoryMode, statutoryModeLabel, trips, newTrip, storageStatus,
           showPasteModal, showManualModal, pasteText, parsedPasteTrip, pasteFieldStatus,
           copyBtnText, reportCopyMode, customPhysicalHours,
           vehicleMode, setGlobalVehicleMode, currentVehicleConfig, totalVehicleCost, netTotalIncome, netHourlyRate, simVehicleMode, setVehicleMode, tacticsGuideTab, simOrders, simAvgTripMins, simPhysicalMins, simMultiplier, simRealHourlyWage, simVehicleCostPerHour, simNetHourlyWage,

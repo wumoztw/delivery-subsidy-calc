@@ -48,6 +48,9 @@ describe('外送剪貼簿解析引擎測試 (Parser Test Suite)', () => {
     assert.equal(res.durationSec, null);
     assert.equal(res.duration, 0);
     assert.equal(res.found.duration, false);
+
+    const sampleD = parseDeliveryText('2026/09/30 下午 14:05 完成');
+    assert.equal(sampleD.durationSec, null);
   });
 
   it('測試 4a: 千分位與無逗號四位數完整解析', () => {
@@ -65,6 +68,21 @@ describe('外送剪貼簿解析引擎測試 (Parser Test Suite)', () => {
     const res = parseDeliveryText('訂單編號 12345');
     assert.equal(res.basePay, 0);
     assert.equal(res.found.basePay, false);
+  });
+
+  it('備援金額不會把小費或活動獎勵誤認為行程費用', () => {
+    const tipOnly = parseDeliveryText('小費 NT5\n14 分鐘 12 秒');
+    assert.equal(tipOnly.basePay, 0);
+    assert.equal(tipOnly.found.basePay, false);
+
+    const incentiveOnly = parseDeliveryText('活動獎勵 NT50\n14 分鐘');
+    assert.equal(incentiveOnly.basePay, 0);
+    assert.equal(incentiveOnly.found.basePay, false);
+
+    const fallback = parseDeliveryText('訂單資訊 NT$50');
+    assert.equal(fallback.basePay, 50);
+    assert.equal(fallback.found.basePay, false);
+    assert.ok(fallback.warnings.includes('行程費用為推測值（取自含 NT$ 的第一行），請確認'));
   });
 
   it('測試 5: 基本報酬不被誤認為加成', () => {
