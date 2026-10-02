@@ -269,7 +269,7 @@
         </div>
         <div class="flex items-center justify-between sm:justify-end gap-2 overflow-x-auto no-scrollbar">
           <div class="flex items-center gap-1 shrink-0">
-            <button @click="rate = 245" :class="rate === 245 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold' : 'bg-slate-800 text-slate-400 border-slate-700'" class="text-[11px] sm:text-xs px-2.5 py-1 rounded-lg border transition font-mono">$245 專法底線</button>
+            <button @click="rate = 245" :class="rate === 245 ? 'bg-sky-50 text-sky-700 border-sky-300 font-bold shadow-sm' : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100'" class="text-[11px] sm:text-xs px-2.5 py-1 rounded-lg border transition font-mono">$245 專法底線</button>
           </div>
           <div class="flex items-center gap-1 border-l border-slate-800 pl-2 shrink-0">
             <span class="text-[10px] text-slate-500">自訂 NT$</span>
@@ -286,8 +286,8 @@
           <span class="text-slate-300 font-medium">{{ statutoryModeLabel }}</span>
         </div>
         <div class="flex items-center gap-1 shrink-0">
-          <button @click="statutoryMode = 'independent'" :class="statutoryMode === 'independent' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold' : 'bg-slate-800 text-slate-400 border-slate-700'" class="text-[11px] sm:text-xs px-2.5 py-1 rounded-lg border transition">獨立累加（對帳）</button>
-          <button @click="statutoryMode = 'table'" :class="statutoryMode === 'table' ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold' : 'bg-slate-800 text-slate-400 border-slate-700'" class="text-[11px] sm:text-xs px-2.5 py-1 rounded-lg border transition">經驗倍率表</button>
+          <button @click="statutoryMode = 'independent'" :class="statutoryMode === 'independent' ? 'bg-sky-50 text-sky-700 border-sky-300 font-bold shadow-sm' : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100'" class="text-[11px] sm:text-xs px-2.5 py-1 rounded-lg border transition">獨立累加（對帳）</button>
+          <button @click="statutoryMode = 'table'" :class="statutoryMode === 'table' ? 'bg-amber-50 text-amber-700 border-amber-300 font-bold shadow-sm' : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100'" class="text-[11px] sm:text-xs px-2.5 py-1 rounded-lg border transition">經驗倍率表</button>
         </div>
       </div>
     </header>
@@ -300,20 +300,20 @@
     <!-- 主選單分頁切換 -->
     <div class="overflow-x-auto no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0">
       <nav class="flex border-b border-slate-800 gap-1 sm:gap-4 text-xs sm:text-sm font-medium min-w-max">
-        <button @click="activeTab = 'dashboard'" :class="activeTab === 'dashboard' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/10' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
+        <button @click="activeTab = 'dashboard'" :class="activeTab === 'dashboard' ? 'text-sky-600 border-sky-600 bg-sky-50 font-bold shadow-sm' : 'text-slate-500 border-transparent hover:text-slate-800 hover:bg-slate-50'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
           <span>📊</span> 結算儀表板
         </button>
-        <button @click="activeTab = 'trips'" :class="activeTab === 'trips' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/10' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
+        <button @click="activeTab = 'trips'" :class="activeTab === 'trips' ? 'text-sky-600 border-sky-600 bg-sky-50 font-bold shadow-sm' : 'text-slate-500 border-transparent hover:text-slate-800 hover:bg-slate-50'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
           <span>📋</span> 訂單明細
           <span v-if="trips.length > 0" class="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-emerald-300 font-mono">{{ trips.length }}</span>
         </button>
-        <button @click="activeTab = 'tactics'" :class="activeTab === 'tactics' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/10' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
+        <button @click="activeTab = 'tactics'" :class="activeTab === 'tactics' ? 'text-sky-600 border-sky-600 bg-sky-50 font-bold shadow-sm' : 'text-slate-500 border-transparent hover:text-slate-800 hover:bg-slate-50'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
           <span>⚡</span> 疊單作戰模擬
         </button>
-        <button @click="activeTab = 'analysis'" :class="activeTab === 'analysis' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/10' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
+        <button @click="activeTab = 'analysis'" :class="activeTab === 'analysis' ? 'text-sky-600 border-sky-600 bg-sky-50 font-bold shadow-sm' : 'text-slate-500 border-transparent hover:text-slate-800 hover:bg-slate-50'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
           <span>📈</span> 時段與戰力分析
         </button>
-        <button @click="activeTab = 'rules'" :class="activeTab === 'rules' ? 'text-emerald-400 border-emerald-400 bg-emerald-500/10' : 'text-slate-400 border-transparent hover:text-slate-200'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
+        <button @click="activeTab = 'rules'" :class="activeTab === 'rules' ? 'text-sky-600 border-sky-600 bg-sky-50 font-bold shadow-sm' : 'text-slate-500 border-transparent hover:text-slate-800 hover:bg-slate-50'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
           <span>📖</span> 專法準則
         </button>
       </nav>
@@ -341,12 +341,12 @@
             <span>🚶</span> <span>步行</span>
           </button>
           <button type="button" @click="setGlobalVehicleMode('bike')"
-            :class="vehicleMode === 'bike' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
+            :class="vehicleMode === 'bike' ? 'bg-sky-50 text-sky-700 border-sky-300 font-bold shadow-sm' : 'text-slate-500 hover:text-slate-800 border-transparent'"
             class="px-2.5 py-1 rounded-lg text-xs transition border flex items-center gap-1">
             <span>🚲</span> <span>腳踏車</span>
           </button>
           <button type="button" @click="setGlobalVehicleMode('motorcycle')"
-            :class="vehicleMode === 'motorcycle' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold shadow' : 'text-slate-400 hover:text-slate-200 border-transparent'"
+            :class="vehicleMode === 'motorcycle' ? 'bg-sky-600 text-white border-sky-600 font-bold shadow-sm shadow-sky-500/20' : 'text-slate-500 hover:text-slate-800 border-transparent'"
             class="px-2.5 py-1 rounded-lg text-xs transition border flex items-center gap-1">
             <span>🛵</span> <span>機車</span>
           </button>
@@ -403,15 +403,15 @@
         </div>
 
         <!-- 4. 預估差額補貼款 -->
-        <div class="bg-gradient-to-br from-emerald-950/90 to-slate-900 p-3.5 sm:p-5 rounded-2xl border border-emerald-500/40 relative overflow-hidden shadow-md flex flex-col justify-between">
+        <div class="bg-gradient-to-br from-sky-50 via-white to-blue-50/70 p-3.5 sm:p-5 rounded-2xl border border-sky-300 shadow-md shadow-sky-500/10 relative overflow-hidden shadow-md flex flex-col justify-between">
           <div class="flex items-center justify-between">
-            <span class="text-[11px] sm:text-xs text-emerald-300 font-bold">預估差額補貼</span>
-            <span class="text-[9px] sm:text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-bold">補發款</span>
+            <span class="text-[11px] sm:text-xs text-sky-800 font-bold">預估差額補貼</span>
+            <span class="text-[9px] sm:text-[10px] bg-sky-100 text-sky-800 border border-sky-200 px-1.5 py-0.5 rounded font-bold">補發款</span>
           </div>
-          <div class="text-xl sm:text-3xl font-black font-mono text-emerald-400 my-1 sm:my-2">
+          <div class="text-xl sm:text-3xl font-black font-mono text-sky-600 my-1 sm:my-2">
             ${{ Math.round(subsidy).toLocaleString() }}
           </div>
-          <div class="text-[10px] sm:text-xs text-emerald-400/80 font-medium truncate">
+          <div class="text-[10px] sm:text-xs text-sky-700/80 font-medium truncate">
             {{ subsidy > 0 ? '兩週結算後全額補發' : '基本車資已達法定保底' }}
           </div>
         </div>
@@ -454,14 +454,14 @@
       </div>
 
       <!-- 總收入與實質落袋淨利 Banner (含載具成本扣除) -->
-      <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950/60 p-4 sm:p-6 rounded-2xl border border-emerald-500/30 shadow-xl space-y-3.5 sm:space-y-4">
+      <div class="bg-gradient-to-br from-white via-sky-50/30 to-blue-50/50 p-4 sm:p-6 rounded-2xl border border-sky-200 shadow-xl shadow-sky-500/10 space-y-3.5 sm:space-y-4">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-3 border-b border-slate-800">
           <div>
             <div class="flex items-center gap-2">
               <span class="text-[10px] sm:text-xs text-slate-400 uppercase tracking-wider font-semibold">實質落袋淨利 (扣除{{ currentVehicleConfig.name }}成本)</span>
               <span v-if="totalVehicleCost > 0" class="text-[10px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-mono">成本 -${{ Math.round(totalVehicleCost) }}</span>
             </div>
-            <div class="text-2xl sm:text-4xl font-black font-mono text-emerald-300 mt-0.5">
+            <div class="text-2xl sm:text-4xl font-black font-mono text-sky-600 mt-0.5">
               NT$ {{ Math.round(netTotalIncome).toLocaleString() }}
             </div>
             <p class="text-[11px] sm:text-xs text-slate-400 mt-1">
@@ -495,7 +495,7 @@
           <button @click="copyReport" class="px-3.5 py-2 bg-slate-800 active:bg-slate-700 hover:bg-slate-700 text-slate-200 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition">
             <span>📋</span> <span class="truncate font-mono">{{ copyBtnText }}</span>
           </button>
-          <button @click="downloadReport" class="px-3.5 py-2 bg-emerald-600 active:bg-emerald-700 hover:bg-emerald-500 text-slate-950 font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-1.5">
+          <button @click="downloadReport" class="px-3.5 py-2 bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white font-bold text-xs rounded-xl transition shadow-md shadow-sky-500/20 flex items-center justify-center gap-1.5">
             <span>📥</span> <span>下載完整戰報 (.md)</span>
           </button>
           <button @click="exportCSV" class="px-3.5 py-2 bg-slate-800 active:bg-slate-700 hover:bg-slate-700 text-slate-200 text-xs rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition">
@@ -698,10 +698,10 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
         
         <!-- 1. 快速手動輸入 (移至第一優先位置) -->
-        <div class="bg-slate-900 p-4 rounded-2xl border border-emerald-500/40 flex flex-col justify-between shadow-lg">
+        <div class="bg-slate-900 p-4 rounded-2xl border border-sky-300 flex flex-col justify-between shadow-md shadow-sky-500/10">
           <div>
             <div class="mb-1">
-              <h2 class="font-bold text-emerald-300 text-xs sm:text-sm flex items-center gap-1.5">
+              <h2 class="font-bold text-sky-700 text-xs sm:text-sm flex items-center gap-1.5">
                 <span>✏️</span> 快速手動輸入
               </h2>
             </div>
@@ -713,16 +713,16 @@
         </div>
 
         <!-- 2. 原況文字 / 剪貼簿一鍵秒貼 -->
-        <div class="bg-slate-900 p-4 rounded-2xl border border-cyan-500/30 flex flex-col justify-between shadow-lg">
+        <div class="bg-slate-900 p-4 rounded-2xl border border-blue-300 flex flex-col justify-between shadow-md shadow-blue-500/10">
           <div>
             <div class="mb-1">
-              <h2 class="font-bold text-cyan-300 text-xs sm:text-sm flex items-center gap-1.5">
+              <h2 class="font-bold text-blue-700 text-xs sm:text-sm flex items-center gap-1.5">
                 <span>📋</span> 剪貼簿 / 原況文字秒貼
               </h2>
             </div>
             <p class="text-[11px] text-slate-400 mb-2.5">長按 iPhone / Android 截圖複製文字，貼上 0.01 秒瞬間精準解析</p>
           </div>
-          <button @click="openPasteModal" class="w-full block text-center py-2 px-2.5 rounded-xl bg-cyan-600 active:bg-cyan-500 hover:bg-cyan-500 text-slate-950 font-bold text-xs transition shadow">
+          <button @click="openPasteModal" class="w-full block text-center py-2 px-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-bold text-xs rounded-xl transition shadow-md shadow-blue-500/20">
             貼上文字一鍵解析
           </button>
         </div>
@@ -2136,10 +2136,10 @@
     </div>
 
     <!-- 手機端底部常駐狀態列 -->
-    <aside class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-md border-t border-slate-800 px-4 py-2.5 shadow-2xl pb-safe flex items-center justify-between">
+    <aside class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-sky-100 px-4 py-2.5 shadow-lg shadow-sky-500/10 pb-safe flex items-center justify-between">
       <div>
         <span class="text-[10px] text-slate-400 block">兩週預估補發差額</span>
-        <div class="text-base font-black font-mono text-emerald-400">
+        <div class="text-base font-black font-mono text-sky-600">
           NT$ {{ Math.round(subsidy).toLocaleString() }}
         </div>
       </div>
