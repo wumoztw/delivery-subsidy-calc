@@ -15,10 +15,9 @@
   <!-- 1. DNS 預連線 (Preconnect)：消除 DNS/TLS 延遲 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- 2. 精簡字重載入：Space Grotesk + Noto Sans TC + JetBrains Mono -->
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <!-- 3. 非同步載入 Space Grotesk 與 JetBrains Mono 降低阻塞 -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" onload="this.rel='stylesheet'">
+  <!-- 2. 精簡字重載入：Noto Sans 與 Noto Sans TC (400, 500, 600) + JetBrains Mono -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <!-- 3. 非同步載入 JetBrains Mono 降低阻塞 -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" onload="this.rel='stylesheet'">
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -46,62 +45,76 @@
       theme: {
         extend: {
           fontFamily: {
-            display: ['"Space Grotesk"', '"Noto Sans TC"', 'sans-serif'],
-            sans: ['"Noto Sans TC"', '"Noto Sans TC Fallback"', '-apple-system', 'BlinkMacSystemFont', '"PingFang TC"', '"Microsoft JhengHei"', 'sans-serif'],
+            display: ['"Noto Sans TC"', 'sans-serif'],
+            sans: ['"Noto Sans TC"', '"Noto Sans"', '-apple-system', 'BlinkMacSystemFont', '"PingFang TC"', '"Microsoft JhengHei"', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
           },
           colors: {
-            // ═══ Stitch 官方次世代 Clean White & Light Sky Blue 清新純白與天藍色系 ═══
+            // ═══ Muji 極簡白藍色系 (和紙白底・純白卡片・細緻邊框・沉靜靛藍) ═══
             slate: {
               50: '#ffffff',   // 極致純白 (Purest White)
-              100: '#0f172a',  // 最高對比深墨黑標題 (Deep Obsidian Ink)
-              200: '#1e293b',  // 重要文字與次標題 (Deep Slate)
-              300: '#334155',  // 正文舒適閱讀色 (Body Charcoal)
-              400: '#475569',  // 輔助說明文字 (Readable Slate)
-              500: '#64748b',  // 備註與圖標 (Muted Slate)
-              600: '#94a3b8',  // 次要邊框與分隔線
-              700: '#bae6fd',  // 天藍輸入框邊框高亮 (Sky Blue Border)
-              800: '#e2e8f0',  // 乾淨精緻卡片外框 (Clean Card Border)
-              850: '#f0f9ff',  // 輕量微天藍浮層 (Soft Ice Blue Surface)
+              100: '#0b1c30',  // 最高對比深紺墨標題 (Deep Navy Ink / Sumi)
+              200: '#1f2937',  // 濃墨次標題 (Dark Ink)
+              300: '#374151',  // 正文舒適深灰 (Charcoal Slate)
+              400: '#64748b',  // 輔助說明文字 (Muted Slate)
+              500: '#94a3b8',  // 備註與圖標
+              600: '#cbd5e1',  // 次要邊框與分隔線
+              700: '#dbeafe',  // 柔霧淡藍框 (Soft Mist Blue Border)
+              800: '#e2e8f0',  // 日系極簡卡片髮絲框 (Hairline Card Border)
+              850: '#eff6ff',  // 柔霧水色浮層 (Mizuiro Surface)
               900: '#ffffff',  // 純淨白卡片背景 (Pure White Card Background)
-              950: '#f8fafc',  // 畫布極簡紙白底色 (Paper Clean Canvas)
+              950: '#fafafc',  // 和紙霜白底色 (Paper Frost White Canvas)
+            },
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#1e3a8a',  // 日系沉靜靛藍 (Quiet Indigo)
+              600: '#1e3a8a',
+              700: '#172554',
+            },
+            indigo: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#1e3a8a',  // 日系沉靜靛藍 (Quiet Indigo)
+              600: '#1e3a8a',
+              700: '#172554',
             },
             emerald: {
               50: '#ecfdf5',
               100: '#064e3b',
               200: '#047857',
               300: '#059669',
-              400: '#047857',  // 日間抗反光深林翡翠綠
+              400: '#047857',
               500: '#059669',
               600: '#047857',
               700: '#065f46',
               800: '#064e3b',
-              900: '#ecfdf5',  // 徽章與標籤柔和淺綠底
+              900: '#ecfdf5',
               950: '#f0fdf4',
             },
             cyan: {
-              50: '#f0f9ff',   // 極淺天藍冰晶底 (Ice Blue Tint)
-              100: '#e0f2fe',  // 天藍淺底 (Soft Sky Tint)
-              200: '#bae6fd',  // 天藍外框 (Sky Border)
-              300: '#7dd3fc',  // 淺天空藍 (Light Sky Blue)
-              400: '#38bdf8',  // 鮮明亮天藍 (Vibrant Sky Blue)
-              500: '#0284c7',  // Stitch 核心淺天藍主色 (Stitch Hero Sky Blue)
-              600: '#0369a1',  // 濃郁海洋深藍 (Deep Ocean Blue)
+              50: '#eff6ff',   // 柔霧水色 (Soft Misted Water)
+              100: '#dbeafe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#1e3a8a',  // 核心對應主色
+              600: '#1e3a8a',
               700: '#075985',
               800: '#0c4a6e',
               900: '#082f49',
-              950: '#f0f9ff',
+              950: '#eff6ff',
             },
             amber: {
               50: '#fffbeb',
               100: '#78350f',
               200: '#92400e',
               300: '#b45309',
-              400: '#b45309',  // 警示琥珀金 (Deep Warm Amber)
+              400: '#b45309',
               500: '#d97706',
               600: '#b45309',
               700: '#92400e',
-              900: '#fffbeb',  // 警示徽章淺金底
+              900: '#fffbeb',
               950: '#fffbeb',
             },
             rose: {
@@ -109,21 +122,21 @@
               100: '#881337',
               200: '#9f1239',
               300: '#be123c',
-              400: '#be123c',  // 成本扣除與雷單深紅 (Crisp Crimson)
+              400: '#be123c',
               500: '#e11d48',
               600: '#be123c',
               700: '#9f1239',
-              900: '#fff1f2',  // 扣除成本徽章淺紅底
+              900: '#fff1f2',
               950: '#fff1f2',
             },
             brand: {
-              50: '#f0fdf4',
-              100: '#dcfce7',
-              400: '#047857',
-              500: '#059669',
-              600: '#047857',
-              900: '#ecfdf5',
-              950: '#f8fafc',
+              50: '#eff6ff',
+              100: '#dbeafe',
+              400: '#1e3a8a',
+              500: '#1e3a8a',
+              600: '#1e3a8a',
+              900: '#eff6ff',
+              950: '#fafafc',
             }
           }
         }
@@ -218,14 +231,14 @@
       letter-spacing: 0.015em;
     }
 
-    /* 9. Stitch 清新天藍選取高亮配色與柔和微陰影 */
+    /* 7. Muji 沉靜靛藍選取高亮配色與極簡自然微陰影 */
     ::selection {
-      background-color: rgba(2, 132, 199, 0.25);
-      color: #0369a1;
+      background-color: rgba(30, 58, 138, 0.15);
+      color: #1e3a8a;
     }
-    /* 卡片純白立體柔光微陰影 (天藍淡光暈 + 質感紙白層次) */
-    .shadow-xl, .shadow-2xl, .shadow-lg {
-      box-shadow: 0 4px 20px -2px rgba(2, 132, 199, 0.08), 0 2px 8px -2px rgba(0, 0, 0, 0.04);
+    /* 極簡自然微陰影 */
+    .shadow-xl, .shadow-2xl, .shadow-lg, .shadow-md, .shadow {
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02) !important;
     }
 
     [v-cloak] { display: none !important; }
@@ -240,18 +253,18 @@
   <div id="app" v-cloak class="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-6">
     
     <!-- 頂部導航列與系統狀態 -->
-    <header class="bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-xl flex flex-col gap-3.5">
+    <header class="bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-xl p-3.5 sm:p-5 shadow-sm flex flex-col gap-3.5">
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5 sm:gap-3">
-          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/25 text-white font-black text-lg sm:text-xl shrink-0">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-lg bg-blue-900 flex items-center justify-center text-white font-bold text-lg sm:text-xl shrink-0 shadow-sm">
             ⚡
           </div>
           <div>
             <div class="flex items-center gap-1.5 flex-wrap">
-              <h1 class="text-base sm:text-2xl font-bold bg-gradient-to-r from-sky-600 via-blue-600 to-cyan-500 bg-clip-text text-transparent leading-tight">
+              <h1 class="text-base sm:text-2xl font-bold text-slate-100 tracking-tight leading-tight">
                 外送專法與疊單收益精算系統
               </h1>
-              <span class="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">v3.0 旗艦版</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-900 border border-blue-200 font-mono">v3.0 旗艦版</span>
             </div>
             <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5 line-clamp-1">智慧雙單疊單工時放大 × 戰力評級 × 秒級精算 × 差額補貼</p>
           </div>
@@ -259,61 +272,61 @@
       </div>
 
       <!-- 費率快速切換與自訂 -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-950/70 p-2 sm:p-2.5 rounded-xl border border-slate-800/80 text-xs">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-50 p-2 sm:p-2.5 rounded-lg border border-slate-800 text-xs">
         <div class="text-slate-400 flex items-center justify-between sm:justify-start gap-1.5">
           <div class="flex items-center gap-1.5">
-            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span>法定保障時薪：</span>
           </div>
-          <span class="text-emerald-300 font-mono font-bold sm:hidden">NT$ {{ rate }} / hr</span>
+          <span class="text-emerald-600 font-mono font-bold sm:hidden">NT$ {{ rate }} / hr</span>
         </div>
         <div class="flex items-center justify-between sm:justify-end gap-2 overflow-x-auto no-scrollbar">
           <div class="flex items-center gap-1 shrink-0">
-            <button @click="rate = 245" :class="rate === 245 ? 'bg-sky-50 text-sky-700 border-sky-300 font-bold shadow-sm' : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100'" class="text-[11px] sm:text-xs px-2.5 py-1 rounded-lg border transition font-mono">$245 專法底線</button>
+            <button @click="rate = 245" :class="rate === 245 ? 'bg-blue-50 text-blue-900 border-blue-300 font-semibold shadow-sm' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'" class="text-[11px] sm:text-xs px-2.5 py-1 rounded-md border transition font-mono">$245 專法底線</button>
           </div>
-          <div class="flex items-center gap-1 border-l border-slate-800 pl-2 shrink-0">
+          <div class="flex items-center gap-1 border-l border-slate-200 pl-2 shrink-0">
             <span class="text-[10px] text-slate-500">自訂 NT$</span>
-            <input type="number" v-model.number="rate" step="0.5" class="w-16 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-right font-mono text-emerald-300 text-xs focus:outline-none focus:border-emerald-500">
+            <input type="number" v-model.number="rate" step="0.5" class="w-16 bg-white border border-slate-200 rounded px-1.5 py-0.5 text-right font-mono text-emerald-600 text-xs focus:outline-none focus:border-blue-500">
             <span class="text-[10px] text-slate-500">/ hr</span>
           </div>
         </div>
       </div>
 
       <!-- 法定工時模式切換 -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-950/70 p-2 sm:p-2.5 rounded-xl border border-slate-800/80 text-xs">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-slate-50 p-2 sm:p-2.5 rounded-lg border border-slate-800 text-xs">
         <div class="text-slate-400">
           法定工時模式：
-          <span class="text-slate-300 font-medium">{{ statutoryModeLabel }}</span>
+          <span class="text-slate-200 font-medium">{{ statutoryModeLabel }}</span>
         </div>
         <div class="flex items-center gap-1 shrink-0">
-          <button @click="statutoryMode = 'independent'" :class="statutoryMode === 'independent' ? 'bg-sky-50 text-sky-700 border-sky-300 font-bold shadow-sm' : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100'" class="text-[11px] sm:text-xs px-2.5 py-1 rounded-lg border transition">獨立累加（對帳）</button>
-          <button @click="statutoryMode = 'table'" :class="statutoryMode === 'table' ? 'bg-amber-50 text-amber-700 border-amber-300 font-bold shadow-sm' : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100'" class="text-[11px] sm:text-xs px-2.5 py-1 rounded-lg border transition">經驗倍率表</button>
+          <button @click="statutoryMode = 'independent'" :class="statutoryMode === 'independent' ? 'bg-blue-50 text-blue-900 border-blue-300 font-semibold shadow-sm' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'" class="text-[11px] sm:text-xs px-2.5 py-1 rounded-md border transition">獨立累加（對帳）</button>
+          <button @click="statutoryMode = 'table'" :class="statutoryMode === 'table' ? 'bg-amber-50 text-amber-800 border-amber-200 font-semibold shadow-sm' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'" class="text-[11px] sm:text-xs px-2.5 py-1 rounded-md border transition">經驗倍率表</button>
         </div>
       </div>
     </header>
 
-    <div v-if="storageStatus !== 'ok'" class="bg-red-900/90 text-red-100 text-xs p-3 rounded-xl mb-3 border border-red-700">
+    <div v-if="storageStatus !== 'ok'" class="bg-red-50 text-red-700 text-xs p-3 rounded-lg mb-3 border border-red-200">
       ⚠️ 資料未能儲存（{{ storageStatus === 'corrupt' ? '偵測到資料損毀，已停止覆寫以保護原文' : '瀏覽器儲存空間寫入失敗或無痕模式限制' }}）。
-      請先 <button @click="exportCSV" class="underline font-bold text-amber-300">匯出 CSV</button> 進行備份。
+      請先 <button @click="exportCSV" class="underline font-bold text-amber-700">匯出 CSV</button> 進行備份。
     </div>
 
     <!-- 主選單分頁切換 -->
     <div class="overflow-x-auto no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0">
       <nav class="flex border-b border-slate-800 gap-1 sm:gap-4 text-xs sm:text-sm font-medium min-w-max">
-        <button @click="activeTab = 'dashboard'" :class="activeTab === 'dashboard' ? 'text-sky-600 border-sky-600 bg-sky-50 font-bold shadow-sm' : 'text-slate-500 border-transparent hover:text-slate-800 hover:bg-slate-50'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
+        <button @click="activeTab = 'dashboard'" :class="activeTab === 'dashboard' ? 'text-blue-900 border-blue-900 bg-blue-50/70 font-semibold shadow-sm' : 'text-slate-500 border-transparent hover:text-blue-900 hover:bg-slate-50'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-md">
           <span>📊</span> 結算儀表板
         </button>
-        <button @click="activeTab = 'trips'" :class="activeTab === 'trips' ? 'text-sky-600 border-sky-600 bg-sky-50 font-bold shadow-sm' : 'text-slate-500 border-transparent hover:text-slate-800 hover:bg-slate-50'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
+        <button @click="activeTab = 'trips'" :class="activeTab === 'trips' ? 'text-blue-900 border-blue-900 bg-blue-50/70 font-semibold shadow-sm' : 'text-slate-500 border-transparent hover:text-blue-900 hover:bg-slate-50'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-md">
           <span>📋</span> 訂單明細
-          <span v-if="trips.length > 0" class="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-emerald-300 font-mono">{{ trips.length }}</span>
+          <span v-if="trips.length > 0" class="text-[10px] px-1.5 py-0.2 rounded-full bg-blue-100 text-blue-900 font-mono">{{ trips.length }}</span>
         </button>
-        <button @click="activeTab = 'tactics'" :class="activeTab === 'tactics' ? 'text-sky-600 border-sky-600 bg-sky-50 font-bold shadow-sm' : 'text-slate-500 border-transparent hover:text-slate-800 hover:bg-slate-50'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
+        <button @click="activeTab = 'tactics'" :class="activeTab === 'tactics' ? 'text-blue-900 border-blue-900 bg-blue-50/70 font-semibold shadow-sm' : 'text-slate-500 border-transparent hover:text-blue-900 hover:bg-slate-50'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-md">
           <span>⚡</span> 疊單作戰模擬
         </button>
-        <button @click="activeTab = 'analysis'" :class="activeTab === 'analysis' ? 'text-sky-600 border-sky-600 bg-sky-50 font-bold shadow-sm' : 'text-slate-500 border-transparent hover:text-slate-800 hover:bg-slate-50'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
+        <button @click="activeTab = 'analysis'" :class="activeTab === 'analysis' ? 'text-blue-900 border-blue-900 bg-blue-50/70 font-semibold shadow-sm' : 'text-slate-500 border-transparent hover:text-blue-900 hover:bg-slate-50'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-md">
           <span>📈</span> 時段與戰力分析
         </button>
-        <button @click="activeTab = 'rules'" :class="activeTab === 'rules' ? 'text-sky-600 border-sky-600 bg-sky-50 font-bold shadow-sm' : 'text-slate-500 border-transparent hover:text-slate-800 hover:bg-slate-50'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-lg">
+        <button @click="activeTab = 'rules'" :class="activeTab === 'rules' ? 'text-blue-900 border-blue-900 bg-blue-50/70 font-semibold shadow-sm' : 'text-slate-500 border-transparent hover:text-blue-900 hover:bg-slate-50'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-md">
           <span>📖</span> 專法準則
         </button>
       </nav>
@@ -2136,16 +2149,16 @@
     </div>
 
     <!-- 手機端底部常駐狀態列 -->
-    <aside class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-sky-100 px-4 py-2.5 shadow-lg shadow-sky-500/10 pb-safe flex items-center justify-between">
+    <aside class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2.5 shadow-sm pb-safe flex items-center justify-between">
       <div>
         <span class="text-[10px] text-slate-400 block">兩週預估補發差額</span>
-        <div class="text-base font-black font-mono text-sky-600">
+        <div class="text-base font-bold font-mono text-blue-900">
           NT$ {{ Math.round(subsidy).toLocaleString() }}
         </div>
       </div>
       <div class="text-right">
         <span class="text-[10px] text-slate-400 block">最終總收入 (含小費/獎勵)</span>
-        <div class="text-base font-black font-mono text-slate-100">
+        <div class="text-base font-bold font-mono text-slate-100">
           NT$ {{ Math.round(totalIncome).toLocaleString() }}
         </div>
       </div>

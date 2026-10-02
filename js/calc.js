@@ -346,9 +346,93 @@
     return { ssr, sr, normal, warning };
   }
 
+  function getEffectiveRate(rate) {
+    const r = Number(rate);
+    return (!r || r <= 0 || isNaN(r)) ? DEFAULT_RATE : r;
+  }
+
+  function getTableMultiplier(stacks) {
+    return getStackMultiplier(stacks);
+  }
+
+  function calcTrip(trip, options) {
+    if (!trip) return { statMins: 0, legal: 0, basePay: 0, physicalMins: 0, subsidy: 0 };
+    const opts = typeof options === 'object' && options !== null ? options : { rate: options };
+    const rate = getEffectiveRate(opts.rate);
+    const statutoryMode = opts.statutoryMode || 'table';
+    const physicalMins = Number(trip.duration) || 0;
+    const stacks = Math.max(1, Number(trip.stacks) || 1);
+    const basePay = Number(trip.basePay) || 0;
+
+    let multiplier;
+    if (statutoryMode === 'independent') {
+      multiplier = stacks;
+    } else {
+      multiplier = getStackMultiplier(stacks);
+    }
+    const statMins = physicalMins * multiplier;
+    const legal = (statMins / 60) * rate;
+    const subsidy = Math.max(0, legal - basePay);
+    return {
+      statMins,
+      legal,
+      basePay,
+      physicalMins,
+      subsidy
+    };
+  }
+
+  function calcSummary(trips, options, vehicleMode) {
+    const opts = typeof options === 'object' && options !== null ? options : { rate: options };
+    const rate = getEffectiveRate(opts.rate);
+    const statutoryMode = opts.statutoryMode || 'table';
+    const list = Array.isArray(trips) ? trips : [];
+
+    let totalPhysicalMins = 0;
+    let totalStatutoryMins = 0;
+    let totalOrdersCount = 0;
+    let totalBasePay = 0;
+    let totalLegal = 0;
+    let totalTips = 0;
+    let totalIncentives = 0;
+
+    for (const t of list) {
+      const c = calcTrip(t, { rate, statutoryMode });
+      totalPhysicalMins += c.physicalMins;
+      totalStatutoryMins += c.statMins;
+      totalOrdersCount += Math.max(1, Number(t.stacks) || 1);
+      totalBasePay += c.basePay;
+      totalLegal += c.legal;
+      totalTips += Number(t.tips) || 0;
+      totalIncentives += Number(t.incentives) || 0;
+    }
+
+    const totalPhysicalHours = totalPhysicalMins / 60;
+    const totalStatutoryHours = totalStatutoryMins / 60;
+    const subsidy = Math.max(0, totalLegal - totalBasePay);
+    const totalIncome = totalBasePay + subsidy + totalTips + totalIncentives;
+
+    return {
+      totalPhysicalMins,
+      totalPhysicalHours,
+      totalStatutoryMins,
+      totalStatutoryHours,
+      totalOrdersCount,
+      totalLegal,
+      totalBasePay,
+      subsidy,
+      totalIncome,
+      effectiveRate: rate
+    };
+  }
+
   return {
     getStackMultiplier,
+    getTableMultiplier,
     getTripStatutoryMins,
+    getEffectiveRate,
+    calcTrip,
+    calcSummary,
     computeSummary,
     getTierLabel,
     getTierBadgeClass,
