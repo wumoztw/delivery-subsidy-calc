@@ -81,3 +81,22 @@ $$Hourly\_Wage_{\text{real}} = \left( \frac{\sum T_{\text{statutory},i}}{\sum T_
 2. 或透過 GitHub Pages / 任何靜態主機託管。
 
 資料只存在本機 `localStorage`（key：`delivery_subsidy_calc_v3`），不會上傳伺服器。
+
+---
+
+## 🎨 UI 視覺架構與 Google Stitch 現代化翻新
+
+本專案採用 **Google Stitch 官方遠端 MCP 雲端引擎**（搭配雙軌並行策略與終端隨需呼叫工具 `stitch-tool`）進行視覺架構全面重塑：
+
+1. **設計風格與視覺規範 (Clean White & Light Sky Blue)**：
+   * **背景畫布**：極致純白（`#FFFFFF`）與紙白底色（`#F8FAFC`），在戶外強光騎乘時具備極佳的抗反光清晰度。
+   * **品牌主色**：Stitch 淺天藍英雄色（`#0284C7`）與活力亮天藍（`#38BDF8`），搭配冰晶淡藍浮層（`#F0F9FF`）。
+   * **文字排版 (Typography)**：
+     * 標題與核心數據：**Space Grotesk**（現代金融科技俐落幾何字型）。
+     * 金額、工時與倍率：**JetBrains Mono**（等寬對齊，防止數字跳動）。
+     * 正文與說明：**Noto Sans TC**（高閱讀舒適度繁中標準）。
+2. **終端隨需喚醒工作流 (Legacy-to-Modern 3 步落地)**：
+   * **步驟 1（規格注入）**：透過自然語言提示詞將現有計費欄位與業務邏輯提交至 Stitch 雲端。
+   * **步驟 2（AI 生成設計 Tokens）**：Stitch 遠端多模態模型產出包含圓角、色票與組件排版的設計規格。
+   * **步驟 3（邏輯與 UI 閉環）**：小幫手（Pi 工兵）將生成的 Tailwind 組件與設計 Tokens 注入現有 Vue 3 核心，完整保留純前端響應式與無痕 LocalStorage 邏輯。
+
