@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="外送專法精算">
-  <meta name="theme-color" content="#0f131d">
+  <meta name="theme-color" content="#f8fafc">
   <!-- 閃電高質感 SVG Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
   <!-- ═══ Google Fonts 最佳化載入 (Stitch FinTech 配套) ═══ -->
@@ -51,20 +51,20 @@
             mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
           },
           colors: {
-            // ═══ Stitch 官方次世代 FinTech 曜石黑與霓虹電競金屬配色 ═══
+            // ═══ Stitch 官方次世代 Clean White & Light Sky Blue 清新純白與天藍色系 ═══
             slate: {
-              50: '#f8fafc',
-              100: '#f1f5f9',   // 銳利高對比主文字 (Crisp Pure Slate)
-              200: '#e2e8f0',   // 副標題與重要文字 (High Contrast Slate)
-              300: '#cbd5e1',   // 正文閱讀色 (Readable Slate)
-              400: '#94a3b8',   // 輔助與說明文字 (Muted Slate)
-              500: '#64748b',   // 圖示與弱化備註 (Icon Slate)
-              600: '#475569',   // 邊框與分隔線
-              700: '#334155',   // 輸入框外框 (Border Outline)
-              800: '#262a35',   // 卡片容器外框 (Container Border)
-              850: '#202430',   // 浮動層卡片底色 (Surface High)
-              900: '#1c1f2a',   // 核心卡片深曜石底色 (Stitch Surface Container)
-              950: '#0f131d',   // 全域背景曜石深空黑 (Stitch Deep Space Canvas)
+              50: '#ffffff',   // 極致純白 (Purest White)
+              100: '#0f172a',  // 最高對比深墨黑標題 (Deep Obsidian Ink)
+              200: '#1e293b',  // 重要文字與次標題 (Deep Slate)
+              300: '#334155',  // 正文舒適閱讀色 (Body Charcoal)
+              400: '#475569',  // 輔助說明文字 (Readable Slate)
+              500: '#64748b',  // 備註與圖標 (Muted Slate)
+              600: '#94a3b8',  // 次要邊框與分隔線
+              700: '#bae6fd',  // 天藍輸入框邊框高亮 (Sky Blue Border)
+              800: '#e2e8f0',  // 乾淨精緻卡片外框 (Clean Card Border)
+              850: '#f0f9ff',  // 輕量微天藍浮層 (Soft Ice Blue Surface)
+              900: '#ffffff',  // 純淨白卡片背景 (Pure White Card Background)
+              950: '#f8fafc',  // 畫布極簡紙白底色 (Paper Clean Canvas)
             },
             emerald: {
               50: '#ecfdf5',
@@ -80,15 +80,16 @@
               950: '#f0fdf4',
             },
             cyan: {
-              50: '#f0f9ff',
-              100: '#0c4a6e',
-              200: '#0369a1',
-              300: '#0284c7',
-              400: '#0369a1',  // 疊單藍 (High-Contrast Sky Blue)
-              500: '#0284c7',
-              600: '#0369a1',
+              50: '#f0f9ff',   // 極淺天藍冰晶底 (Ice Blue Tint)
+              100: '#e0f2fe',  // 天藍淺底 (Soft Sky Tint)
+              200: '#bae6fd',  // 天藍外框 (Sky Border)
+              300: '#7dd3fc',  // 淺天空藍 (Light Sky Blue)
+              400: '#38bdf8',  // 鮮明亮天藍 (Vibrant Sky Blue)
+              500: '#0284c7',  // Stitch 核心淺天藍主色 (Stitch Hero Sky Blue)
+              600: '#0369a1',  // 濃郁海洋深藍 (Deep Ocean Blue)
               700: '#075985',
-              900: '#f0f9ff',  // 疊單徽章淺藍底
+              800: '#0c4a6e',
+              900: '#082f49',
               950: '#f0f9ff',
             },
             amber: {
@@ -186,21 +187,21 @@
       line-height: 1.35;
     }
 
-    /* 7. Stitch FinTech 深邃曜石黑文字階層與霓虹光澤優化 */
+    /* 7. Stitch 清新純白與淺天藍文字階層優化 (陽光下抗反光、最高對比) */
     .text-slate-500 {
       color: #64748b !important;
     }
     .text-slate-400 {
-      color: #94a3b8 !important;
+      color: #475569 !important;
     }
     .text-slate-300 {
-      color: #cbd5e1 !important;
+      color: #334155 !important;
     }
     .text-slate-200 {
-      color: #e2e8f0 !important;
+      color: #1e293b !important;
     }
     .text-slate-100 {
-      color: #f1f5f9 !important;
+      color: #0f172a !important; /* 最高對比深黑墨色 */
     }
 
     /* 8. 微型標籤字級保護 (防止手機戶外反光時小字模糊) */
@@ -217,14 +218,14 @@
       letter-spacing: 0.015em;
     }
 
-    /* 9. Stitch 霓虹選取高亮配色與深曜石微發光陰影 */
+    /* 9. Stitch 清新天藍選取高亮配色與柔和微陰影 */
     ::selection {
-      background-color: rgba(16, 185, 129, 0.35);
-      color: #ffffff;
+      background-color: rgba(2, 132, 199, 0.25);
+      color: #0369a1;
     }
-    /* 卡片立體深邃光澤陰影 */
+    /* 卡片純白立體柔光微陰影 (天藍淡光暈 + 質感紙白層次) */
     .shadow-xl, .shadow-2xl, .shadow-lg {
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.45), 0 8px 10px -6px rgba(0, 0, 0, 0.4), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+      box-shadow: 0 4px 20px -2px rgba(2, 132, 199, 0.08), 0 2px 8px -2px rgba(0, 0, 0, 0.04);
     }
 
     [v-cloak] { display: none !important; }
@@ -242,12 +243,12 @@
     <header class="bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-xl flex flex-col gap-3.5">
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5 sm:gap-3">
-          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-slate-950 font-black text-lg sm:text-xl shrink-0">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/25 text-white font-black text-lg sm:text-xl shrink-0">
             ⚡
           </div>
           <div>
             <div class="flex items-center gap-1.5 flex-wrap">
-              <h1 class="text-base sm:text-2xl font-bold bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent leading-tight">
+              <h1 class="text-base sm:text-2xl font-bold bg-gradient-to-r from-sky-600 via-blue-600 to-cyan-500 bg-clip-text text-transparent leading-tight">
                 外送專法與疊單收益精算系統
               </h1>
               <span class="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">v3.0 旗艦版</span>
