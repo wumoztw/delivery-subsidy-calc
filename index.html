@@ -8,16 +8,17 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="外送專法精算">
-  <meta name="theme-color" content="#f8fafc">
+  <meta name="theme-color" content="#0f131d">
   <!-- 閃電高質感 SVG Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
-  <!-- ═══ Google Fonts 最佳化載入 ═══ -->
+  <!-- ═══ Google Fonts 最佳化載入 (Stitch FinTech 配套) ═══ -->
   <!-- 1. DNS 預連線 (Preconnect)：消除 DNS/TLS 延遲 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- 2. 精簡字重載入：僅載入實際使用的字重 (400/500/700/900) -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <!-- 3. 非同步載入 JetBrains Mono (非首屏關鍵字體) 降低阻塞 -->
+  <!-- 2. 精簡字重載入：Space Grotesk + Noto Sans TC + JetBrains Mono -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <!-- 3. 非同步載入 Space Grotesk 與 JetBrains Mono 降低阻塞 -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" onload="this.rel='stylesheet'">
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" onload="this.rel='stylesheet'">
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -45,23 +46,25 @@
       theme: {
         extend: {
           fontFamily: {
+            display: ['"Space Grotesk"', '"Noto Sans TC"', 'sans-serif'],
             sans: ['"Noto Sans TC"', '"Noto Sans TC Fallback"', '-apple-system', 'BlinkMacSystemFont', '"PingFang TC"', '"Microsoft JhengHei"', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
           },
           colors: {
-            // ═══ 方案四：【日間抗反光紙白】(Paper Clean Light) 專業日間配色 ═══
+            // ═══ Stitch 官方次世代 FinTech 曜石黑與霓虹電競金屬配色 ═══
             slate: {
-              50: '#f8fafc',   // 純淨紙白外框
-              100: '#0f172a',  // 最高對比標題深墨色 (Obsidian Ink)
-              200: '#1e293b',  // 重要文字與次標題 (Deep Slate)
-              300: '#334155',  // 正文內文 (Body Charcoal)
-              400: '#475569',  // 輔助說明文字 (Readable Slate)
-              500: '#64748b',  // 備註與圖標 (Muted Slate)
-              600: '#94a3b8',  // 次要邊框與分隔線
-              700: '#cbd5e1',  // 輸入框邊框 (Light Border)
-              800: '#e2e8f0',  // 卡片外框與分割線 (Card Border)
-              900: '#ffffff',  // 卡片白色背景 (Pure Card White)
-              950: '#f8fafc',  // 頁面畫布底色 (Paper Canvas)
+              50: '#f8fafc',
+              100: '#f1f5f9',   // 銳利高對比主文字 (Crisp Pure Slate)
+              200: '#e2e8f0',   // 副標題與重要文字 (High Contrast Slate)
+              300: '#cbd5e1',   // 正文閱讀色 (Readable Slate)
+              400: '#94a3b8',   // 輔助與說明文字 (Muted Slate)
+              500: '#64748b',   // 圖示與弱化備註 (Icon Slate)
+              600: '#475569',   // 邊框與分隔線
+              700: '#334155',   // 輸入框外框 (Border Outline)
+              800: '#262a35',   // 卡片容器外框 (Container Border)
+              850: '#202430',   // 浮動層卡片底色 (Surface High)
+              900: '#1c1f2a',   // 核心卡片深曜石底色 (Stitch Surface Container)
+              950: '#0f131d',   // 全域背景曜石深空黑 (Stitch Deep Space Canvas)
             },
             emerald: {
               50: '#ecfdf5',
@@ -183,21 +186,21 @@
       line-height: 1.35;
     }
 
-    /* 7. 日間紙白高對比度與抗反光優化 (陽光下依然清晰銳利) */
+    /* 7. Stitch FinTech 深邃曜石黑文字階層與霓虹光澤優化 */
     .text-slate-500 {
-      color: #64748b !important; /* 日間清晰深石墨灰，高對比不反光 */
+      color: #64748b !important;
     }
     .text-slate-400 {
-      color: #475569 !important; /* 日間標準內文石墨黑，清晰省力 */
+      color: #94a3b8 !important;
     }
     .text-slate-300 {
-      color: #334155 !important;
+      color: #cbd5e1 !important;
     }
     .text-slate-200 {
-      color: #1e293b !important;
+      color: #e2e8f0 !important;
     }
     .text-slate-100 {
-      color: #0f172a !important; /* 最高對比深黑墨色 */
+      color: #f1f5f9 !important;
     }
 
     /* 8. 微型標籤字級保護 (防止手機戶外反光時小字模糊) */
@@ -214,14 +217,14 @@
       letter-spacing: 0.015em;
     }
 
-    /* 9. 日間清新選取高亮配色 */
+    /* 9. Stitch 霓虹選取高亮配色與深曜石微發光陰影 */
     ::selection {
-      background-color: rgba(5, 150, 105, 0.2);
-      color: #064e3b;
+      background-color: rgba(16, 185, 129, 0.35);
+      color: #ffffff;
     }
-    /* 卡片立體微陰影優化 (提升紙張層次感) */
+    /* 卡片立體深邃光澤陰影 */
     .shadow-xl, .shadow-2xl, .shadow-lg {
-      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.45), 0 8px 10px -6px rgba(0, 0, 0, 0.4), 0 0 1px 1px rgba(255, 255, 255, 0.05);
     }
 
     [v-cloak] { display: none !important; }
