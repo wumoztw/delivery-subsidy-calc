@@ -34,6 +34,11 @@
     const app = createApp({
       setup() {
         const activeTab = ref('dashboard');
+        // 頂部設定面板（時薪／週期／工時模式）預設收合，手機一開就看到結算數字；開關狀態記在本機
+        let savedPanel = false;
+        try { savedPanel = localStorage.getItem('dsc_settings_open') === '1'; } catch (e) {}
+        const showSettings = ref(savedPanel);
+        watch(showSettings, (v) => { try { localStorage.setItem('dsc_settings_open', v ? '1' : '0'); } catch (e) {} });
         const rate = ref(Cfg.DEFAULT_RATE);
         const rateMode = ref('auto'); // 'auto'（依訂單日期查最低工資表）| 'custom'
         const statutoryMode = ref('table'); // 'independent' | 'table'
@@ -671,7 +676,7 @@
         }, { deep: true });
 
         return {
-          activeTab, rate, rateMode, rateScheduleHint, displayRateText, statutoryMode, statutoryModeLabel, trips, visibleTrips, newTrip, storageStatus,
+          activeTab, showSettings, rate, rateMode, rateScheduleHint, displayRateText, statutoryMode, statutoryModeLabel, trips, visibleTrips, newTrip, storageStatus,
           cycleFilter, cycleFilterLabel, cycleGroups, pastCycleOptions, currentCycleInfo, removeTrip, clearVisibleTrips, tripLegal,
           showPasteModal, showManualModal, pasteText, parsedPasteTrip, pasteFieldStatus,
           copyBtnText, reportCopyMode, customPhysicalHours,
