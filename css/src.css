@@ -59,45 +59,60 @@ h1, h2, h3, h4, h5, h6,
   line-height: 1.35;
 }
 
-/* 7. Stitch 清新純白與淺天藍文字階層優化 (陽光下抗反光、最高對比) */
-.text-ink-600 {
-  color: #64748b !important;
-}
-.text-ink-700 {
-  color: #475569 !important;
-}
-.text-ink-800 {
-  color: #334155 !important;
-}
-.text-ink-900 {
-  color: #1e293b !important;
-}
-.text-ink-950 {
-  color: #0f172a !important; /* 最高對比深黑墨色 */
+/* 7. 選取高亮：品牌外送綠 */
+::selection {
+  background-color: rgba(6, 163, 90, 0.18);
+  color: #04532f;
 }
 
 /* 8. 微型標籤字級保護 (防止手機戶外反光時小字模糊) */
-.text-\[9px\] {
-  font-size: 10.5px !important;
-  letter-spacing: 0.025em;
-}
-.text-\[10px\] {
-  font-size: 11.5px !important;
-  letter-spacing: 0.02em;
-}
-.text-\[11px\] {
-  font-size: 12px !important;
-  letter-spacing: 0.015em;
+.text-\[9px\]  { font-size: 10.5px !important; letter-spacing: 0.025em; }
+.text-\[10px\] { font-size: 11.5px !important; letter-spacing: 0.02em; }
+.text-\[11px\] { font-size: 12px !important;   letter-spacing: 0.015em; }
+
+/* 9. 頁面底色：頂端一抹淡綠，往下回到中性灰 */
+body {
+  background-image: radial-gradient(120% 420px at 50% -120px, rgba(6, 163, 90, 0.10), transparent 70%);
+  background-repeat: no-repeat;
 }
 
-/* 7. Muji 沉靜靛藍選取高亮配色與極簡自然微陰影 */
-::selection {
-  background-color: rgba(30, 58, 138, 0.15);
-  color: #1e3a8a;
+/* 10. 統一的柔和層次陰影（卡片浮起但不搶戲） */
+.shadow-sm { box-shadow: 0 1px 2px rgba(16, 24, 20, 0.04), 0 1px 1px rgba(16, 24, 20, 0.03) !important; }
+.shadow, .shadow-md {
+  box-shadow: 0 1px 2px rgba(16, 24, 20, 0.04), 0 4px 14px -6px rgba(16, 24, 20, 0.08) !important;
 }
-/* 極簡自然微陰影 */
-.shadow-xl, .shadow-2xl, .shadow-lg, .shadow-md, .shadow {
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02) !important;
+.shadow-lg, .shadow-xl, .shadow-2xl {
+  box-shadow: 0 2px 4px rgba(16, 24, 20, 0.04), 0 12px 28px -12px rgba(16, 24, 20, 0.14) !important;
+}
+
+/* 11. 互動回饋：按壓微縮、鍵盤焦點綠框 */
+button { transition: background-color .15s, color .15s, border-color .15s, box-shadow .15s, transform .08s; }
+button:not(:disabled):active { transform: scale(0.97); }
+button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visible {
+  outline: 2px solid #06a35a;
+  outline-offset: 2px;
+}
+input[type="number"], input[type="text"], input[type="date"], input[type="time"], select, textarea {
+  transition: border-color .15s, box-shadow .15s;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: #06a35a !important;
+  box-shadow: 0 0 0 3px rgba(6, 163, 90, 0.15);
+}
+input[type="range"] { accent-color: #06a35a; }
+input[type="checkbox"], input[type="radio"] { accent-color: #06a35a; }
+
+/* 12. 主分頁：作用中分頁改為綠色底線＋淡綠底 */
+nav button { white-space: nowrap; }
+
+/* 13. 表格：表頭淡底、列 hover 提示 */
+table thead tr { background-color: #f5f7f6; }
+table tbody tr { transition: background-color .12s; }
+table tbody tr:hover { background-color: rgba(6, 163, 90, 0.04); }
+
+/* 14. 減少動態偏好 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 
 [v-cloak] { display: none !important; }
