@@ -21,16 +21,16 @@
   <!-- 3. 非同步載入 JetBrains Mono 降低阻塞 -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" onload="this.rel='stylesheet'">
   <!-- 樣式：Tailwind CLI 建置後的精簡 CSS（npm run build:css） -->
-  <link rel="stylesheet" href="css/app.css?v=20261012f">
+  <link rel="stylesheet" href="css/app.css?v=20261012g">
   <!-- 執行期函式庫改為本地 vendor，離線（PWA）也能開 -->
-  <script src="vendor/vue.global.prod.js?v=20261012f"></script>
-  <script src="vendor/papaparse.min.js?v=20261012f"></script>
+  <script src="vendor/vue.global.prod.js?v=20261012g"></script>
+  <script src="vendor/papaparse.min.js?v=20261012g"></script>
   <!-- 核心模組（順序有依賴：config → calc → cycle/parser/report → app） -->
-  <script src="js/config.js?v=20261012f"></script>
-  <script src="js/calc.js?v=20261012f"></script>
-  <script src="js/cycle.js?v=20261012f"></script>
-  <script src="js/parser.js?v=20261012f"></script>
-  <script src="js/report.js?v=20261012f"></script>
+  <script src="js/config.js?v=20261012g"></script>
+  <script src="js/calc.js?v=20261012g"></script>
+  <script src="js/cycle.js?v=20261012g"></script>
+  <script src="js/parser.js?v=20261012g"></script>
+  <script src="js/report.js?v=20261012g"></script>
 </head>
 <body class="bg-ink-50 text-ink-950 min-h-screen font-sans antialiased selection:bg-jade-500 selection:text-white pb-24 sm:pb-8">
   <div id="app" v-cloak class="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-6">
@@ -2226,16 +2226,31 @@
 
   <script>
     // 腳本載入或啟動失敗時，不要整頁空白：顯示提示並給重新整理按鈕
+    // 清掉離線快取與 Service Worker（版本錯配時的自我修復）
+    window.__dscResetCache = function () {
+      var jobs = [];
+      try { if (navigator.serviceWorker) jobs.push(navigator.serviceWorker.getRegistrations().then(function (rs) { return Promise.all(rs.map(function (r) { return r.unregister(); })); })); } catch (e) {}
+      try { if (window.caches) jobs.push(caches.keys().then(function (ks) { return Promise.all(ks.map(function (k) { return caches.delete(k); })); })); } catch (e) {}
+      return Promise.all(jobs).catch(function () {});
+    };
     window.__dscShowFatal = function (msg) {
+      // 第一次失敗：多半是快取到舊檔，自動清快取並重新載入一次（同一分頁只做一次，避免無限重整）
+      var healed = false;
+      try { healed = sessionStorage.getItem('dsc_healed') === '1'; } catch (e) { healed = true; }
+      if (!healed) {
+        try { sessionStorage.setItem('dsc_healed', '1'); } catch (e) {}
+        window.__dscResetCache().then(function () { location.reload(); });
+        return;
+      }
       var el = document.getElementById('app');
       if (el) el.removeAttribute('v-cloak');
       document.body.innerHTML = '<div style="max-width:32rem;margin:15vh auto;padding:1.5rem;font-family:sans-serif;line-height:1.6;border:1px solid #e2e8f0;border-radius:12px;background:#fff;color:#111c2d">'
         + '<h2 style="margin:0 0 .5rem;font-size:1.1rem">頁面載入失敗</h2>'
         + '<p style="margin:0 0 1rem;font-size:.9rem">通常是瀏覽器還留著舊版檔案。請按下方按鈕重新整理；仍失敗請把下面的錯誤訊息截圖。</p>'
-        + '<button onclick="location.reload()" style="background:#06c167;color:#fff;border:0;border-radius:8px;padding:.5rem 1rem;font-size:.9rem;cursor:pointer">重新整理</button>'
+        + '<button onclick="window.__dscResetCache().then(function(){location.reload()})" style="background:#06c167;color:#fff;border:0;border-radius:8px;padding:.5rem 1rem;font-size:.9rem;cursor:pointer">重新整理</button>'
         + '<pre style="white-space:pre-wrap;font-size:.75rem;color:#be123c;margin-top:1rem">' + String(msg).replace(/</g, '&lt;') + '</pre></div>';
     };
   </script>
-  <script src="js/app.js?v=20261012f"></script>
+  <script src="js/app.js?v=20261012g"></script>
 </body>
 </html>
