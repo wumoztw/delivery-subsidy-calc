@@ -725,6 +725,6 @@
     // PWA：註冊離線快取（file:// 直接開檔時瀏覽器不支援，略過即可）
     if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch((err) => console.warn('Service Worker 註冊失敗：', err));
+        navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch((err) => console.warn('Service Worker 註冊失敗：', err));
       });
     }
