@@ -55,9 +55,16 @@
         const vehicleMode = ref(localStorage.getItem('delivery_calc_vehicle_mode') || 'motorcycle');
         const simVehicleMode = ref(vehicleMode.value);
         const tacticsGuideTab = ref(vehicleMode.value);
-        const simOrders = ref(vehicleMode.value === 'motorcycle' ? 3 : 2);
-        const simAvgTripMins = ref(vehicleMode.value === 'bike' ? 24 : 18);
-        const simPhysicalMins = ref(vehicleMode.value === 'motorcycle' ? 25 : (vehicleMode.value === 'bike' ? 30 : 28));
+        // 模擬器參數（一批 = 一次出發到全部送達），會記在本機
+        const SIM_KEY = 'delivery_calc_sim_v2';
+        const simBase = () => ({ ...Cfg.simDefaultsMap[vehicleMode.value] || Cfg.simDefaultsMap.motorcycle, hoursPerDay: 6, daysPerCycle: 12 });
+        const sim = ref(simBase());
+        try {
+          const savedSim = JSON.parse(localStorage.getItem(SIM_KEY) || 'null');
+          if (savedSim && typeof savedSim === 'object') Object.assign(sim.value, savedSim);
+        } catch (e) {}
+        const simScenarioA = ref(null);
+        const simNotice = ref('');
 
         const vehicleConfigMap = Cfg.vehicleConfigMap;
 
@@ -76,19 +83,9 @@
         const setVehicleMode = (mode) => {
           simVehicleMode.value = mode;
           tacticsGuideTab.value = mode;
-          if (mode === 'walk') {
-            simOrders.value = 2;
-            simAvgTripMins.value = 18;
-            simPhysicalMins.value = 28;
-          } else if (mode === 'bike') {
-            simOrders.value = 2;
-            simAvgTripMins.value = 24;
-            simPhysicalMins.value = 30;
-          } else if (mode === 'motorcycle') {
-            simOrders.value = 3;
-            simAvgTripMins.value = 18;
-            simPhysicalMins.value = 25;
-          }
+          const keep = { hoursPerDay: sim.value.hoursPerDay, daysPerCycle: sim.value.daysPerCycle };
+          sim.value = { ...(Cfg.simDefaultsMap[mode] || Cfg.simDefaultsMap.motorcycle), ...keep };
+          simNotice.value = '';
         };
 
         // 自動同步手動輸入金額
@@ -618,30 +615,67 @@
         });
 
         // 模擬器計算（含 3 種載具成本與純淨時薪計算）
-        const simMultiplier = computed(() => {
-          const totalSimMins = simOrders.value * simAvgTripMins.value;
-          if (simPhysicalMins.value <= 0) return 1.0;
-          return totalSimMins / simPhysicalMins.value;
+        // ── 跑單時薪模擬（與主計算器同一套 calc.js：跟著工時模式與費率走） ──
+        const simOptsFor = (mode) => ({ ...calcOpts.value, vehicleMode: mode });
+        const simResult = computed(() => Calc.simulateSession({ ...sim.value, date: nowLocal() }, simOptsFor(simVehicleMode.value)));
+        const simVehicleCompare = computed(() => ['walk', 'bike', 'motorcycle'].map((mode) => ({
+          mode,
+          name: vehicleConfigMap[mode].name,
+          icon: vehicleConfigMap[mode].icon,
+          costPerKm: vehicleConfigMap[mode].costPerKm,
+          r: Calc.simulateSession({ ...sim.value, date: nowLocal() }, simOptsFor(mode))
+        })));
+        // 各載具預設情境的試算結果（給作戰指南顯示即時數字，不再寫死）
+        const simGuidePreview = computed(() => {
+          const out = {};
+          for (const mode of ['walk', 'bike', 'motorcycle']) {
+            out[mode] = Calc.simulateSession({ ...Cfg.simDefaultsMap[mode], date: nowLocal() }, simOptsFor(mode));
+          }
+          return out;
         });
-
-        const simRealHourlyWage = computed(() => {
-          return simMultiplier.value * Calc.getTripRate({ date: nowLocal() }, calcOpts.value);
+        const simScenarioAResult = computed(() => {
+          const a = simScenarioA.value;
+          return a ? Calc.simulateSession({ ...a.params, date: nowLocal() }, simOptsFor(a.mode)) : null;
         });
-
-        const simVehicleCostPerHour = computed(() => {
-          return (vehicleConfigMap[simVehicleMode.value] || vehicleConfigMap.motorcycle).costPerHour;
-        });
-
-        const simNetHourlyWage = computed(() => {
-          return Math.max(0, simRealHourlyWage.value - simVehicleCostPerHour.value);
-        });
+        const saveSimScenarioA = () => {
+          simScenarioA.value = {
+            mode: simVehicleMode.value,
+            label: `${vehicleConfigMap[simVehicleMode.value].icon} ${sim.value.stacks} 疊・${sim.value.distanceKm}km`,
+            params: { ...sim.value }
+          };
+        };
+        const clearSimScenarioA = () => { simScenarioA.value = null; };
+        const loadSimFromRecords = () => {
+          const list = visibleTrips.value.filter((t) => Number(t.duration) > 0);
+          if (!list.length) {
+            simNotice.value = '目前篩選的週期沒有可用的訂單紀錄。';
+            return;
+          }
+          const n = list.length;
+          const sum = (f) => list.reduce((acc, t) => acc + (Number(f(t)) || 0), 0);
+          const orders = sum((t) => Math.max(1, Number(t.stacks) || 1));
+          const avgDur = sum((t) => t.duration) / n;
+          sim.value = {
+            ...sim.value,
+            stacks: Math.max(1, Math.min(10, Math.round(orders / n))),
+            avgServiceMins: Math.round(avgDur),
+            physicalMins: Math.max(5, Math.round(avgDur)),
+            distanceKm: Math.round((sum((t) => t.distance) / n) * 10) / 10,
+            basePayPerOrder: Math.round(sum((t) => t.basePay) / orders),
+            tipsPerOrder: Math.round((sum((t) => t.tips) + sum((t) => t.incentives)) / orders)
+          };
+          simNotice.value = `已帶入 ${n} 趟紀錄的平均值。紀錄只有整趟時間，空檔分鐘請依實際情況自行調整。`;
+        };
+        watch(sim, (v) => {
+          try { localStorage.setItem(SIM_KEY, JSON.stringify(v)); } catch (e) {}
+        }, { deep: true });
 
         return {
           activeTab, rate, rateMode, rateScheduleHint, displayRateText, statutoryMode, statutoryModeLabel, trips, visibleTrips, newTrip, storageStatus,
           cycleFilter, cycleFilterLabel, cycleGroups, pastCycleOptions, currentCycleInfo, removeTrip, clearVisibleTrips, tripLegal,
           showPasteModal, showManualModal, pasteText, parsedPasteTrip, pasteFieldStatus,
           copyBtnText, reportCopyMode, customPhysicalHours,
-          vehicleMode, setGlobalVehicleMode, currentVehicleConfig, totalVehicleCost, netTotalIncome, netHourlyRate, simVehicleMode, setVehicleMode, tacticsGuideTab, simOrders, simAvgTripMins, simPhysicalMins, simMultiplier, simRealHourlyWage, simVehicleCostPerHour, simNetHourlyWage,
+          vehicleMode, setGlobalVehicleMode, currentVehicleConfig, totalVehicleCost, netTotalIncome, netHourlyRate, simVehicleMode, setVehicleMode, tacticsGuideTab, sim, simResult, simVehicleCompare, simGuidePreview, simScenarioA, simScenarioAResult, saveSimScenarioA, clearSimScenarioA, loadSimFromRecords, simNotice,
           totalPhysicalMins, totalPhysicalHours, totalStatutoryMins, totalStatutoryHours, totalOrdersCount,
           totalLegal, totalBasePay, totalBoostFare, totalTips, totalIncentives,
           totalPoints, totalDistance, avgBasePay, avgDistance, avgBoostRate,

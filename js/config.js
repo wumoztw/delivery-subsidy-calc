@@ -102,7 +102,18 @@
     }
   };
 
+  /**
+   * 模擬器各載具的預設情境（一批 = 一次取餐出發到全部送達）。
+   * idleMins：送完到接下一批之間的空檔（等派單、回商圈）；distanceKm：一批總里程。
+   */
+  const simDefaultsMap = {
+    walk: { stacks: 2, avgServiceMins: 18, physicalMins: 28, idleMins: 8, distanceKm: 1.2, basePayPerOrder: 50, tipsPerOrder: 8 },
+    bike: { stacks: 2, avgServiceMins: 24, physicalMins: 30, idleMins: 8, distanceKm: 3.5, basePayPerOrder: 60, tipsPerOrder: 8 },
+    motorcycle: { stacks: 3, avgServiceMins: 18, physicalMins: 25, idleMins: 10, distanceKm: 7, basePayPerOrder: 60, tipsPerOrder: 8 }
+  };
+
   return {
+    simDefaultsMap,
     STORAGE_KEY,
     LEGACY_STORAGE_KEY,
     RATE_FACTOR,
