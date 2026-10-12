@@ -382,7 +382,99 @@
     return { ssr, sr, normal, warning };
   }
 
+  /**
+   * 跑單時薪模擬：以「一批」為單位推算每小時與整期收入。
+   * 法定工時沿用與主計算器相同的 calcTrip（服務時間 × 疊單倍率，跟著 statutoryMode / 費率走）。
+   *
+   * params:
+   *   stacks           每批疊單數
+   *   avgServiceMins   每單平均服務時間（不可超過 physicalMins）
+   *   physicalMins     一批從出發到全部送達的實際耗時
+   *   idleMins         批與批之間的空檔（等派單、空車回商圈）
+   *   distanceKm       一批總里程（計算載具成本）
+   *   basePayPerOrder  每單平台基本車資；tipsPerOrder 每單平均小費＋獎勵
+   *   hoursPerDay / daysPerCycle  整期推估（預設 6 小時 × 12 天）
+   *   date             試算日期（auto 費率用）
+   */
+  function simulateSession(params, options) {
+    const opts = normalizeOpts(options);
+    const p = params || {};
+    const vCfg = getVehicleConfig(opts.vehicleMode);
+    const stacks = clampStacks(p.stacks);
+    const physicalMins = Math.max(1, num(p.physicalMins));
+    const rawService = Math.max(0, num(p.avgServiceMins));
+    const avgServiceMins = Math.min(rawService, physicalMins);
+    const idleMins = Math.max(0, num(p.idleMins));
+    const distanceKm = Math.max(0, num(p.distanceKm));
+    const hoursPerDay = Math.max(0, p.hoursPerDay == null ? 6 : num(p.hoursPerDay));
+    const daysPerCycle = Math.max(0, p.daysPerCycle == null ? 12 : num(p.daysPerCycle));
+
+    const warnings = [];
+    if (rawService > physicalMins) {
+      warnings.push(`每單服務時間（${rawService} 分）不可能超過整批實際耗時（${physicalMins} 分），已以 ${physicalMins} 分計算。`);
+    }
+
+    // 以平均服務時間 × 疊單倍率計算一批的法定工時（與主計算器同一套）
+    const batch = calcTrip({ duration: avgServiceMins, stacks, basePay: num(p.basePayPerOrder) * stacks, date: p.date }, opts);
+    const basePay = batch.basePay;
+    const tips = num(p.tipsPerOrder) * stacks;
+    const payout = Math.max(batch.legal, basePay); // 平台車資與保底取高者
+    const subsidy = Math.max(0, batch.legal - basePay);
+    const cost = distanceKm * vCfg.costPerKm;
+    const cycleMins = physicalMins + idleMins;
+    const batchesPerHour = 60 / cycleMins;
+
+    const perHour = {
+      legal: batch.legal * batchesPerHour,
+      basePay: basePay * batchesPerHour,
+      subsidy: subsidy * batchesPerHour,
+      tips: tips * batchesPerHour,
+      gross: (payout + tips) * batchesPerHour,
+      cost: cost * batchesPerHour,
+      net: (payout + tips - cost) * batchesPerHour
+    };
+
+    const cycleHours = hoursPerDay * daysPerCycle;
+    // 整期補差額依專法以「整期合計」計算；同一情境重複時與逐批加總相同
+    const perCycle = {
+      hours: cycleHours,
+      batches: batchesPerHour * cycleHours,
+      orders: batchesPerHour * cycleHours * stacks,
+      legal: perHour.legal * cycleHours,
+      basePay: perHour.basePay * cycleHours,
+      subsidy: perHour.subsidy * cycleHours,
+      tips: perHour.tips * cycleHours,
+      cost: perHour.cost * cycleHours,
+      net: perHour.net * cycleHours
+    };
+
+    return {
+      stacks,
+      avgServiceMins,
+      physicalMins,
+      idleMins,
+      cycleMins,
+      batchesPerHour,
+      rate: batch.rate,
+      multiplier: batch.multiplier,
+      statMinsPerBatch: batch.statMins,
+      // 法定工時 ÷ 實際耗時（不含空檔）與 ÷ 總時間（含空檔）
+      leverageOnRoad: batch.statMins / physicalMins,
+      leverageOverall: batch.statMins / cycleMins,
+      legalPerBatch: batch.legal,
+      basePayPerBatch: basePay,
+      subsidyPerBatch: subsidy,
+      payoutPerBatch: payout,
+      tipsPerBatch: tips,
+      costPerBatch: cost,
+      perHour,
+      perCycle,
+      warnings
+    };
+  }
+
   return {
+    simulateSession,
     normalizeOpts,
     getVehicleConfig,
     getEffectiveRate,
