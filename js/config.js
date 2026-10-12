@@ -15,10 +15,46 @@
   const STORAGE_KEY = 'delivery_subsidy_calc_v3';
   const LEGACY_STORAGE_KEY = 'delivery_subsidy_calc_v2';
 
-  // 專法預設保障時薪費率 (基本工資 $196 * 1.25 = $245/h)
+  // 外送員保障時薪 = 當時最低工資時薪 × 1.25
+  const RATE_FACTOR = 1.25;
+
+  /**
+   * 最低工資時薪歷程（依生效日排序）。每年秋天公告新數字後，在最後加一列即可。
+   * - 2025：190（月薪 28,590）
+   * - 2026：196（月薪 29,500）
+   * 2027 年待勞動部正式公告後再加。
+   */
+  const MIN_WAGE_SCHEDULE = [
+    { from: '2025-01-01', hourly: 190 },
+    { from: '2026-01-01', hourly: 196 }
+  ];
+
+  // 找不到可用日期時的回退費率（2026 年：196 × 1.25）
   const DEFAULT_RATE = 245;
 
-  // 專法法定累加工時倍率對照表 (每多一疊 +0.75x，10疊為上限)
+  function toLocalDateKey(date) {
+    const d = date instanceof Date ? date : new Date(date);
+    if (Number.isNaN(d.getTime())) return null;
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  /** 取得某日適用的最低工資時薪（早於表上第一筆時用第一筆）。 */
+  function getMinWageForDate(date) {
+    const key = toLocalDateKey(date == null ? new Date() : date);
+    if (!key) return MIN_WAGE_SCHEDULE[MIN_WAGE_SCHEDULE.length - 1].hourly;
+    let hourly = MIN_WAGE_SCHEDULE[0].hourly;
+    for (const row of MIN_WAGE_SCHEDULE) {
+      if (key >= row.from) hourly = row.hourly;
+    }
+    return hourly;
+  }
+
+  /** 取得某日適用的外送保障時薪（最低工資 × 1.25）。 */
+  function getStatutoryRateForDate(date) {
+    return getMinWageForDate(date) * RATE_FACTOR;
+  }
+
+  // 經驗倍率表 (每多一疊 +0.75x，10 疊為上限)
   const stackMultiplierMap = {
     1: 1.00,
     2: 1.75,
@@ -69,7 +105,12 @@
   return {
     STORAGE_KEY,
     LEGACY_STORAGE_KEY,
+    RATE_FACTOR,
+    MIN_WAGE_SCHEDULE,
     DEFAULT_RATE,
+    toLocalDateKey,
+    getMinWageForDate,
+    getStatutoryRateForDate,
     stackMultiplierMap,
     vehicleConfigMap
   };

@@ -68,7 +68,39 @@
     return Math.max(0, Math.min(100, (current / target) * 100));
   }
 
-  const api = { getBiweeklyCycleInfo, getProgressPercentage };
+  const dateKey = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
+  /** 回傳某時間點所屬週期的代碼（週期起日 YYYY-MM-DD）；無效日期回傳 null。 */
+  function getCycleKey(date) {
+    if (date == null || date === '') return null;
+    const d = date instanceof Date ? date : new Date(date);
+    if (Number.isNaN(d.getTime())) return null;
+    return dateKey(getBiweeklyCycleInfo(d).cycleStart);
+  }
+
+  /** 由週期代碼還原週期資訊（以起日中午取樣，避開 04:00 邊界）。 */
+  function getCycleInfoByKey(key) {
+    const [y, m, d] = String(key).split('-').map(Number);
+    if (!y || !m || !d) return null;
+    return getBiweeklyCycleInfo(new Date(y, m - 1, d, 12, 0, 0, 0));
+  }
+
+  /** 依訂單日期分組，回傳由新到舊的週期清單：[{ key, label, count }]；未標日期者另計。 */
+  function groupTripsByCycle(trips) {
+    const map = new Map();
+    let undated = 0;
+    for (const t of Array.isArray(trips) ? trips : []) {
+      const key = getCycleKey(t && t.date);
+      if (!key) { undated += 1; continue; }
+      map.set(key, (map.get(key) || 0) + 1);
+    }
+    const cycles = [...map.entries()]
+      .sort((a, b) => (a[0] < b[0] ? 1 : -1))
+      .map(([key, count]) => ({ key, label: getCycleInfoByKey(key).cycleLabel, count }));
+    return { cycles, undated };
+  }
+
+  const api = { getBiweeklyCycleInfo, getProgressPercentage, getCycleKey, getCycleInfoByKey, groupTripsByCycle };
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = api;
   } else {
