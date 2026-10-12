@@ -1,9 +1,9 @@
-    const { createApp, ref, computed, watch, onMounted } = Vue;
+    const { createApp, ref, computed, watch, onMounted } = window.Vue || {};
     const Calc = window.DeliveryCalc;
     const Cfg = window.DeliveryConfig;
-    const Cycle = window.DSC.cycle;
+    const Cycle = (window.DSC || {}).cycle;
 
-    const { STORAGE_KEY, LEGACY_STORAGE_KEY } = Cfg;
+    const { STORAGE_KEY, LEGACY_STORAGE_KEY } = Cfg || {};
 
     // datetime-local 使用的本地時間字串（YYYY-MM-DDTHH:mm，不含時區，以手機當地時間解讀）
     const toLocalInput = (date) => {
@@ -27,7 +27,11 @@
     // 確保單筆訂單物件擁有 id，沒有的話（例如舊資料、CSV 匯入）就補一個
     const ensureTripId = (t) => (t && t.id ? t : { ...t, id: makeTripId() });
 
-    createApp({
+    try {
+    if (!window.Vue || !window.DeliveryCalc || !Cycle || typeof Cycle.getCycleKey !== 'function') {
+      throw new Error('核心模組版本不符或未載入（可能是瀏覽器快取了舊檔案）');
+    }
+    const app = createApp({
       setup() {
         const activeTab = ref('dashboard');
         const rate = ref(Cfg.DEFAULT_RATE);
@@ -651,7 +655,19 @@
           handleFileUpload, exportCSV, loadSampleData, copyReport, downloadReport, generateFullReportText
         };
       }
-    }).mount('#app');
+    });
+    let mounted = false;
+    // 只有在首次掛載前出錯才換成錯誤頁；之後的錯誤只記錄，不打斷使用
+    app.config.errorHandler = (err) => {
+      console.error(err);
+      if (!mounted) window.__dscShowFatal(err && err.stack || err);
+    };
+    app.mount('#app');
+    mounted = true;
+    } catch (err) {
+      console.error(err);
+      if (window.__dscShowFatal) window.__dscShowFatal(err && err.stack || err);
+    }
 
     // PWA：註冊離線快取（file:// 直接開檔時瀏覽器不支援，略過即可）
     if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
