@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="外送專法精算">
-  <meta name="theme-color" content="#06c167">
+  <meta name="theme-color" content="#06a35a">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -21,16 +21,16 @@
   <!-- 3. 非同步載入 JetBrains Mono 降低阻塞 -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" onload="this.rel='stylesheet'">
   <!-- 樣式：Tailwind CLI 建置後的精簡 CSS（npm run build:css） -->
-  <link rel="stylesheet" href="css/app.css?v=20261012c">
+  <link rel="stylesheet" href="css/app.css?v=20261012d">
   <!-- 執行期函式庫改為本地 vendor，離線（PWA）也能開 -->
-  <script src="vendor/vue.global.prod.js?v=20261012c"></script>
-  <script src="vendor/papaparse.min.js?v=20261012c"></script>
+  <script src="vendor/vue.global.prod.js?v=20261012d"></script>
+  <script src="vendor/papaparse.min.js?v=20261012d"></script>
   <!-- 核心模組（順序有依賴：config → calc → cycle/parser/report → app） -->
-  <script src="js/config.js?v=20261012c"></script>
-  <script src="js/calc.js?v=20261012c"></script>
-  <script src="js/cycle.js?v=20261012c"></script>
-  <script src="js/parser.js?v=20261012c"></script>
-  <script src="js/report.js?v=20261012c"></script>
+  <script src="js/config.js?v=20261012d"></script>
+  <script src="js/calc.js?v=20261012d"></script>
+  <script src="js/cycle.js?v=20261012d"></script>
+  <script src="js/parser.js?v=20261012d"></script>
+  <script src="js/report.js?v=20261012d"></script>
 </head>
 <body class="bg-ink-50 text-ink-950 min-h-screen font-sans antialiased selection:bg-jade-500 selection:text-white pb-24 sm:pb-8">
   <div id="app" v-cloak class="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-6">
@@ -39,7 +39,7 @@
     <header class="bg-ink-0/95 backdrop-blur-md border border-ink-200 rounded-xl p-3.5 sm:p-5 shadow-sm flex flex-col gap-3.5">
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5 sm:gap-3">
-          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-[#06C167] flex items-center justify-center text-white shrink-0 shadow-sm font-black text-xl sm:text-2xl font-sans tracking-tight">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-jade-400 to-jade-800 flex items-center justify-center text-white shrink-0 shadow-md ring-1 ring-black/5 font-black text-xl sm:text-2xl font-sans tracking-tight">
             D
           </div>
           <div>
@@ -2187,6 +2187,6 @@
         + '<pre style="white-space:pre-wrap;font-size:.75rem;color:#be123c;margin-top:1rem">' + String(msg).replace(/</g, '&lt;') + '</pre></div>';
     };
   </script>
-  <script src="js/app.js?v=20261012c"></script>
+  <script src="js/app.js?v=20261012d"></script>
 </body>
 </html>
