@@ -34,6 +34,19 @@
     const app = createApp({
       setup() {
         const activeTab = ref('dashboard');
+        // 頂部設定面板（時薪／週期／工時模式）預設收合，手機一開就看到結算數字；開關狀態記在本機
+        let savedPanel = false;
+        try { savedPanel = localStorage.getItem('dsc_settings_open') === '1'; } catch (e) {}
+        const showSettings = ref(savedPanel);
+        // 依現在時刻決定頁首天色：朝 5–10、昼 10–16、夕 16–19、夜 其餘
+        const timeOfDay = computed(() => {
+          const h = new Date().getHours();
+          if (h >= 5 && h < 10) return { key: 'morning', label: '朝', text: '早安，出發吧' };
+          if (h >= 10 && h < 16) return { key: 'noon', label: '昼', text: '午餐尖峰，注意補水' };
+          if (h >= 16 && h < 19) return { key: 'dusk', label: '夕', text: '晚餐尖峰，開燈慢騎' };
+          return { key: 'night', label: '夜', text: '夜騎小心，平安回家' };
+        });
+        watch(showSettings, (v) => { try { localStorage.setItem('dsc_settings_open', v ? '1' : '0'); } catch (e) {} });
         const rate = ref(Cfg.DEFAULT_RATE);
         const rateMode = ref('auto'); // 'auto'（依訂單日期查最低工資表）| 'custom'
         const statutoryMode = ref('table'); // 'independent' | 'table'
@@ -553,6 +566,12 @@
         const avgDistance = computed(() => summary.value.avgDistance);
         const avgBoostRate = computed(() => summary.value.avgBoostRate);
         const subsidy = computed(() => summary.value.subsidy);
+        // 旅程進度：基本車資相對法定保底的達成率（0–100）
+        const routeProgress = computed(() => {
+          const legal = Number(summary.value.totalLegal) || 0;
+          if (legal <= 0) return 0;
+          return Math.max(0, Math.min(100, (Number(summary.value.totalBasePay) || 0) / legal * 100));
+        });
         const totalIncome = computed(() => summary.value.totalIncome);
         const totalVehicleCost = computed(() => summary.value.totalVehicleCost);
         const netTotalIncome = computed(() => summary.value.netTotalIncome);
@@ -580,10 +599,10 @@
           if (total <= 0) return [];
 
           const raw = [
-            { label: '基本車資', value: base,       color: '#34d399' },
-            { label: '差額補貼', value: sub,        color: '#fbbf24' },
-            { label: '平台獎勵', value: incentives, color: '#38bdf8' },
-            { label: '顧客小費', value: tips,       color: '#f472b6' },
+            { label: '基本車資', value: base,       color: '#4f7646' },
+            { label: '差額補貼', value: sub,        color: '#d9733b' },
+            { label: '平台獎勵', value: incentives, color: '#3e7898' },
+            { label: '顧客小費', value: tips,       color: '#c9a24a' },
           ].filter(item => item.value > 0); // 過濾掉 0 值項目，避免空切片
 
           let cumulative = 0;
@@ -671,7 +690,7 @@
         }, { deep: true });
 
         return {
-          activeTab, rate, rateMode, rateScheduleHint, displayRateText, statutoryMode, statutoryModeLabel, trips, visibleTrips, newTrip, storageStatus,
+          activeTab, showSettings, timeOfDay, routeProgress, rate, rateMode, rateScheduleHint, displayRateText, statutoryMode, statutoryModeLabel, trips, visibleTrips, newTrip, storageStatus,
           cycleFilter, cycleFilterLabel, cycleGroups, pastCycleOptions, currentCycleInfo, removeTrip, clearVisibleTrips, tripLegal,
           showPasteModal, showManualModal, pasteText, parsedPasteTrip, pasteFieldStatus,
           copyBtnText, reportCopyMode, customPhysicalHours,
