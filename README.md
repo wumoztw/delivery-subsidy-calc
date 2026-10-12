@@ -8,7 +8,7 @@
 
 1. **專法差額精算**：
    - 自動累計總服務工時（$T_{\text{total}}$）。
-   - 根據法定保障費率（\$245/h 底線，可自訂）精算最低應得保底（$\text{Total}_{\text{legal}}$）。
+   - 根據法定保障費率（最低工資 × 1.25，依訂單日期自動或自訂）精算最低應得保底（$\text{Total}_{\text{legal}}$）。
    - 計算補發差額（$\Delta R = \max(0, \text{Total}_{\text{legal}} - R_{\text{base}})$）。
 2. **法定工時模式可切換**（會寫入 localStorage）：
    - **獨立累加（對帳）**：法定分鐘 ＝ 本趟記錄的服務時間 × 疊單數。因目前每筆只存「整趟」時間、沒有每張單的接單／送達起迄，這是獨立計時的近似，重疊路段可能被高估。
@@ -18,8 +18,11 @@
    - 預覽會標示「已抓到／漏欄」；疊單數**不會**從點數自動推算，預設 1 疊，需在明細手動切換。
 4. **費用明細拆解**：基本行程費用、基本報酬加成、行程小計、顧客小費、活動獎勵。
 5. **疊單工時放大與實質產值模型**。
-6. **CSV 匯入／匯出**（繁中 UTF-8 含 BOM）。
+6. **CSV 匯入／匯出**（繁中 UTF-8 含 BOM，含「日期時間」欄）。
 7. **localStorage 自動儲存**，並可一鍵複製結算戰報。
+8. **雙週週期歸屬**：每筆訂單記日期時間，自動歸入 Uber Eats 雙週週期（週一 04:00 切期），可切換查看本期、歷史各期、未標日期或全部。
+9. **費率依日期自動**：內建最低工資歷程表，跨年那一期也算得對。
+10. **PWA 離線可用**：可加入手機主畫面，訊號不穩時照常開啟。
 
 ---
 
@@ -36,7 +39,7 @@
 
 $$\text{Total}_{\text{legal}} = \left(\sum_i T_{\text{statutory},i} / 60\right) \times P_{\text{rate}}$$
 
-- 專法底線 $P_{\text{rate}}$：\$245 / 小時（基本工資 \$196 × 1.25），可自訂。
+- 保障費率 $P_{\text{rate}}$：當年最低工資時薪 × 1.25（2026：\$245；2027：\$256.25）。預設「依日期自動」逐筆套用，也可改為自訂固定值。跨年度的週期會依各趟日期分別計算。
 
 ### 3. 基本報酬差額
 
@@ -75,30 +78,54 @@ $$Hourly\_Wage_{\text{real}} = \left( \frac{\sum T_{\text{statutory},i}}{\sum T_
 
 ## 🛠️ 本地啟動與使用
 
-純靜態單頁，無需後端：
+純靜態網站，無需後端；可安裝到手機桌面（PWA），斷線也能開。
 
-1. 以現代瀏覽器直接開啟 `index.html`。
-2. 或透過 GitHub Pages / 任何靜態主機託管。
+1. 直接用瀏覽器開啟 `index.html`（此方式不會啟用離線快取），或
+2. `python3 -m http.server` 後開 `http://localhost:8000`，或部署到 GitHub Pages。
 
 資料只存在本機 `localStorage`（key：`delivery_subsidy_calc_v3`），不會上傳伺服器。
 
----
+### 開發
 
-## 🎨 UI 視覺架構與 Google Stitch 現代化翻新
+```bash
+npm install
+npm test            # 單元測試（計算引擎、週期、戰報、解析器）
+npm run build       # 複製 vendor/ 並重建 css/app.css
+npm run watch:css   # 改樣式時即時重建
+```
 
-本專案採用 **Google Stitch 官方遠端 MCP 雲端引擎**（搭配雙軌並行策略與終端隨需呼叫工具 `stitch-tool`）進行視覺架構全面重塑：
+`css/app.css`、`vendor/` 都有提交到 repo，讓直接開檔也能用；CI 會檢查它們與原始碼同步，改了 `index.html` 或 `js/` 的 class 後記得 `npm run build`。
 
-1. **設計風格與視覺規範 (Japanese Minimalist Muji Edition - 日系簡約白藍色系)**：
-   * **和風紙質底蘊**：採用和紙霜白（`#FAFAFC`）底色與純淨雪白（`#FFFFFF`）懸浮卡片，搭配細膩髮絲線邊框（`#E2E8F0`），在戶外強光下具備極致的抗反光清晰度與克制美學。
-   * **傳統和風色彩**：
-     * **主色**：沉靜靛藍染（`#1E3A8A`）營造冷靜專業的財務數據信賴感。
-     * **副色**：柔霧水色（`#EFF6FF`）與淡天色（`#DBEAFE`）作為精巧標籤與分頁強調。
-     * **墨色文字**：深紺墨（`#0B1C30`）與濃墨（`#1F2937`），具備舒適的段落呼吸感。
-   * **文字排版 (Typography)**：
-     * 標題、正文與標籤：**Noto Sans TC** 與 **Noto Sans**（簡潔克制、高易讀性的日系無印標準）。
-     * 金額、工時與倍率：**JetBrains Mono**（等寬數字對齊，杜絕排版位移）。
-2. **終端隨需喚醒工作流 (Legacy-to-Modern 3 步落地)**：
-   * **步驟 1（規格注入）**：透過自然語言提示詞將現有計費欄位與業務邏輯提交至 Stitch 雲端。
-   * **步驟 2（AI 生成設計 Tokens）**：Stitch 遠端模型（`GEMINI_3_8_FLASH`）產出日系簡約版全套設計規格與組件視覺。
-   * **步驟 3（邏輯與 UI 閉環）**：小幫手（Pi 工兵）將生成的 Tailwind 組件與設計 Tokens 注入現有 Vue 3 核心，完整保留純前端響應式與無痕 LocalStorage 邏輯。
+### 專案結構
 
+| 檔案 | 用途 |
+| :--- | :--- |
+| `index.html` | 頁面模板（Vue 3 in-DOM template） |
+| `js/config.js` | 常數：最低工資表、倍率表、載具成本 |
+| `js/calc.js` | **唯一的計算引擎**，網頁與測試共用 |
+| `js/cycle.js` | 雙週週期：日期歸期、週期清單 |
+| `js/parser.js` | App 文字秒貼解析 |
+| `js/report.js` | 戰報／申訴草稿產生器 |
+| `js/app.js` | Vue 狀態、儲存、匯入匯出、畫面綁定 |
+| `css/src.css` + `tailwind.config.js` | 樣式原始檔，建置成 `css/app.css` |
+| `sw.js` + `manifest.webmanifest` + `icons/` | PWA 離線與安裝 |
+
+### 每年更新費率
+
+最低工資通常每年秋天公告、隔年 1/1 生效。在 `js/config.js` 的 `MIN_WAGE_SCHEDULE` 最後加一列即可，例如：
+
+```js
+{ from: '2028-01-01', hourly: 新時薪 }
+```
+
+### 色票命名
+
+自訂色票都改成專案自有名稱，且一律「數字越大越深」，不會與 Tailwind 內建 `slate`、`amber` 等色名的語意衝突：
+
+| 色票 | 用途 |
+| :--- | :--- |
+| `ink-*` | 底色、框線、文字（0 = 純白 … 950 = 深紺墨） |
+| `leaf-*` / `jade-*` | Uber Eats 綠系主色 |
+| `mist-*` | 水藍輔助色 |
+| `ochre-*` | 補貼／警示金黃 |
+| `crimson-*` | 雷單／刪除紅 |

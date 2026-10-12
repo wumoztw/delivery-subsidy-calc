@@ -35,8 +35,13 @@
     const hourly = physicalHours > 0 ? income / physicalHours : 0;
     const rate = number(summary.effectiveRate, 245);
     const cycleLabel = cycleInfo && cycleInfo.cycleLabel ? cycleInfo.cycleLabel : '本期';
+    // 跨年度混到兩種最低工資時，列出區間而非單一費率
+    const rates = Array.isArray(summary.ratesUsed) ? summary.ratesUsed : [];
+    const rateText = summary.mixedRates && rates.length > 1
+      ? `NT$${money(rates[0])}～${money(rates[rates.length - 1])}/h（依各趟日期適用）`
+      : `NT$${money(rate)}/h`;
 
-    return { list, totalOrders, stackedTrips, stackRate, physicalHours, statutoryHours, basePay, legal, gap, income, hourly, rate, cycleLabel };
+    return { rateText, list, totalOrders, stackedTrips, stackRate, physicalHours, statutoryHours, basePay, legal, gap, income, hourly, rate, cycleLabel };
   }
 
   function generateShortPost(summary, trips, cycleInfo) {
@@ -93,7 +98,7 @@
       '',
       '受文者：勞動部／相關工會（請依實際受理單位調整）',
       '',
-      `本人就 ${s.cycleLabel} 期間之外送服務報酬提出對帳申請。依《外送員權益保障及外送平臺管理法》第 5 條及每小時 NT$${money(s.rate)}/h 底線進行初步試算（法規名稱、條文及適用範圍，敬請受理單位依現行法令核實）：`,
+      `本人就 ${s.cycleLabel} 期間之外送服務報酬提出對帳申請。依《外送員權益保障及外送平臺管理法》第 5 條及每小時 ${s.rateText} 底線進行初步試算（法規名稱、條文及適用範圍，敬請受理單位依現行法令核實）：`,
       `• 實際跑單總工時：${hours(s.physicalHours)} 小時`,
       `• 法定累計服務工時：${hours(s.statutoryHours)} 小時`,
       `• 平台已給付基本車資：NT$${money(s.basePay)}`,

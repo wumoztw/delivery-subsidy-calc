@@ -1,16 +1,21 @@
 {
   "name": "delivery-subsidy-calc",
-  "version": "1.1.0",
+  "version": "1.2.0",
+  "private": true,
   "description": "外送專法與疊單收益精算系統",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "build:css": "tailwindcss -c tailwind.config.js -i css/src.css -o css/app.css --minify",
+    "watch:css": "tailwindcss -c tailwind.config.js -i css/src.css -o css/app.css --watch",
+    "vendor": "node -e \"const fs=require('fs');fs.mkdirSync('vendor',{recursive:true});fs.copyFileSync('node_modules/vue/dist/vue.global.prod.js','vendor/vue.global.prod.js');fs.copyFileSync('node_modules/papaparse/papaparse.min.js','vendor/papaparse.min.js')\"",
+    "build": "npm run vendor && npm run build:css"
   },
-  "keywords": [
-    "delivery",
-    "subsidy",
-    "ubereats",
-    "taiwan"
-  ],
+  "keywords": ["delivery", "subsidy", "ubereats", "taiwan"],
   "author": "wumoztw",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "papaparse": "5.4.1",
+    "tailwindcss": "^3.4.0",
+    "vue": "3.4.21"
+  }
 }
