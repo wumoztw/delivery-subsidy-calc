@@ -59,58 +59,147 @@ h1, h2, h3, h4, h5, h6,
   line-height: 1.35;
 }
 
-/* 7. 選取高亮：品牌外送綠 */
-::selection {
-  background-color: rgba(6, 163, 90, 0.18);
-  color: #04532f;
+/* ═══ 日系戶外手帳風格 ═══ */
+:root {
+  --paper: #f6f2ea; --card: #fffdf8; --line: #e4ddcf; --ink: #2a2723;
+  --moss: #4f7646; --moss-deep: #3a5a33; --persimmon: #d9733b; --sea: #3e7898; --shu: #c8402f;
 }
 
-/* 8. 微型標籤字級保護 (防止手機戶外反光時小字模糊) */
+::selection { background-color: rgba(79, 118, 70, 0.2); color: #22361f; }
+
+/* 微型標籤字級保護 (防止手機戶外反光時小字模糊) */
 .text-\[9px\]  { font-size: 10.5px !important; letter-spacing: 0.025em; }
 .text-\[10px\] { font-size: 11.5px !important; letter-spacing: 0.02em; }
 .text-\[11px\] { font-size: 12px !important;   letter-spacing: 0.015em; }
 
-/* 9. 頁面底色：頂端一抹淡綠，往下回到中性灰 */
+/* 紙張底色＋極淡紙紋 */
 body {
-  background-image: radial-gradient(120% 420px at 50% -120px, rgba(6, 163, 90, 0.10), transparent 70%);
-  background-repeat: no-repeat;
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(rgba(61, 57, 52, 0.035) 1px, transparent 1px);
+  background-size: 6px 6px;
 }
 
-/* 10. 統一的柔和層次陰影（卡片浮起但不搶戲） */
-.shadow-sm { box-shadow: 0 1px 2px rgba(16, 24, 20, 0.04), 0 1px 1px rgba(16, 24, 20, 0.03) !important; }
-.shadow, .shadow-md {
-  box-shadow: 0 1px 2px rgba(16, 24, 20, 0.04), 0 4px 14px -6px rgba(16, 24, 20, 0.08) !important;
+/* 標題：明體，帶日系雜誌感 */
+h1, h2, h3, .font-display {
+  font-family: 'Noto Serif TC', 'Noto Sans TC', serif;
+  letter-spacing: 0.04em;
 }
-.shadow-lg, .shadow-xl, .shadow-2xl {
-  box-shadow: 0 2px 4px rgba(16, 24, 20, 0.04), 0 12px 28px -12px rgba(16, 24, 20, 0.14) !important;
+h1 { font-weight: 700; }
+
+/* 平面化：陰影收到最淡，靠細線分層 */
+.shadow-sm, .shadow, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl {
+  box-shadow: 0 1px 0 rgba(61, 57, 52, 0.05) !important;
 }
 
-/* 11. 互動回饋：按壓微縮、鍵盤焦點綠框 */
-button { transition: background-color .15s, color .15s, border-color .15s, box-shadow .15s, transform .08s; }
+/* 頁首：等高線地形紋 */
+.contour-bg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='180' viewBox='0 0 360 180'%3E%3Cg fill='none' stroke='%234f7646' stroke-opacity='.10' stroke-width='1'%3E%3Cpath d='M-10 150c60-30 90-80 160-80s110 50 220 30'/%3E%3Cpath d='M-10 165c70-28 100-70 170-70s105 45 210 28'/%3E%3Cpath d='M-10 135c50-32 80-90 150-90s115 55 230 32'/%3E%3Cpath d='M200 60c20-25 60-30 80-10s10 45-20 45-80-10-60-35z'/%3E%3Cpath d='M215 62c12-14 40-17 52-5s5 28-14 28-50-8-38-23z'/%3E%3Cpath d='M-10 120c40-30 70-95 140-95s120 60 240 35'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-position: right bottom;
+}
+
+/* 頁首頂端的天色條與時段章 */
+.sky-strip { position: absolute; inset: 0 0 auto 0; height: 4px; }
+.sky-morning { --sky: linear-gradient(90deg, #f4d9a8, #f2b48a, #b9d4e3); }
+.sky-noon    { --sky: linear-gradient(90deg, #a9cfe4, #d7ecf5, #a9cfe4); }
+.sky-dusk    { --sky: linear-gradient(90deg, #f0a46c, #d9733b, #8e6a9a); }
+.sky-night   { --sky: linear-gradient(90deg, #22344a, #3e5a7a, #22344a); }
+.sky-strip.sky-morning, .sky-strip.sky-noon, .sky-strip.sky-dusk, .sky-strip.sky-night { background: var(--sky); }
+.sky-chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.5rem; height: 1.5rem; border-radius: 9999px;
+  font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 12px;
+  color: #fff; background: var(--sky);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+}
+.sky-chip.sky-noon { color: #234a61; }
+
+/* 分頁：手帳索引標籤 */
+.index-tab {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.55rem 0.85rem; margin-bottom: -1px;
+  border: 1px solid transparent; border-bottom: 0;
+  border-radius: 10px 10px 0 0;
+  transition: background-color .15s, color .15s;
+}
+.tab-off { color: #6f685b; }
+.tab-off:hover { color: var(--moss-deep); background: rgba(79,118,70,.06); }
+.tab-on {
+  color: var(--moss-deep); font-weight: 600; background: var(--card);
+  border-color: #d3cab8; position: relative;
+}
+.tab-on::before {
+  content: ""; position: absolute; left: 10px; right: 10px; top: -1px; height: 3px;
+  background: var(--moss); border-radius: 0 0 3px 3px;
+}
+.tab-ico { width: 1.05rem; height: 1.05rem; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* 本期旅程：路線虛線 */
+.route { position: relative; height: 28px; margin: 0 14px; }
+.route::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 50%;
+  border-top: 2px dashed #d3cab8; transform: translateY(-50%);
+}
+.route-done {
+  position: absolute; left: 0; top: 50%; height: 3px; transform: translateY(-50%);
+  background: var(--moss); border-radius: 3px; transition: width .6s ease;
+}
+.route-pin {
+  position: absolute; top: 50%; width: 10px; height: 10px; border-radius: 9999px;
+  transform: translate(-50%, -50%); background: var(--card); border: 2px solid var(--moss);
+}
+.route-start { left: 0; }
+.route-rider {
+  position: absolute; top: 50%; transform: translate(-50%, -62%);
+  width: 28px; height: 28px; border-radius: 9999px; background: var(--card);
+  border: 1.5px solid var(--moss); color: var(--moss-deep);
+  display: flex; align-items: center; justify-content: center; transition: left .6s ease;
+}
+.route-rider svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.route-flag { position: absolute; right: -14px; top: 50%; transform: translateY(-58%); font-size: 18px; color: var(--sea); line-height: 1; }
+
+/* 車票：左右打孔、虛線撕邊 */
+.ticket {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  -webkit-mask: radial-gradient(circle 11px at 0 44px, transparent 98%, #000) left / 51% 100% no-repeat,
+                radial-gradient(circle 11px at 100% 44px, transparent 98%, #000) right / 51% 100% no-repeat;
+          mask: radial-gradient(circle 11px at 0 44px, transparent 98%, #000) left / 51% 100% no-repeat,
+                radial-gradient(circle 11px at 100% 44px, transparent 98%, #000) right / 51% 100% no-repeat;
+}
+.ticket-tear { border-bottom: 2px dashed var(--line); }
+
+/* 朱印章 */
+.hanko {
+  position: absolute; right: 14px; top: 40px; z-index: 1;
+  width: 64px; height: 64px; border-radius: 9999px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 17px; letter-spacing: .1em;
+  color: var(--shu); border: 2.5px solid var(--shu);
+  box-shadow: inset 0 0 0 3px var(--card), inset 0 0 0 4.5px var(--shu);
+  transform: rotate(-14deg); opacity: .82; pointer-events: none;
+  mix-blend-mode: multiply;
+}
+.hanko-pending { color: var(--persimmon); border-color: var(--persimmon); box-shadow: inset 0 0 0 3px var(--card), inset 0 0 0 4.5px var(--persimmon); }
+@media (min-width: 768px) { .hanko { right: 46%; top: 22px; } }
+
+/* 互動回饋：按壓微縮、鍵盤焦點苔綠框 */
+button { transition: background-color .15s, color .15s, border-color .15s, transform .08s; }
 button:not(:disabled):active { transform: scale(0.97); }
 button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visible {
-  outline: 2px solid #06a35a;
-  outline-offset: 2px;
-}
-input[type="number"], input[type="text"], input[type="date"], input[type="time"], select, textarea {
-  transition: border-color .15s, box-shadow .15s;
+  outline: 2px solid var(--moss); outline-offset: 2px;
 }
 input:focus, select:focus, textarea:focus {
-  border-color: #06a35a !important;
-  box-shadow: 0 0 0 3px rgba(6, 163, 90, 0.15);
+  border-color: var(--moss) !important; box-shadow: 0 0 0 3px rgba(79, 118, 70, 0.15);
 }
-input[type="range"] { accent-color: #06a35a; }
-input[type="checkbox"], input[type="radio"] { accent-color: #06a35a; }
+input[type="range"], input[type="checkbox"], input[type="radio"] { accent-color: var(--moss); }
 
-/* 12. 主分頁：作用中分頁改為綠色底線＋淡綠底 */
-nav button { white-space: nowrap; }
+/* 表格：表頭淡紙色、列 hover */
+table thead tr { background-color: var(--paper); }
+table tbody tr:hover { background-color: rgba(79, 118, 70, 0.05); }
 
-/* 13. 表格：表頭淡底、列 hover 提示 */
-table thead tr { background-color: #f5f7f6; }
-table tbody tr { transition: background-color .12s; }
-table tbody tr:hover { background-color: rgba(6, 163, 90, 0.04); }
-
-/* 14. 減少動態偏好 */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }

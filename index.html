@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="外送專法精算">
-  <meta name="theme-color" content="#06a35a">
+  <meta name="theme-color" content="#4f7646">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -17,37 +17,42 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <!-- 2. 精簡字重載入：Noto Sans 與 Noto Sans TC (400, 500, 600) + JetBrains Mono -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@600;700&family=Noto+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <!-- 3. 非同步載入 JetBrains Mono 降低阻塞 -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" onload="this.rel='stylesheet'">
   <!-- 樣式：Tailwind CLI 建置後的精簡 CSS（npm run build:css） -->
-  <link rel="stylesheet" href="css/app.css?v=20261012e">
+  <link rel="stylesheet" href="css/app.css?v=20261012f">
   <!-- 執行期函式庫改為本地 vendor，離線（PWA）也能開 -->
-  <script src="vendor/vue.global.prod.js?v=20261012e"></script>
-  <script src="vendor/papaparse.min.js?v=20261012e"></script>
+  <script src="vendor/vue.global.prod.js?v=20261012f"></script>
+  <script src="vendor/papaparse.min.js?v=20261012f"></script>
   <!-- 核心模組（順序有依賴：config → calc → cycle/parser/report → app） -->
-  <script src="js/config.js?v=20261012e"></script>
-  <script src="js/calc.js?v=20261012e"></script>
-  <script src="js/cycle.js?v=20261012e"></script>
-  <script src="js/parser.js?v=20261012e"></script>
-  <script src="js/report.js?v=20261012e"></script>
+  <script src="js/config.js?v=20261012f"></script>
+  <script src="js/calc.js?v=20261012f"></script>
+  <script src="js/cycle.js?v=20261012f"></script>
+  <script src="js/parser.js?v=20261012f"></script>
+  <script src="js/report.js?v=20261012f"></script>
 </head>
 <body class="bg-ink-50 text-ink-950 min-h-screen font-sans antialiased selection:bg-jade-500 selection:text-white pb-24 sm:pb-8">
   <div id="app" v-cloak class="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-6">
     
     <!-- 頂部導航列與系統狀態 -->
-    <header class="bg-ink-0/95 backdrop-blur-md border border-ink-200 rounded-xl p-3.5 sm:p-5 shadow-sm flex flex-col gap-3.5">
+    <header class="contour-bg relative overflow-hidden bg-ink-0 border border-ink-200 rounded-2xl p-3.5 sm:p-5 flex flex-col gap-3.5">
+      <div class="sky-strip" :class="'sky-' + timeOfDay.key" aria-hidden="true"></div>
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5 sm:gap-3">
-          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-jade-400 to-jade-800 flex items-center justify-center text-white shrink-0 shadow-md ring-1 ring-black/5 font-black text-xl sm:text-2xl font-sans tracking-tight">
-            D
+          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-jade-500 text-ink-0 flex items-center justify-center shrink-0 ring-4 ring-jade-0" aria-hidden="true">
+            <svg class="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="22" r="4"/><circle cx="25" cy="22" r="4"/>
+              <path d="M12 22h7l3-8h-4"/><path d="M19 22l-3-7H9"/><rect x="5" y="8" width="8" height="7" rx="1"/><path d="M22 14l1.5-4H26"/>
+            </svg>
           </div>
           <div>
             <div class="flex items-center gap-1.5 flex-wrap">
               <h1 class="text-base sm:text-2xl font-bold text-ink-950 tracking-tight leading-tight">
                 外送專法與疊單收益精算系統
               </h1>
-              <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-900 border border-blue-200 font-mono">v3.0 旗艦版</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-jade-0 text-jade-700 border border-jade-500/30 font-mono">v3.0</span>
+              <span class="sky-chip" :class="'sky-' + timeOfDay.key" :title="timeOfDay.text">{{ timeOfDay.label }}</span>
             </div>
             <p class="text-[11px] sm:text-xs text-ink-700 mt-0.5 line-clamp-1">智慧雙單疊單工時放大 × 戰力評級 × 秒級精算 × 差額補貼</p>
           </div>
@@ -126,22 +131,22 @@
 
     <!-- 主選單分頁切換 -->
     <div class="overflow-x-auto no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0">
-      <nav class="flex border-b border-ink-200 gap-1 sm:gap-4 text-xs sm:text-sm font-medium min-w-max">
-        <button @click="activeTab = 'dashboard'" :class="activeTab === 'dashboard' ? 'text-blue-900 border-blue-900 bg-blue-50/70 font-semibold shadow-sm' : 'text-ink-600 border-transparent hover:text-blue-900 hover:bg-ink-0'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-md">
-          <span>📊</span> 結算儀表板
+      <nav class="flex border-b border-ink-300 gap-1 sm:gap-2 text-xs sm:text-sm font-medium min-w-max">
+        <button @click="activeTab = 'dashboard'" :class="activeTab === 'dashboard' ? 'tab-on' : 'tab-off'" class="index-tab">
+          <svg class="tab-ico" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="1.5"/><path d="M4 11h16M9 7V5h6v2"/></svg> 結算儀表板
         </button>
-        <button @click="activeTab = 'trips'" :class="activeTab === 'trips' ? 'text-blue-900 border-blue-900 bg-blue-50/70 font-semibold shadow-sm' : 'text-ink-600 border-transparent hover:text-blue-900 hover:bg-ink-0'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-md">
-          <span>📋</span> 訂單明細
+        <button @click="activeTab = 'trips'" :class="activeTab === 'trips' ? 'tab-on' : 'tab-off'" class="index-tab">
+          <svg class="tab-ico" viewBox="0 0 24 24"><path d="M6 3h12v18l-2-1.5L14 21l-2-1.5L10 21l-2-1.5L6 21z"/><path d="M9 8h6M9 12h6"/></svg> 訂單明細
           <span v-if="trips.length > 0" class="text-[10px] px-1.5 py-0.2 rounded-full bg-blue-100 text-blue-900 font-mono">{{ trips.length }}</span>
         </button>
-        <button @click="activeTab = 'tactics'" :class="activeTab === 'tactics' ? 'text-blue-900 border-blue-900 bg-blue-50/70 font-semibold shadow-sm' : 'text-ink-600 border-transparent hover:text-blue-900 hover:bg-ink-0'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-md">
-          <span>⚡</span> 疊單作戰模擬
+        <button @click="activeTab = 'tactics'" :class="activeTab === 'tactics' ? 'tab-on' : 'tab-off'" class="index-tab">
+          <svg class="tab-ico" viewBox="0 0 24 24"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h5l2-6h-3M14 17l-2-5H7"/></svg> 疊單作戰模擬
         </button>
-        <button @click="activeTab = 'analysis'" :class="activeTab === 'analysis' ? 'text-blue-900 border-blue-900 bg-blue-50/70 font-semibold shadow-sm' : 'text-ink-600 border-transparent hover:text-blue-900 hover:bg-ink-0'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-md">
-          <span>📈</span> 時段與戰力分析
+        <button @click="activeTab = 'analysis'" :class="activeTab === 'analysis' ? 'tab-on' : 'tab-off'" class="index-tab">
+          <svg class="tab-ico" viewBox="0 0 24 24"><path d="M2 19l7-10 4 6 3-4 6 8z"/><circle cx="17" cy="6" r="2"/></svg> 時段與戰力分析
         </button>
-        <button @click="activeTab = 'rules'" :class="activeTab === 'rules' ? 'text-blue-900 border-blue-900 bg-blue-50/70 font-semibold shadow-sm' : 'text-ink-600 border-transparent hover:text-blue-900 hover:bg-ink-0'" class="py-2.5 px-3 sm:px-4 border-b-2 transition flex items-center gap-1.5 rounded-t-md">
-          <span>📖</span> 專法準則
+        <button @click="activeTab = 'rules'" :class="activeTab === 'rules' ? 'tab-on' : 'tab-off'" class="index-tab">
+          <svg class="tab-ico" viewBox="0 0 24 24"><path d="M4 5h6a2 2 0 012 2v12a2 2 0 00-2-2H4zM20 5h-6a2 2 0 00-2 2v12a2 2 0 012-2h6z"/></svg> 專法準則
         </button>
       </nav>
     </div>
@@ -180,6 +185,27 @@
         </div>
       </div>
       
+      <!-- 本期旅程：基本車資朝法定保底前進的路線 -->
+      <div class="bg-ink-0 border border-ink-200 rounded-2xl px-4 py-3 sm:px-5 sm:py-4">
+        <div class="flex items-center justify-between text-[11px] sm:text-xs text-ink-700 mb-2">
+          <span class="font-display font-bold text-ink-900 text-sm">本期旅程</span>
+          <span class="font-mono">{{ totalDistance.toFixed(1) }} km · {{ visibleTrips.length }} 單</span>
+        </div>
+        <div class="route" role="progressbar" :aria-valuenow="Math.round(routeProgress)" aria-valuemin="0" aria-valuemax="100" aria-label="基本車資達成法定保底的比例">
+          <span class="route-pin route-start" aria-hidden="true"></span>
+          <span class="route-done" :style="{ width: routeProgress + '%' }"></span>
+          <span class="route-rider" :style="{ left: routeProgress + '%' }" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h5l2-6h-3M14 17l-2-5H7"/><rect x="4" y="6" width="5" height="5" rx=".5"/></svg>
+          </span>
+          <span class="route-flag" aria-hidden="true">⛰</span>
+        </div>
+        <div class="flex justify-between text-[10px] sm:text-[11px] text-ink-600 mt-1.5">
+          <span>出發</span>
+          <span>車資 {{ Math.round(routeProgress) }}% 抵達保底</span>
+          <span>保底 ${{ Math.round(totalLegal).toLocaleString() }}</span>
+        </div>
+      </div>
+
       <!-- 核心指標四宮格 -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         
@@ -281,14 +307,19 @@
       </div>
 
       <!-- 總收入與實質落袋淨利 Banner (含載具成本扣除) -->
-      <div class="bg-gradient-to-br from-white via-sky-50/30 to-blue-50/50 p-4 sm:p-6 rounded-2xl border border-sky-200 shadow-xl shadow-sky-500/10 space-y-3.5 sm:space-y-4">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-3 border-b border-ink-200">
+      <div class="ticket relative p-4 sm:p-6 space-y-3.5 sm:space-y-4">
+        <div v-if="visibleTrips.length > 0" class="hanko" :class="subsidy > 0 ? 'hanko-pending' : ''" aria-hidden="true">{{ subsidy > 0 ? '補貼' : '達標' }}</div>
+        <div class="!mt-0 flex items-center justify-between text-[10px] sm:text-[11px] text-ink-600 font-mono tracking-widest">
+          <span>外送乘車券 · RIDER PASS</span>
+          <span>{{ cycleFilterLabel }}</span>
+        </div>
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-3 ticket-tear">
           <div>
             <div class="flex items-center gap-2">
               <span class="text-[10px] sm:text-xs text-ink-700 uppercase tracking-wider font-semibold">實質落袋淨利 (扣除{{ currentVehicleConfig.name }}成本)</span>
               <span v-if="totalVehicleCost > 0" class="text-[10px] px-1.5 py-0.2 rounded bg-crimson-200/20 text-crimson-500 font-mono">成本 -${{ Math.round(totalVehicleCost) }}</span>
             </div>
-            <div class="text-2xl sm:text-4xl font-black font-mono text-sky-600 mt-0.5">
+            <div class="text-2xl sm:text-4xl font-black font-mono text-jade-700 mt-0.5">
               NT$ {{ Math.round(netTotalIncome).toLocaleString() }}
             </div>
             <p class="text-[11px] sm:text-xs text-ink-700 mt-1">
@@ -352,12 +383,12 @@
                     :stroke-dasharray="slice.dash + ' ' + slice.gap"
                     :stroke-dashoffset="slice.offset" />
                 </template>
-                <circle cx="100" cy="100" r="50" fill="#0f172a" />
+                <circle cx="100" cy="100" r="50" fill="#fffdf8" />
               </svg>
               <!-- 中心文字（absolute 疊上，不受 SVG rotate 影響） -->
               <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
-                <span style="color:#64748b;font-size:10px;font-family:monospace;letter-spacing:0.05em">總收入</span>
-                <span style="color:#f1f5f9;font-size:13px;font-weight:900;font-family:monospace;margin-top:2px">
+                <span style="color:#6f685b;font-size:10px;font-family:monospace;letter-spacing:0.05em">總收入</span>
+                <span style="color:#2a2723;font-size:13px;font-weight:900;font-family:monospace;margin-top:2px">
                   NT${{ Math.round(totalIncome).toLocaleString() }}
                 </span>
               </div>
@@ -2205,6 +2236,6 @@
         + '<pre style="white-space:pre-wrap;font-size:.75rem;color:#be123c;margin-top:1rem">' + String(msg).replace(/</g, '&lt;') + '</pre></div>';
     };
   </script>
-  <script src="js/app.js?v=20261012e"></script>
+  <script src="js/app.js?v=20261012f"></script>
 </body>
 </html>
