@@ -10,21 +10,22 @@ describe('最低工資費率表', () => {
     assert.equal(config.getStatutoryRateForDate('2025-06-01T12:00'), 237.5);
     assert.equal(config.getStatutoryRateForDate('2026-10-12T12:00'), 245);
     assert.equal(config.getStatutoryRateForDate('2026-12-31T23:59'), 245);
-    assert.equal(config.getStatutoryRateForDate('2027-01-01T00:30'), 256.25);
+    // 2027 尚未加入表中前，沿用最後一筆（245）
+    assert.equal(config.getStatutoryRateForDate('2027-01-01T00:30'), 245);
     // 早於表上第一筆時沿用第一筆
     assert.equal(config.getStatutoryRateForDate('2020-01-01T12:00'), 237.5);
   });
 
   it('auto 模式逐筆套用各自日期的費率，跨年會標示 mixedRates', () => {
     const trips = [
-      { duration: 60, stacks: 1, basePay: 0, date: '2026-12-31T20:00' },
-      { duration: 60, stacks: 1, basePay: 0, date: '2027-01-02T20:00' }
+      { duration: 60, stacks: 1, basePay: 0, date: '2024-12-31T20:00' },
+      { duration: 60, stacks: 1, basePay: 0, date: '2026-01-02T20:00' }
     ];
     const s = calc.calcSummary(trips, { rateMode: 'auto' });
-    assert.equal(s.totalLegal, 245 + 256.25);
+    assert.equal(s.totalLegal, 237.5 + 245);
     assert.equal(s.mixedRates, true);
-    assert.deepEqual(s.ratesUsed, [245, 256.25]);
-    assert.equal(s.effectiveRate, (245 + 256.25) / 2);
+    assert.deepEqual(s.ratesUsed, [237.5, 245]);
+    assert.equal(s.effectiveRate, (237.5 + 245) / 2);
   });
 
   it('custom 模式忽略日期、全部用自訂費率', () => {
