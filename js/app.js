@@ -1,4 +1,4 @@
-    const { createApp, ref, computed, watch, onMounted } = window.Vue || {};
+    const { createApp, ref, computed, watch, onMounted, provide } = window.Vue || {};
     const Calc = window.DeliveryCalc;
     const Cfg = window.DeliveryConfig;
     const Cycle = (window.DSC || {}).cycle;
@@ -47,13 +47,41 @@
           return { key: 'night', label: '夜', text: '夜騎小心，平安回家' };
         });
         watch(showSettings, (v) => { try { localStorage.setItem('dsc_settings_open', v ? '1' : '0'); } catch (e) {} });
+
+        // ── 建議文字語氣：casual（輕鬆跑單口吻）| formal（正式，分享給別人時用）──
+        let savedTone = 'casual';
+        try { savedTone = localStorage.getItem('dsc_tone') === 'formal' ? 'formal' : 'casual'; } catch (e) {}
+        const tone = ref(savedTone);
+        watch(tone, (v) => { try { localStorage.setItem('dsc_tone', v); } catch (e) {} });
+        const toneApi = (window.DSC || {}).tone;
+        const toned = (text) => (toneApi ? toneApi.applyTone(text, tone.value) : text);
+        const toneItem = (o) => {
+          if (!o || typeof o !== 'object') return o;
+          const out = { ...o };
+          ['text', 'title', 'desc', 'label'].forEach((k) => { if (typeof out[k] === 'string') out[k] = toned(out[k]); });
+          if (Array.isArray(out.tips)) out.tips = out.tips.map(toneItem);
+          if (Array.isArray(out.warnings)) out.warnings = out.warnings.map(toneItem);
+          return out;
+        };
+
+        // ── 費率表年度提醒（11、12 月還沒有明年費率，或跨年後沒有今年費率）──
+        const rateReminderRaw = Cfg.checkRateSchedule ? Cfg.checkRateSchedule(new Date()) : null;
+        const reminderKey = rateReminderRaw ? `dsc_rate_reminder_${rateReminderRaw.level}_${rateReminderRaw.year}` : '';
+        let reminderDismissed = false;
+        try { reminderDismissed = Boolean(reminderKey) && localStorage.getItem(reminderKey) === '1'; } catch (e) {}
+        // 「已跨年卻沒今年費率」會讓保底算少，不提供關閉；「即將跨年」可以先關掉
+        const rateReminder = ref(rateReminderRaw && (rateReminderRaw.level === 'missing' || !reminderDismissed) ? rateReminderRaw : null);
+        const dismissRateReminder = () => {
+          try { if (reminderKey) localStorage.setItem(reminderKey, '1'); } catch (e) {}
+          rateReminder.value = null;
+        };
         const rate = ref(Cfg.DEFAULT_RATE);
         const rateMode = ref('auto'); // 'auto'（依訂單日期查最低工資表）| 'custom'
         const statutoryMode = ref('table'); // 'independent' | 'table'
         const trips = ref([]);
         const cycleFilter = ref('current'); // 'current' | 'all' | 'undated' | 週期代碼 YYYY-MM-DD
         const storageStatus = ref('ok'); // 'ok' | 'corrupt' | 'write_failed'
-        const newTrip = ref({ duration: '', distance: '', baseFare: '', boostFare: '', basePay: '', tips: '', incentives: '', points: '', stacks: 1, merchant: '', date: nowLocal() });
+        const newTrip = ref({ duration: '', distance: '', baseFare: '', boostFare: '', basePay: '', tips: '', incentives: '', points: '', stacks: 1, merchant: '', orderTimes: '', date: nowLocal() });
         
         // 彈窗控制
         const showPasteModal = ref(false);
@@ -221,7 +249,12 @@
 
         // 新增單筆
         const addTrip = () => {
-          if (!newTrip.value.duration) return;
+          // 沒填整趟時間但有逐單時間時，用逐單區間聯集當實際耗時
+          if (!newTrip.value.duration) {
+            const info = orderTimesInfo(newTrip.value);
+            if (info.state !== 'ok') return;
+            newTrip.value.duration = info.union;
+          }
           const bFare = Number(newTrip.value.baseFare) || 0;
           const bBoost = Number(newTrip.value.boostFare) || 0;
           const bPay = Number(newTrip.value.basePay) || (bFare + bBoost);
@@ -238,6 +271,7 @@
             points: Number(newTrip.value.points) || 0,
             stacks: Number(newTrip.value.stacks) || 1,
             merchant: newTrip.value.merchant || '',
+            orderTimes: newTrip.value.orderTimes || '',
             date: normalizeDate(newTrip.value.date) || nowLocal()
           });
           newTrip.value = { duration: '', distance: '', baseFare: '', boostFare: '', basePay: '', tips: '', incentives: '', points: '', stacks: 1, merchant: '', date: nowLocal() };
@@ -294,7 +328,18 @@
         );
         const getTripStatutoryMins = (t) => Calc.getTripStatutoryMins(t, calcOpts.value);
         const tripLegal = (t) => Math.round(Calc.calcTrip(t, calcOpts.value).legal);
-        const getTierLabel = (t) => Calc.getTierLabel(t, calcOpts.value);
+        const getTierLabel = (t) => toned(Calc.getTierLabel(t, calcOpts.value));
+        // 逐單時間：解析結果與「疊單數跟著單數走」
+        const orderTimesInfo = (t) => {
+          const list = Calc.parseOrderTimes(t && t.orderTimes);
+          if (!t || !t.orderTimes) return { state: 'empty', count: 0, sum: 0, union: 0 };
+          if (!list.length) return { state: 'invalid', count: 0, sum: 0, union: 0 };
+          return { state: 'ok', count: list.length, sum: list.reduce((a, o) => a + o.mins, 0), union: Calc.unionMins(list) };
+        };
+        const syncStacksFromOrderTimes = (t) => {
+          const info = orderTimesInfo(t);
+          if (info.state === 'ok') t.stacks = Math.min(10, info.count);
+        };
         const getTierBadgeClass = (t) => Calc.getTierBadgeClass(t, calcOpts.value);
 
         // ── 費率顯示 ──
@@ -365,6 +410,7 @@
                   points: parseFloat(row.points || row['點數'] || 0),
                   stacks: parseInt(row.stacks || row['疊單數'] || 1, 10),
                   merchant: row.merchant || row['商家'] || '',
+                  orderTimes: row.order_times || row.orderTimes || row['逐單時間'] || '',
                   date: normalizeDate(row.date || row['日期時間'] || row['日期'] || '')
                 };
               }).filter(t => t.duration > 0 || t.basePay > 0);
@@ -398,7 +444,8 @@
             '活動獎勵_NT': t.incentives || 0,
             '點數': t.points || 0,
             '戰力等級': getTierLabel(t),
-            '商家': t.merchant || ''
+            '商家': t.merchant || '',
+            '逐單時間': t.orderTimes || ''
           }));
           const csvString = '\uFEFF' + Papa.unparse(csvData);
           const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
@@ -469,9 +516,11 @@
         // 確認加入秒貼訂單
         const confirmPasteTrip = () => {
           const t = parsedPasteTrip.value;
-          if (t.duration > 0 || t.basePay > 0) {
+          if (t.duration > 0 || t.basePay > 0 || t.orderTimes) {
             const { found, ...tripFields } = t;
-            trips.value.push({ ...tripFields, id: makeTripId(), date: nowLocal() });
+            const ot = orderTimesInfo(tripFields);
+            const duration = tripFields.duration > 0 ? tripFields.duration : (ot.state === 'ok' ? ot.union : 0);
+            trips.value.push({ ...tripFields, duration, id: makeTripId(), date: nowLocal() });
             showPasteModal.value = false;
             pasteText.value = '';
             alert('已成功秒貼並加入訂單清單！');
@@ -500,7 +549,7 @@
         const generateFullReportText = () => {
           const report = window.DSC && window.DSC.report;
           if (!report) return '戰報模組尚未載入。';
-          return report.generateFullReport(getReportSummary(), getReportTrips(), getReportCycle(), getReportContext());
+          return toned(report.generateFullReport(getReportSummary(), getReportTrips(), getReportCycle(), getReportContext()));
         };
 
         // 一鍵複製所選戰報格式
@@ -515,11 +564,12 @@
             return;
           }
           const args = [getReportSummary(), getReportTrips(), getReportCycle(), getReportContext()];
+          // 申訴草稿本身就是正式語氣，不再轉換
           const text = reportCopyMode.value === 'short'
-            ? report.generateShortPost(...args)
+            ? toned(report.generateShortPost(...args))
             : reportCopyMode.value === 'complaint'
               ? report.generateLaborComplaintDraft(...args)
-              : report.generateFullReport(...args);
+              : toned(report.generateFullReport(...args));
           const label = reportCopyMode.value === 'short' ? '短貼' : reportCopyMode.value === 'complaint' ? '申訴草稿' : '完整社團戰報';
           navigator.clipboard.writeText(text).then(() => {
             copyBtnText.value = `✅ 已複製${label}！`;
@@ -618,8 +668,58 @@
 
 
         // ── 每單診斷、整體建議、戰力統計 ──
-        const tripInsights = computed(() => Calc.computeTripInsights(visibleTrips.value, calcOpts.value));
-        const globalInsights = computed(() => Calc.computeGlobalInsights(visibleTrips.value, calcOpts.value, summary.value));
+        const tripInsights = computed(() => Calc.computeTripInsights(visibleTrips.value, calcOpts.value).map(toneItem));
+        const globalInsights = computed(() => Calc.computeGlobalInsights(visibleTrips.value, calcOpts.value, summary.value).map(toneItem));
+        const exactCount = computed(() => summary.value.exactCount || 0);
+
+        // ── 雙週對帳單（圖片／列印存 PDF／純文字）──
+        const showStatementModal = ref(false);
+        const statement = computed(() => {
+          const api = (window.DSC || {}).statement;
+          return api ? api.buildStatement(summary.value, visibleTrips.value, selectedCycleInfo.value, calcOpts.value) : null;
+        });
+        const statementFileBase = () => `外送專法對帳單_${(statement.value && statement.value.cycleLabel || '本期').replace(/[\\/:*?"<>|\s]+/g, '_')}`;
+        const openStatement = () => {
+          if (visibleTrips.value.length === 0) { alert('目前篩選的週期沒有訂單資料！'); return; }
+          showStatementModal.value = true;
+        };
+        const statementBusy = ref(false);
+        const downloadStatementPNG = async () => {
+          const api = (window.DSC || {}).statement;
+          if (!api || !statement.value) return;
+          statementBusy.value = true;
+          try {
+            if (document.fonts && document.fonts.ready) await document.fonts.ready;
+            const blob = await api.drawStatementPNG(statement.value);
+            if (!blob) throw new Error('圖片產生失敗');
+            const file = new File([blob], `${statementFileBase()}.png`, { type: 'image/png' });
+            // 手機優先叫出分享面板（可直接存到相簿或傳 LINE），不支援時改下載
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              try { await navigator.share({ files: [file], title: statement.value.title }); return; } catch (e) { if (e && e.name === 'AbortError') return; }
+            }
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = file.name;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 1500);
+          } catch (e) {
+            console.error(e);
+            alert('對帳單圖片產生失敗，請改用「列印／存成 PDF」。');
+          } finally {
+            statementBusy.value = false;
+          }
+        };
+        const printStatement = () => {
+          document.body.classList.add('print-statement');
+          const done = () => { document.body.classList.remove('print-statement'); window.removeEventListener('afterprint', done); };
+          window.addEventListener('afterprint', done);
+          setTimeout(() => { window.print(); setTimeout(done, 1000); }, 50);
+        };
+        const copyStatementText = () => {
+          const api = (window.DSC || {}).statement;
+          if (!api || !statement.value) return;
+          navigator.clipboard.writeText(api.statementToText(statement.value)).then(() => alert('已複製對帳單文字！'));
+        };
         const tierStats = computed(() => Calc.computeTierStats(visibleTrips.value, calcOpts.value));
 
         const tipHitRate = computed(() => {
@@ -637,6 +737,12 @@
         // ── 跑單時薪模擬（與主計算器同一套 calc.js：跟著工時模式與費率走） ──
         const simOptsFor = (mode) => ({ ...calcOpts.value, vehicleMode: mode });
         const simResult = computed(() => Calc.simulateSession({ ...sim.value, date: nowLocal() }, simOptsFor(simVehicleMode.value)));
+        // 目標時薪反推：記在本機
+        let savedTarget = 400;
+        try { const v = Number(localStorage.getItem('dsc_sim_target')); if (v > 0) savedTarget = v; } catch (e) {}
+        const simTarget = ref(savedTarget);
+        watch(simTarget, (v) => { try { localStorage.setItem('dsc_sim_target', String(v)); } catch (e) {} });
+        const simTargetResult = computed(() => Calc.solveTargetHourly(simTarget.value, { ...sim.value, date: nowLocal() }, simOptsFor(simVehicleMode.value), 5));
         const simVehicleCompare = computed(() => ['walk', 'bike', 'motorcycle'].map((mode) => ({
           mode,
           name: vehicleConfigMap[mode].name,
@@ -689,7 +795,10 @@
           try { localStorage.setItem(SIM_KEY, JSON.stringify(v)); } catch (e) {}
         }, { deep: true });
 
-        return {
+        const ctx = {
+          tone, toned, rateReminder, dismissRateReminder, orderTimesInfo, syncStacksFromOrderTimes, exactCount,
+          showStatementModal, statement, openStatement, statementBusy, downloadStatementPNG, printStatement, copyStatementText,
+          simTarget, simTargetResult,
           activeTab, showSettings, timeOfDay, routeProgress, rate, rateMode, rateScheduleHint, displayRateText, statutoryMode, statutoryModeLabel, trips, visibleTrips, newTrip, storageStatus,
           cycleFilter, cycleFilterLabel, cycleGroups, pastCycleOptions, currentCycleInfo, removeTrip, clearVisibleTrips, tripLegal,
           showPasteModal, showManualModal, pasteText, parsedPasteTrip, pasteFieldStatus,
@@ -707,8 +816,13 @@
           cycleStacks, getTripStatutoryMins, getStackMultiplier, getTierLabel, getTierBadgeClass,
           handleFileUpload, exportCSV, loadSampleData, copyReport, downloadReport, generateFullReportText
         };
+        // 各區塊元件（js/components/*.js）以 inject('dsc') 取用同一份狀態
+        provide('dsc', ctx);
+        return ctx;
       }
     });
+    // 註冊元件：index.html 只剩骨架，各分頁與彈窗都在 js/components/
+    Object.entries(window.DSCComponents || {}).forEach(([tag, def]) => app.component(tag, def));
     let mounted = false;
     // 只有在首次掛載前出錯才換成錯誤頁；之後的錯誤只記錄，不打斷使用
     app.config.errorHandler = (err) => {

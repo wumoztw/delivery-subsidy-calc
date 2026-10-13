@@ -10,12 +10,17 @@
     "vendor": "node -e \"const fs=require('fs');fs.mkdirSync('vendor',{recursive:true});fs.copyFileSync('node_modules/vue/dist/vue.global.prod.js','vendor/vue.global.prod.js');fs.copyFileSync('node_modules/papaparse/papaparse.min.js','vendor/papaparse.min.js')\"",
     "build": "npm run vendor && npm run build:css"
   },
-  "keywords": ["delivery", "subsidy", "ubereats", "taiwan"],
+  "keywords": [
+    "delivery",
+    "subsidy",
+    "ubereats",
+    "taiwan"
+  ],
   "author": "wumoztw",
   "license": "MIT",
   "devDependencies": {
     "papaparse": "5.4.1",
     "tailwindcss": "^3.4.0",
-    "vue": "3.4.21"
+    "vue": "^3.5.43"
   }
 }
