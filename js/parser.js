@@ -126,6 +126,51 @@
     return '';
   }
 
+  // 7.5 逐單起迄時間：每張單「接單→送達」。支援兩種寫法
+  //   a) 一行一個區間：14:05-14:32、下午 2:05 ~ 下午 2:32
+  //   b) 分開兩行：接單 14:05 ／ 送達 14:32（依出現順序配對）
+  // 抓不到或配對數不合時回傳空字串，不影響其他欄位。
+  const TIME_RE = '(上午|下午|AM|PM)?\\s*(\\d{1,2}):(\\d{2})\\s*(AM|PM)?';
+  const toHHMM = (ampm1, h, m, ampm2) => {
+    let hh = +h;
+    const ap = String(ampm1 || ampm2 || '').toUpperCase();
+    if ((ap === '下午' || ap === 'PM') && hh < 12) hh += 12;
+    if ((ap === '上午' || ap === 'AM') && hh === 12) hh = 0;
+    if (hh > 23 || +m > 59) return null;
+    return `${String(hh).padStart(2, '0')}:${m}`;
+  };
+
+  function extractOrderTimes(lines) {
+    const rangeRe = new RegExp(`${TIME_RE}\\s*(?:-|~|～|至|到|—|–)\\s*${TIME_RE}`, 'i');
+    const ranges = [];
+    for (const line of lines) {
+      const r = rangeRe.exec(line);
+      if (!r) continue;
+      const a = toHHMM(r[1], r[2], r[3], r[4]);
+      const b = toHHMM(r[5], r[6], r[7], r[8]);
+      if (a && b) ranges.push(`${a}-${b}`);
+    }
+    if (ranges.length) return ranges.join(', ');
+
+    const single = new RegExp(TIME_RE, 'i');
+    const starts = [];
+    const ends = [];
+    for (const line of lines) {
+      const isStart = /接單|接受訂單|開始配送|開始/.test(line);
+      const isEnd = /送達|已送達|完成配送|抵達/.test(line);
+      if (!isStart && !isEnd) continue;
+      const r = single.exec(line.replace(/\d{4}[\/-]\d{1,2}[\/-]\d{1,2}/, ''));
+      if (!r) continue;
+      const t = toHHMM(r[1], r[2], r[3], r[4]);
+      if (!t) continue;
+      if (isStart) starts.push(t); else ends.push(t);
+    }
+    if (starts.length && starts.length === ends.length) {
+      return starts.map((st, i) => `${st}-${ends[i]}`).join(', ');
+    }
+    return '';
+  }
+
   // 8. 合理範圍檢查（超出範圍不阻擋，但提供警告清單供 UI 標示）
   function sanityCheck(t) {
     const w = [];
@@ -166,6 +211,8 @@
     const distance = extractDistanceKm(lines);
     const points = extractPoints(lines);
     const merchant = extractMerchant(lines);
+    const orderTimes = extractOrderTimes(lines);
+    const orderCount = orderTimes ? orderTimes.split(',').length : 0;
 
     // 互補推導（當某欄未直接匹配時自動推導）
     const derived = [];
@@ -206,8 +253,10 @@
       tips: tips != null ? tips : 0,
       incentives: incentives != null ? incentives : 0,
       points: points != null ? points : 0,
-      stacks: 1,
+      // 有逐單時間時，疊單數＝抓到的單數；否則維持預設 1 疊，需手動切換
+      stacks: orderCount > 0 ? Math.min(10, orderCount) : 1,
       merchant: merchant || '',
+      orderTimes,
       found: {
         duration: durationSec != null,
         distance: distance != null,
@@ -217,7 +266,8 @@
         tips: tips != null,
         incentives: incentives != null,
         points: points != null,
-        merchant: Boolean(merchant)
+        merchant: Boolean(merchant),
+        orderTimes: Boolean(orderTimes)
       },
       derived,
       warnings: []
@@ -236,6 +286,7 @@
     parseDeliveryText,
     extractDurationSec,
     extractDistanceKm,
+    extractOrderTimes,
     sanityCheck
   };
 

@@ -210,3 +210,13 @@ table tbody tr:hover { background-color: rgba(79, 118, 70, 0.05); }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 input, button, select { touch-action: manipulation; }
 .pb-safe { padding-bottom: env(safe-area-inset-bottom, 1rem); }
+/* 列印對帳單：只印 .statement-sheet，其餘畫面全部隱藏（由 app.js 的 printStatement 加上 body.print-statement） */
+@media print {
+  body.print-statement { background: #fff !important; padding: 0 !important; }
+  body.print-statement #app > *:not(.statement-root) { display: none !important; }
+  body.print-statement .statement-root { position: static !important; display: block !important; padding: 0 !important; background: none !important; backdrop-filter: none !important; }
+  body.print-statement .statement-frame { max-height: none !important; overflow: visible !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; max-width: none !important; }
+  body.print-statement .statement-tools { display: none !important; }
+  body.print-statement .statement-sheet { border: 0 !important; }
+  body.print-statement tr { break-inside: avoid; }
+}

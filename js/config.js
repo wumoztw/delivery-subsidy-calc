@@ -54,6 +54,27 @@
     return getMinWageForDate(date) * RATE_FACTOR;
   }
 
+  /**
+   * 費率表年度檢查：每年 9 月審議、行政院核定後才能加下一年的數字。
+   * - 11、12 月還沒有下一年的列 → level 'upcoming'（提醒記得等公告後更新）
+   * - 已經跨年但沒有今年的列 → level 'missing'（目前沿用去年費率，數字可能偏低）
+   * 都有的話回傳 null。
+   */
+  function checkRateSchedule(now) {
+    const d = now instanceof Date ? now : new Date(now == null ? Date.now() : now);
+    if (Number.isNaN(d.getTime())) return null;
+    const year = d.getFullYear();
+    const has = (y) => MIN_WAGE_SCHEDULE.some((r) => r.from.slice(0, 4) === String(y));
+    if (!has(year)) {
+      const last = MIN_WAGE_SCHEDULE[MIN_WAGE_SCHEDULE.length - 1];
+      return { level: 'missing', year, lastYear: last.from.slice(0, 4), lastHourly: last.hourly };
+    }
+    if (d.getMonth() >= 10 && !has(year + 1)) {
+      return { level: 'upcoming', year: year + 1 };
+    }
+    return null;
+  }
+
   // 經驗倍率表 (每多一疊 +0.75x，10 疊為上限)
   const stackMultiplierMap = {
     1: 1.00,
@@ -122,6 +143,7 @@
     toLocalDateKey,
     getMinWageForDate,
     getStatutoryRateForDate,
+    checkRateSchedule,
     stackMultiplierMap,
     vehicleConfigMap
   };

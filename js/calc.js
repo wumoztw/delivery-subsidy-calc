@@ -74,24 +74,83 @@
     return getEffectiveRate(opts.rate);
   }
 
-  function getTripStatutoryMins(trip, options) {
-    if (!trip) return 0;
-    const opts = normalizeOpts(options);
-    return num(trip.duration) * getStackMultiplier(trip.stacks, opts.statutoryMode);
+  /**
+   * 解析「逐單時間」：每張單從接單到送達的起迄，例如 "14:05-14:32, 14:10-14:40"。
+   * 支援 - ~ ～ 至 到 分隔、全形冒號、跨午夜（迄 < 起 視為隔天）。
+   * 單張超過 4 小時或為 0 分鐘視為打錯，整串不採用（回傳空陣列），避免算錯錢。
+   */
+  function parseOrderTimes(text) {
+    if (!text) return [];
+    const s = String(text).replace(/：/g, ':').replace(/[～〜]/g, '~');
+    const re = /(\d{1,2}):(\d{2})\s*(?:-|~|至|到|—|–)\s*(\d{1,2}):(\d{2})/g;
+    const out = [];
+    let m;
+    while ((m = re.exec(s))) {
+      const a = +m[1] * 60 + +m[2];
+      let b = +m[3] * 60 + +m[4];
+      if (+m[1] > 23 || +m[3] > 23 || +m[2] > 59 || +m[4] > 59) return [];
+      if (b < a) b += 24 * 60;
+      const mins = b - a;
+      if (mins <= 0 || mins > 240) return [];
+      out.push({ start: a, end: b, mins });
+    }
+    return out;
   }
 
-  /** 單筆法定工時、保底與差額。 */
+  /** 逐單區間的聯集長度（＝實際在路上的物理分鐘，重疊只算一次）。 */
+  function unionMins(intervals) {
+    if (!intervals.length) return 0;
+    // 起點正規化：以第一張單為基準，早於它 12 小時以上的視為跨午夜
+    const base = Math.min(...intervals.map((i) => i.start));
+    const list = intervals
+      .map((i) => (i.start - base > 12 * 60 ? { start: i.start - 1440, end: i.end - 1440 } : i))
+      .sort((x, y) => x.start - y.start);
+    let total = 0;
+    let cs = list[0].start;
+    let ce = list[0].end;
+    for (const i of list.slice(1)) {
+      if (i.start <= ce) ce = Math.max(ce, i.end);
+      else { total += ce - cs; cs = i.start; ce = i.end; }
+    }
+    return total + (ce - cs);
+  }
+
+  /** 這筆訂單是否有可用的逐單起迄時間。 */
+  function hasExactOrderTimes(trip) {
+    return Boolean(trip && parseOrderTimes(trip.orderTimes).length);
+  }
+
+  function getTripStatutoryMins(trip, options) {
+    return calcTrip(trip, options).statMins;
+  }
+
+  /**
+   * 單筆法定工時、保底與差額。
+   * 獨立累加模式下若有逐單時間，改用「每張單各自的起迄分鐘加總」精算（exact = true），
+   * 不再用「整趟時間 × 疊單數」近似，重疊路段不會被高估。
+   */
   function calcTrip(trip, options) {
-    if (!trip) return { statMins: 0, legal: 0, basePay: 0, physicalMins: 0, subsidy: 0, gap: 0, rate: 0, multiplier: 1 };
+    if (!trip) return { statMins: 0, legal: 0, basePay: 0, physicalMins: 0, subsidy: 0, gap: 0, rate: 0, multiplier: 1, exact: false };
     const opts = normalizeOpts(options);
     const rate = getTripRate(trip, opts);
-    const physicalMins = Math.max(0, num(trip.duration));
-    const multiplier = getStackMultiplier(trip.stacks, opts.statutoryMode);
-    const statMins = physicalMins * multiplier;
+    const orders = parseOrderTimes(trip.orderTimes);
+    let physicalMins = Math.max(0, num(trip.duration));
+    if (!physicalMins && orders.length) physicalMins = unionMins(orders);
+    let statMins;
+    let multiplier;
+    let exact = false;
+    if (opts.statutoryMode === 'independent' && orders.length) {
+      statMins = orders.reduce((a, o) => a + o.mins, 0);
+      multiplier = physicalMins > 0 ? statMins / physicalMins : orders.length;
+      exact = true;
+    } else {
+      multiplier = getStackMultiplier(trip.stacks, opts.statutoryMode);
+      statMins = physicalMins * multiplier;
+    }
     const legal = (statMins / 60) * rate;
     const basePay = num(trip.basePay);
     const subsidy = Math.max(0, legal - basePay);
-    return { statMins, legal, basePay, physicalMins, subsidy, gap: subsidy, rate, multiplier };
+    return { statMins, legal, basePay, physicalMins, subsidy, gap: subsidy, rate, multiplier, exact };
   }
 
   /** 整期彙總：法定工時、保底、差額、收入、載具成本與各種效率指標。 */
@@ -111,9 +170,11 @@
     let totalPoints = 0;
     let totalDistance = 0;
     const ratesUsed = new Set();
+    let exactCount = 0;
 
     for (const t of list) {
       const c = calcTrip(t, opts);
+      if (c.exact) exactCount += 1;
       totalPhysicalMins += c.physicalMins;
       totalStatutoryMins += c.statMins;
       totalOrdersCount += clampStacks(t.stacks);
@@ -167,6 +228,7 @@
       stackingMultiplier,
       realHourlyRate: stackingMultiplier * effectiveRate,
       effectiveRate,
+      exactCount,
       mixedRates: ratesUsed.size > 1,
       ratesUsed: [...ratesUsed].sort((a, b) => a - b)
     };
@@ -473,7 +535,42 @@
     };
   }
 
+  /**
+   * 目標時薪反推：在其他條件（服務時間、耗時、空檔、車資、小費）不變下，
+   * 列出 1～maxStacks 疊各自的每小時實拿，以及要達標時一批里程最多能跑幾公里。
+   * 一批里程只影響載具成本，因此可直接解：net ≥ 目標 ⇔ 里程 ≤ (每批實拿含小費 − 目標 ÷ 每小時批數) ÷ 每公里成本。
+   */
+  function solveTargetHourly(targetNet, params, options, maxStacks) {
+    const target = Math.max(0, num(targetNet));
+    const opts = normalizeOpts(options);
+    const vCfg = getVehicleConfig(opts.vehicleMode);
+    const limit = Math.min(10, Math.max(1, Math.round(num(maxStacks)) || 5));
+    const rows = [];
+    for (let k = 1; k <= limit; k += 1) {
+      const r = simulateSession({ ...(params || {}), stacks: k }, opts);
+      const grossPerBatch = r.payoutPerBatch + r.tipsPerBatch;
+      const needPerBatch = target / r.batchesPerHour;
+      let maxKm;
+      if (grossPerBatch < needPerBatch) maxKm = null; // 里程 0 也達不到
+      else if (vCfg.costPerKm <= 0) maxKm = Infinity;
+      else maxKm = (grossPerBatch - needPerBatch) / vCfg.costPerKm;
+      rows.push({
+        stacks: k,
+        netPerHour: r.perHour.net,
+        reached: r.perHour.net >= target,
+        maxKm,
+        gap: target - r.perHour.net
+      });
+    }
+    const first = rows.find((x) => x.reached) || null;
+    return { target, rows, minStacks: first ? first.stacks : null, costPerKm: vCfg.costPerKm };
+  }
+
   return {
+    solveTargetHourly,
+    parseOrderTimes,
+    unionMins,
+    hasExactOrderTimes,
     simulateSession,
     normalizeOpts,
     getVehicleConfig,
