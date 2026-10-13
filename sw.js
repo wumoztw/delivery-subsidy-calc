@@ -7,7 +7,7 @@
  * - Google Fonts：快取優先（字型檔不會變）
  * 改動 APP_SHELL 清單或想強制全部重抓時，把 CACHE_VERSION 加一。
  */
-const CACHE_VERSION = 'dsc-v8';
+const CACHE_VERSION = 'dsc-v9';
 const APP_SHELL = [
   './',
   './index.html',
