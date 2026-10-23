@@ -128,9 +128,6 @@
     <button @click="activeTab = 'tactics'" :class="activeTab === 'tactics' ? 'tab-on' : 'tab-off'" class="index-tab">
       <svg class="tab-ico" viewBox="0 0 24 24"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h5l2-6h-3M14 17l-2-5H7"/></svg> 疊單作戰模擬
     </button>
-    <button @click="activeTab = 'analysis'" :class="activeTab === 'analysis' ? 'tab-on' : 'tab-off'" class="index-tab">
-      <svg class="tab-ico" viewBox="0 0 24 24"><path d="M2 19l7-10 4 6 3-4 6 8z"/><circle cx="17" cy="6" r="2"/></svg> 時段與戰力分析
-    </button>
     <button @click="activeTab = 'rules'" :class="activeTab === 'rules' ? 'tab-on' : 'tab-off'" class="index-tab">
       <svg class="tab-ico" viewBox="0 0 24 24"><path d="M4 5h6a2 2 0 012 2v12a2 2 0 00-2-2H4zM20 5h-6a2 2 0 00-2 2v12a2 2 0 012-2h6z"/></svg> 專法準則
     </button>

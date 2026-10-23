@@ -21,36 +21,35 @@
   <!-- 3. 非同步載入 JetBrains Mono 降低阻塞 -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" onload="this.rel='stylesheet'">
   <!-- 樣式：Tailwind CLI 建置後的精簡 CSS（npm run build:css） -->
-  <link rel="stylesheet" href="css/app.css?v=20261023a">
+  <link rel="stylesheet" href="css/app.css?v=20261023b">
   <!-- 執行期函式庫改為本地 vendor，離線（PWA）也能開 -->
-  <script src="vendor/vue.global.prod.js?v=20261023a"></script>
-  <script src="vendor/papaparse.min.js?v=20261023a"></script>
+  <script src="vendor/vue.global.prod.js?v=20261023b"></script>
+  <script src="vendor/papaparse.min.js?v=20261023b"></script>
   <!-- 核心模組（順序有依賴：config → calc → cycle/parser/report → app） -->
-  <script src="js/config.js?v=20261023a"></script>
-  <script src="js/calc.js?v=20261023a"></script>
-  <script src="js/cycle.js?v=20261023a"></script>
-  <script src="js/parser.js?v=20261023a"></script>
-  <script src="js/report.js?v=20261023a"></script>
-  <script src="js/tone.js?v=20261023a"></script>
-  <script src="js/statement.js?v=20261023a"></script>
+  <script src="js/config.js?v=20261023b"></script>
+  <script src="js/calc.js?v=20261023b"></script>
+  <script src="js/cycle.js?v=20261023b"></script>
+  <script src="js/parser.js?v=20261023b"></script>
+  <script src="js/report.js?v=20261023b"></script>
+  <script src="js/tone.js?v=20261023b"></script>
+  <script src="js/statement.js?v=20261023b"></script>
   <!-- 畫面元件（在 app.js 之前載入，由 app.js 統一註冊） -->
-  <script src="js/icons.js?v=20261023a"></script>
-  <script src="js/components/AppHeader.js?v=20261023a"></script>
-  <script src="js/components/RateReminder.js?v=20261023a"></script>
-  <script src="js/components/TabDashboard.js?v=20261023a"></script>
-  <script src="js/components/TabTrips.js?v=20261023a"></script>
-  <script src="js/components/SimPanel.js?v=20261023a"></script>
-  <script src="js/components/VehicleMatrix.js?v=20261023a"></script>
-  <script src="js/components/SingleOrderPlan.js?v=20261023a"></script>
-  <script src="js/components/VehicleHandbook.js?v=20261023a"></script>
-  <script src="js/components/WatchVsBill.js?v=20261023a"></script>
-  <script src="js/components/TabTactics.js?v=20261023a"></script>
-  <script src="js/components/TabAnalysis.js?v=20261023a"></script>
-  <script src="js/components/TabRules.js?v=20261023a"></script>
-  <script src="js/components/MobileStatusBar.js?v=20261023a"></script>
-  <script src="js/components/PasteModal.js?v=20261023a"></script>
-  <script src="js/components/ManualModal.js?v=20261023a"></script>
-  <script src="js/components/StatementModal.js?v=20261023a"></script>
+  <script src="js/icons.js?v=20261023b"></script>
+  <script src="js/components/AppHeader.js?v=20261023b"></script>
+  <script src="js/components/RateReminder.js?v=20261023b"></script>
+  <script src="js/components/TabDashboard.js?v=20261023b"></script>
+  <script src="js/components/TabTrips.js?v=20261023b"></script>
+  <script src="js/components/SimPanel.js?v=20261023b"></script>
+  <script src="js/components/VehicleMatrix.js?v=20261023b"></script>
+  <script src="js/components/SingleOrderPlan.js?v=20261023b"></script>
+  <script src="js/components/VehicleHandbook.js?v=20261023b"></script>
+  <script src="js/components/WatchVsBill.js?v=20261023b"></script>
+  <script src="js/components/TabTactics.js?v=20261023b"></script>
+  <script src="js/components/TabRules.js?v=20261023b"></script>
+  <script src="js/components/MobileStatusBar.js?v=20261023b"></script>
+  <script src="js/components/PasteModal.js?v=20261023b"></script>
+  <script src="js/components/ManualModal.js?v=20261023b"></script>
+  <script src="js/components/StatementModal.js?v=20261023b"></script>
 </head>
 <body class="bg-ink-50 text-ink-950 min-h-screen font-sans antialiased selection:bg-jade-500 selection:text-white pb-24 sm:pb-8">
   <div id="app" v-cloak class="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-6">
@@ -60,7 +59,6 @@
     <tab-dashboard></tab-dashboard>
     <tab-trips></tab-trips>
     <tab-tactics></tab-tactics>
-    <tab-analysis></tab-analysis>
     <tab-rules></tab-rules>
     <mobile-status-bar></mobile-status-bar>
     <paste-modal></paste-modal>
@@ -102,6 +100,6 @@
         + '<pre style="white-space:pre-wrap;font-size:.75rem;color:#be123c;margin-top:1rem">' + String(msg).replace(/</g, '&lt;') + '</pre></div>';
     };
   </script>
-  <script src="js/app.js?v=20261023a"></script>
+  <script src="js/app.js?v=20261023b"></script>
 </body>
 </html>
