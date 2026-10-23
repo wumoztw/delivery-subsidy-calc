@@ -7,17 +7,23 @@
     setup() { return root.Vue.inject('dsc'); },
     template: `
 <!-- 手機端底部常駐狀態列 -->
-<aside class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-ink-900 px-4 py-2.5 shadow-sm pb-safe flex items-center justify-between">
-  <div>
-    <span class="text-[10px] text-ink-700 block">兩週預估補發差額</span>
-    <div class="text-base font-bold font-mono text-blue-900">
-      NT$ {{ Math.round(subsidy).toLocaleString() }}
+<aside class="mstatus sm:hidden fixed bottom-0 left-0 right-0 z-40 backdrop-blur-md px-4 pt-2 pb-safe grid grid-cols-3 gap-2 items-end" aria-label="本期概況">
+  <div class="min-w-0">
+    <span class="text-[11px] text-ink-700 block">預估補貼</span>
+    <div class="text-base font-black font-mono truncate" :class="subsidy > 0 ? 'text-ochre-500' : 'text-jade-700'">
+      \${{ Math.round(subsidy).toLocaleString() }}
     </div>
   </div>
-  <div class="text-right">
-    <span class="text-[10px] text-ink-700 block">最終總收入 (含小費/獎勵)</span>
-    <div class="text-base font-bold font-mono text-ink-950">
-      NT$ {{ Math.round(totalIncome).toLocaleString() }}
+  <div class="min-w-0 text-center">
+    <span class="text-[11px] text-ink-700 block">實質時薪</span>
+    <div class="text-base font-black font-mono text-teal-300 truncate">
+      \${{ netHourlyRate.toFixed(0) }}
+    </div>
+  </div>
+  <div class="min-w-0 text-right">
+    <span class="text-[11px] text-ink-700 block">總收入</span>
+    <div class="text-base font-black font-mono text-ink-950 truncate">
+      \${{ Math.round(totalIncome).toLocaleString() }}
     </div>
   </div>
 </aside>

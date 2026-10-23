@@ -68,9 +68,9 @@ h1, h2, h3, h4, h5, h6,
 ::selection { background-color: rgba(79, 118, 70, 0.2); color: #22361f; }
 
 /* 微型標籤字級保護 (防止手機戶外反光時小字模糊) */
-.text-\[9px\]  { font-size: 10.5px !important; letter-spacing: 0.025em; }
-.text-\[10px\] { font-size: 11.5px !important; letter-spacing: 0.02em; }
-.text-\[11px\] { font-size: 12px !important;   letter-spacing: 0.015em; }
+.text-\[9px\]  { font-size: 11px !important; letter-spacing: 0.025em; }
+.text-\[10px\] { font-size: 12px !important; letter-spacing: 0.02em; }
+.text-\[11px\] { font-size: 12.5px !important;   letter-spacing: 0.015em; }
 
 /* 紙張底色＋極淡紙紋 */
 body {
@@ -158,6 +158,47 @@ h1 { font-weight: 700; }
 }
 .route-rider svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .route-flag { position: absolute; right: -14px; top: 50%; transform: translateY(-58%); font-size: 18px; color: var(--sea); line-height: 1; }
+
+/* 保底節點與終點旗幟 */
+.route::before { border-top-color: #cfc5b0; }
+.route-done { background: linear-gradient(90deg, #7fa273, var(--moss) 60%, var(--moss-deep)); height: 5px; box-shadow: 0 0 0 3px rgba(79,118,70,.12); }
+.route-goal {
+  position: absolute; right: 0; top: 50%; width: 14px; height: 14px; border-radius: 9999px;
+  transform: translate(50%, -50%); background: var(--card); border: 2.5px solid #b9ae98; transition: background-color .4s, border-color .4s;
+}
+.route-goal.reached { background: var(--moss); border-color: var(--moss-deep); box-shadow: 0 0 0 4px rgba(79,118,70,.2); }
+.route-rider { box-shadow: 0 2px 6px rgba(61,57,52,.18); }
+
+/* KPI Hero 卡：紙白微漸層＋柔邊 */
+.kpi-card {
+  position: relative; overflow: hidden; border-radius: 1rem; padding: 0.9rem 1rem;
+  background: linear-gradient(145deg, #fffefb 0%, #f7f2e7 100%);
+  border: 1px solid rgba(211, 202, 184, .55);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 1px 3px rgba(61,57,52,.08) !important;
+  transition: box-shadow .2s;
+}
+.kpi-card:hover { box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 6px 16px rgba(61,57,52,.12) !important; }
+.kpi-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--kpi, var(--moss)); }
+.kpi-ok { --kpi: var(--moss); background: linear-gradient(145deg, #fdfef9 0%, #eef4e6 100%); }
+.kpi-due { --kpi: var(--persimmon); background: linear-gradient(145deg, #fffdf6 0%, #fbeedd 100%); }
+.kpi-num { font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 800; font-size: 1.75rem; line-height: 1.1; letter-spacing: -0.02em; }
+@media (min-width: 640px) { .kpi-num { font-size: 2.25rem; } }
+
+/* 膠囊分段切換器 */
+.seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 9999px; background: rgba(61,57,52,.07); box-shadow: inset 0 1px 2px rgba(61,57,52,.1); }
+.seg-btn {
+  flex: 1 1 0; min-height: 40px; padding: 0 0.95rem; border-radius: 9999px; font-size: 0.8rem; color: #6f685b;
+  display: inline-flex; align-items: center; gap: .3rem; justify-content: center;
+  transition: background-color .25s, color .25s, box-shadow .25s, transform .15s;
+}
+.seg-btn:hover { color: var(--ink); }
+.seg-on { background: var(--card); color: var(--moss-deep); font-weight: 700; box-shadow: 0 1px 3px rgba(61,57,52,.25), 0 0 0 1px rgba(79,118,70,.2) !important; }
+
+/* 手機底部狀態條 */
+.mstatus { background: rgba(255,253,248,.94); border-top: 1px solid var(--line); box-shadow: 0 -6px 18px rgba(61,57,52,.1) !important; }
+
+/* 觸控熱區 */
+@media (pointer: coarse) { button, select, label.cursor-pointer { min-height: 40px; } }
 
 /* 車票：左右打孔、虛線撕邊 */
 .ticket {

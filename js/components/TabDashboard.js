@@ -10,7 +10,7 @@
 <div v-show="activeTab === 'dashboard'" class="space-y-4 sm:space-y-6">
 
   <!-- 全域外送載具模式切換列 -->
-  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-ink-0/90 p-3 sm:p-3.5 rounded-2xl border border-ink-200 shadow-md">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-white/80 p-3 sm:p-3.5 rounded-2xl ring-1 ring-ink-200/60 shadow-sm">
     <div class="flex items-center gap-2.5">
       <span class="text-2xl">{{ currentVehicleConfig.icon }}</span>
       <div>
@@ -21,27 +21,15 @@
         <p class="text-[11px] text-ink-700 mt-0.5">{{ currentVehicleConfig.desc }}</p>
       </div>
     </div>
-    <div class="flex items-center gap-1.5 p-1 bg-ink-50 rounded-xl border border-ink-200 self-start sm:self-auto flex-wrap">
-      <button type="button" @click="setGlobalVehicleMode('walk')"
-        :class="vehicleMode === 'walk' ? 'bg-ochre-200/20 text-ochre-500 border-ochre-200/40 font-bold shadow' : 'text-ink-700 hover:text-ink-900 border-transparent'"
-        class="px-2.5 py-1 rounded-lg text-xs transition border flex items-center gap-1">
-        <span>🚶</span> <span>步行</span>
-      </button>
-      <button type="button" @click="setGlobalVehicleMode('bike')"
-        :class="vehicleMode === 'bike' ? 'bg-sky-50 text-sky-700 border-sky-300 font-bold shadow-sm' : 'text-ink-600 hover:text-ink-200 border-transparent'"
-        class="px-2.5 py-1 rounded-lg text-xs transition border flex items-center gap-1">
-        <span>🚲</span> <span>腳踏車</span>
-      </button>
-      <button type="button" @click="setGlobalVehicleMode('motorcycle')"
-        :class="vehicleMode === 'motorcycle' ? 'bg-sky-600 text-white border-sky-600 font-bold shadow-sm shadow-sky-500/20' : 'text-ink-600 hover:text-ink-200 border-transparent'"
-        class="px-2.5 py-1 rounded-lg text-xs transition border flex items-center gap-1">
-        <span>🛵</span> <span>機車</span>
-      </button>
+    <div class="seg self-stretch sm:self-auto" role="group" aria-label="載具模式">
+      <button type="button" @click="setGlobalVehicleMode('walk')" :class="vehicleMode === 'walk' ? 'seg-on' : ''" :aria-pressed="vehicleMode === 'walk'" class="seg-btn"><span>🚶</span><span>步行</span></button>
+      <button type="button" @click="setGlobalVehicleMode('bike')" :class="vehicleMode === 'bike' ? 'seg-on' : ''" :aria-pressed="vehicleMode === 'bike'" class="seg-btn"><span>🚲</span><span>腳踏車</span></button>
+      <button type="button" @click="setGlobalVehicleMode('motorcycle')" :class="vehicleMode === 'motorcycle' ? 'seg-on' : ''" :aria-pressed="vehicleMode === 'motorcycle'" class="seg-btn"><span>🛵</span><span>機車</span></button>
     </div>
   </div>
-  
+
   <!-- 本期旅程：基本車資朝法定保底前進的路線 -->
-  <div class="bg-ink-0 border border-ink-200 rounded-2xl px-4 py-3 sm:px-5 sm:py-4">
+  <div class="bg-white/80 ring-1 ring-ink-200/60 shadow-sm rounded-2xl px-4 py-3 sm:px-5 sm:py-4">
     <div class="flex items-center justify-between text-[11px] sm:text-xs text-ink-700 mb-2">
       <span class="font-display font-bold text-ink-900 text-sm">本期旅程</span>
       <span class="font-mono">{{ totalDistance.toFixed(1) }} km · {{ visibleTrips.length }} 單</span>
@@ -52,6 +40,7 @@
       <span class="route-rider" :style="{ left: routeProgress + '%' }" aria-hidden="true">
         <svg viewBox="0 0 24 24"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h5l2-6h-3M14 17l-2-5H7"/><rect x="4" y="6" width="5" height="5" rx=".5"/></svg>
       </span>
+      <span class="route-goal" :class="routeProgress >= 100 ? 'reached' : ''" aria-hidden="true"></span>
       <span class="route-flag" aria-hidden="true">⛰</span>
     </div>
     <div class="flex justify-between text-[10px] sm:text-[11px] text-ink-600 mt-1.5">
@@ -65,12 +54,12 @@
   <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
     
     <!-- 1. 法定申報累計總工時 (含疊單獨立累加) -->
-    <div class="bg-ink-0/90 p-3.5 sm:p-5 rounded-2xl border border-ink-200 relative overflow-hidden shadow-md flex flex-col justify-between">
+    <div class="kpi-card flex flex-col justify-between">
       <div class="flex items-center justify-between">
         <span class="text-[11px] sm:text-xs text-ink-700">法定申報總工時</span>
         <span class="text-[9px] sm:text-[10px] bg-mist-500/10 text-mist-400 px-1.5 py-0.5 rounded font-mono">疊單放大</span>
       </div>
-      <div class="text-xl sm:text-3xl font-black font-mono text-mist-300 my-1 sm:my-2">
+      <div class="kpi-num text-mist-300 my-1 sm:my-2">
         {{ totalStatutoryHours.toFixed(2) }} <span class="text-xs font-normal text-ink-700">hr</span>
       </div>
       <div class="text-[10px] sm:text-xs text-ink-600 flex justify-between">
@@ -80,12 +69,12 @@
     </div>
 
     <!-- 2. 法定最低保底 -->
-    <div class="bg-ink-0/90 p-3.5 sm:p-5 rounded-2xl border border-ink-200 relative overflow-hidden shadow-md flex flex-col justify-between">
+    <div class="kpi-card flex flex-col justify-between">
       <div class="flex items-center justify-between">
         <span class="text-[11px] sm:text-xs text-ink-700">法定最低保底</span>
         <span class="text-[9px] sm:text-[10px] bg-ink-200 text-ink-700 px-1.5 py-0.5 rounded font-mono">@\${{ displayRateText }}</span>
       </div>
-      <div class="text-xl sm:text-3xl font-black font-mono text-ink-950 my-1 sm:my-2">
+      <div class="kpi-num text-ink-950 my-1 sm:my-2">
         \${{ Math.round(totalLegal).toLocaleString() }}
       </div>
       <div class="text-[10px] sm:text-xs text-ink-600 truncate">
@@ -94,14 +83,14 @@
     </div>
 
     <!-- 3. 實領基本車資 -->
-    <div class="bg-ink-0/90 p-3.5 sm:p-5 rounded-2xl border border-ink-200 relative overflow-hidden shadow-md flex flex-col justify-between">
+    <div class="kpi-card flex flex-col justify-between">
       <div class="flex items-center justify-between">
         <span class="text-[11px] sm:text-xs text-ink-700">實領基本車資</span>
         <span :class="subsidy > 0 ? 'bg-ochre-200/10 text-ochre-500' : 'bg-jade-500/10 text-jade-500'" class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded font-mono">
           {{ subsidy > 0 ? '需補發' : '已超標' }}
         </span>
       </div>
-      <div class="text-xl sm:text-3xl font-black font-mono text-ink-950 my-1 sm:my-2">
+      <div class="kpi-num text-ink-950 my-1 sm:my-2">
         \${{ Math.round(totalBasePay).toLocaleString() }}
       </div>
       <div class="text-[10px] sm:text-xs text-ink-600 flex justify-between">
@@ -111,15 +100,15 @@
     </div>
 
     <!-- 4. 預估差額補貼款 -->
-    <div class="bg-gradient-to-br from-sky-50 via-white to-blue-50/70 p-3.5 sm:p-5 rounded-2xl border border-sky-300 shadow-md shadow-sky-500/10 relative overflow-hidden shadow-md flex flex-col justify-between">
+    <div class="kpi-card flex flex-col justify-between" :class="subsidy > 0 ? 'kpi-due' : 'kpi-ok'">
       <div class="flex items-center justify-between">
-        <span class="text-[11px] sm:text-xs text-sky-800 font-bold">預估差額補貼</span>
-        <span class="text-[9px] sm:text-[10px] bg-sky-100 text-sky-800 border border-sky-200 px-1.5 py-0.5 rounded font-bold">補發款</span>
+        <span class="text-[11px] sm:text-xs text-ink-800 font-bold">預估差額補貼</span>
+        <span :class="subsidy > 0 ? 'bg-ochre-200/20 text-ochre-500' : 'bg-jade-500/10 text-jade-700'" class="text-[10px] px-1.5 py-0.5 rounded font-bold">{{ subsidy > 0 ? '補發款' : '已達標' }}</span>
       </div>
-      <div class="text-xl sm:text-3xl font-black font-mono text-sky-600 my-1 sm:my-2">
+      <div class="kpi-num my-1 sm:my-2" :class="subsidy > 0 ? 'text-ochre-500' : 'text-jade-700'">
         \${{ Math.round(subsidy).toLocaleString() }}
       </div>
-      <div class="text-[10px] sm:text-xs text-sky-700/80 font-medium truncate">
+      <div class="text-[10px] sm:text-xs text-ink-700 font-medium truncate">
         {{ subsidy > 0 ? '兩週結算後全額補發' : '基本車資已達法定保底' }}
       </div>
     </div>
@@ -127,7 +116,7 @@
   </div>
 
   <!-- 進階作戰指標面板 -->
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 bg-ink-0/60 p-3.5 rounded-2xl border border-ink-200 text-xs">
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 bg-ink-100/50 p-3.5 rounded-2xl text-xs">
     <div class="space-y-1">
       <span class="text-[10px] text-ink-700">🚴 累計總里程</span>
       <div class="text-base sm:text-lg font-bold font-mono text-ink-900">
@@ -174,7 +163,7 @@
           <span class="text-[10px] sm:text-xs text-ink-700 uppercase tracking-wider font-semibold">實質落袋淨利 (扣除{{ currentVehicleConfig.name }}成本)</span>
           <span v-if="totalVehicleCost > 0" class="text-[10px] px-1.5 py-0.2 rounded bg-crimson-200/20 text-crimson-500 font-mono">成本 -\${{ Math.round(totalVehicleCost) }}</span>
         </div>
-        <div class="text-2xl sm:text-4xl font-black font-mono text-jade-700 mt-0.5">
+        <div class="text-3xl sm:text-5xl font-black font-mono text-jade-700 mt-0.5">
           NT$ {{ Math.round(netTotalIncome).toLocaleString() }}
         </div>
         <p class="text-[11px] sm:text-xs text-ink-700 mt-1">
@@ -183,14 +172,14 @@
       </div>
 
       <!-- 實質落袋純時薪指標 -->
-      <div class="bg-ink-50/80 p-3 sm:p-4 rounded-xl border border-ink-200">
+      <div class="bg-ink-100/50 p-3 sm:p-4 rounded-xl">
         <div class="flex items-center justify-between text-[11px] sm:text-xs text-ink-700 mb-1">
           <span>實質落袋純時薪</span>
           <span class="text-[10px] sm:text-xs px-2 py-0.5 rounded font-mono" :class="stackingMultiplier >= 1.5 ? 'bg-jade-500/20 text-jade-500' : 'bg-ink-200 text-ink-800'">
             {{ stackingMultiplier.toFixed(2) }}x 疊單倍數
           </span>
         </div>
-        <div class="text-xl sm:text-2xl font-black font-mono text-teal-300">
+        <div class="text-2xl sm:text-3xl font-black font-mono text-teal-300">
           NT$ {{ netHourlyRate.toFixed(1) }} <span class="text-xs font-normal text-ink-700">/ 物理時</span>
         </div>
         <div class="mt-1 flex items-center gap-2 text-[10px] sm:text-xs text-ink-600">
@@ -201,20 +190,20 @@
 
     <!-- 快捷操作按鈕 (整合完整戰報複製與下載) -->
     <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 pt-1">
-      <select v-model="reportCopyMode" aria-label="戰報複製格式" class="px-2 py-2 bg-ink-200 text-ink-900 text-xs rounded-xl border border-ink-300">
+      <select v-model="reportCopyMode" aria-label="戰報複製格式" class="px-2 py-2.5 min-h-[40px] bg-ink-200 text-ink-900 text-xs rounded-xl border border-ink-300">
         <option value="short">短貼</option>
         <option value="full">完整社團戰報</option>
       </select>
-      <button @click="copyReport" class="px-3.5 py-2 bg-ink-200 active:bg-ink-300 hover:bg-ink-300 text-ink-900 text-xs rounded-xl border border-ink-300 flex items-center justify-center gap-1.5 transition">
+      <button @click="copyReport" class="px-3.5 py-2.5 min-h-[40px] bg-ink-200 active:bg-ink-300 hover:bg-ink-300 text-ink-900 text-xs rounded-xl border border-ink-300 flex items-center justify-center gap-1.5 transition">
         <span>📋</span> <span class="truncate font-mono">{{ copyBtnText }}</span>
       </button>
-      <button @click="downloadReport" class="px-3.5 py-2 bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white font-bold text-xs rounded-xl transition shadow-md shadow-sky-500/20 flex items-center justify-center gap-1.5">
+      <button @click="downloadReport" class="px-3.5 py-2.5 min-h-[40px] bg-jade-700 hover:bg-jade-500 active:bg-jade-800 text-white font-bold text-xs rounded-xl transition shadow-md shadow-sky-500/20 flex items-center justify-center gap-1.5">
         <span>📥</span> <span>下載完整戰報 (.md)</span>
       </button>
-      <button @click="openStatement" class="px-3.5 py-2 bg-jade-700 hover:bg-jade-500 active:bg-jade-800 text-ink-50 font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-1.5">
+      <button @click="openStatement" class="px-3.5 py-2.5 min-h-[40px] bg-jade-700 hover:bg-jade-500 active:bg-jade-800 text-ink-50 font-bold text-xs rounded-xl transition shadow flex items-center justify-center gap-1.5">
         <span>🧾</span> <span>雙週對帳單</span>
       </button>
-      <button @click="exportCSV" class="px-3.5 py-2 bg-ink-200 active:bg-ink-300 hover:bg-ink-300 text-ink-900 text-xs rounded-xl border border-ink-300 flex items-center justify-center gap-1.5 transition">
+      <button @click="exportCSV" class="px-3.5 py-2.5 min-h-[40px] bg-ink-200 active:bg-ink-300 hover:bg-ink-300 text-ink-900 text-xs rounded-xl border border-ink-300 flex items-center justify-center gap-1.5 transition">
         <span>💾</span> <span>匯出明細 CSV</span>
       </button>
     </div>
@@ -222,7 +211,7 @@
 
   <!-- 收入組成圓餅圖報表 -->
   <template v-if="totalIncome > 0">
-    <div class="bg-ink-0/90 p-4 sm:p-6 rounded-2xl border border-ink-200 shadow-md">
+    <div class="bg-white/80 p-4 sm:p-6 rounded-2xl ring-1 ring-ink-200/60 shadow-sm">
       <div class="flex items-center gap-2 mb-4">
         <span class="text-base">🥧</span>
         <h3 class="text-sm font-bold text-ink-900">收入組成分析報表</h3>
@@ -298,7 +287,7 @@
   <div v-if="visibleTrips.length > 0" class="space-y-4">
 
     <!-- 診斷區頂部標頭與操作列 -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 bg-ink-0/90 p-3.5 sm:p-4 rounded-2xl border border-ink-200 shadow-md">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 bg-white/80 p-3.5 sm:p-4 rounded-2xl ring-1 ring-ink-200/60 shadow-sm">
       <div class="flex items-center gap-2">
         <span class="text-lg">🎯</span>
         <div>
@@ -317,7 +306,7 @@
     </div>
 
     <!-- 整體戰略建議 -->
-    <div v-if="globalInsights.length > 0" class="bg-ink-0/90 p-4 sm:p-5 rounded-2xl border border-ink-200 shadow-md">
+    <div v-if="globalInsights.length > 0" class="bg-white/80 p-4 sm:p-5 rounded-2xl ring-1 ring-ink-200/60 shadow-sm">
       <div class="flex items-center gap-2 mb-3">
         <span class="text-base">🧠</span>
         <h3 class="text-sm font-bold text-ink-900">週期戰略診斷建議</h3>
@@ -349,7 +338,7 @@
     </div>
 
     <!-- 每單逐筆診斷 -->
-    <div class="bg-ink-0/90 p-4 sm:p-5 rounded-2xl border border-ink-200 shadow-md">
+    <div class="bg-white/80 p-4 sm:p-5 rounded-2xl ring-1 ring-ink-200/60 shadow-sm">
       <div class="flex items-center gap-2 mb-3">
         <span class="text-base">🔍</span>
         <h3 class="text-sm font-bold text-ink-900">每單逐筆診斷報告</h3>
