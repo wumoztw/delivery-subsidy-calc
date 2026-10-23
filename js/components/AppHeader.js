@@ -33,11 +33,11 @@
   <!-- 設定摘要列：點擊展開／收合三項設定 -->
   <button type="button" @click="showSettings = !showSettings" :aria-expanded="showSettings ? 'true' : 'false'" aria-controls="settings-panel"
     class="w-full flex items-center gap-2 bg-ink-50 hover:bg-jade-0 border border-ink-200 rounded-lg px-2.5 py-2 text-left text-[11px] sm:text-xs">
-    <span class="shrink-0 text-base leading-none">⚙️</span>
+    <span class="shrink-0 text-ink-700"><ico name="settings" class="ico-lg"/></span>
     <span class="flex-1 min-w-0 flex flex-wrap items-center gap-x-2 gap-y-1">
       <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-ink-0 border border-ink-200 font-mono font-bold text-jade-700">NT$ {{ displayRateText }}/hr</span>
-      <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-ink-0 border border-ink-200 text-ink-800 truncate max-w-full">🗓️ {{ cycleFilterLabel }}</span>
-      <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-ink-0 border border-ink-200 text-ink-800 truncate max-w-full">⏱️ {{ statutoryModeLabel }}</span>
+      <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-ink-0 border border-ink-200 text-ink-800 truncate max-w-full"><ico name="calendar"/> {{ cycleFilterLabel }}</span>
+      <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-ink-0 border border-ink-200 text-ink-800 truncate max-w-full"><ico name="clock"/> {{ statutoryModeLabel }}</span>
     </span>
     <span class="shrink-0 text-ink-600 font-medium flex items-center gap-1">
       <span class="hidden sm:inline">{{ showSettings ? '收合' : '設定' }}</span>
@@ -70,7 +70,7 @@
     <!-- 對帳週期篩選：依訂單日期歸入 Uber Eats 雙週週期 -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-ink-0 p-2 sm:p-2.5 rounded-lg border border-ink-200 text-xs">
       <div class="text-ink-700 flex items-center gap-1.5">
-        <span>🗓️ 結算週期：</span>
+        <span class="inline-flex items-center gap-1"><ico name="calendar"/>結算週期：</span>
         <span class="text-ink-900 font-medium">{{ cycleFilterLabel }}</span>
       </div>
       <select v-model="cycleFilter" class="bg-white border border-ink-300 rounded-md px-2 py-1 text-[11px] sm:text-xs text-ink-900 focus:outline-none focus:border-blue-500">

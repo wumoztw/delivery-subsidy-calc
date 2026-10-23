@@ -22,9 +22,9 @@
       </div>
     </div>
     <div class="seg self-stretch sm:self-auto" role="group" aria-label="載具模式">
-      <button type="button" @click="setGlobalVehicleMode('walk')" :class="vehicleMode === 'walk' ? 'seg-on' : ''" :aria-pressed="vehicleMode === 'walk'" class="seg-btn"><span>🚶</span><span>步行</span></button>
-      <button type="button" @click="setGlobalVehicleMode('bike')" :class="vehicleMode === 'bike' ? 'seg-on' : ''" :aria-pressed="vehicleMode === 'bike'" class="seg-btn"><span>🚲</span><span>腳踏車</span></button>
-      <button type="button" @click="setGlobalVehicleMode('motorcycle')" :class="vehicleMode === 'motorcycle' ? 'seg-on' : ''" :aria-pressed="vehicleMode === 'motorcycle'" class="seg-btn"><span>🛵</span><span>機車</span></button>
+      <button type="button" @click="setGlobalVehicleMode('walk')" :class="vehicleMode === 'walk' ? 'seg-on' : ''" :aria-pressed="vehicleMode === 'walk'" class="seg-btn"><ico name="walking"/><span>步行</span></button>
+      <button type="button" @click="setGlobalVehicleMode('bike')" :class="vehicleMode === 'bike' ? 'seg-on' : ''" :aria-pressed="vehicleMode === 'bike'" class="seg-btn"><ico name="bike"/><span>腳踏車</span></button>
+      <button type="button" @click="setGlobalVehicleMode('motorcycle')" :class="vehicleMode === 'motorcycle' ? 'seg-on' : ''" :aria-pressed="vehicleMode === 'motorcycle'" class="seg-btn"><ico name="motorcycle"/><span>機車</span></button>
     </div>
   </div>
 
@@ -56,7 +56,7 @@
     <!-- 1. 法定申報累計總工時 (含疊單獨立累加) -->
     <div class="kpi-card flex flex-col justify-between">
       <div class="flex items-center justify-between">
-        <span class="text-[11px] sm:text-xs text-ink-700">法定申報總工時</span>
+        <span class="text-[11px] sm:text-xs text-ink-700 inline-flex items-center gap-1"><ico name="clock"/>法定申報總工時</span>
         <span class="text-[9px] sm:text-[10px] bg-mist-500/10 text-mist-400 px-1.5 py-0.5 rounded font-mono">疊單放大</span>
       </div>
       <div class="kpi-num text-mist-300 my-1 sm:my-2">
@@ -71,7 +71,7 @@
     <!-- 2. 法定最低保底 -->
     <div class="kpi-card flex flex-col justify-between">
       <div class="flex items-center justify-between">
-        <span class="text-[11px] sm:text-xs text-ink-700">法定最低保底</span>
+        <span class="text-[11px] sm:text-xs text-ink-700 inline-flex items-center gap-1"><ico name="coins"/>法定最低保底</span>
         <span class="text-[9px] sm:text-[10px] bg-ink-200 text-ink-700 px-1.5 py-0.5 rounded font-mono">@\${{ displayRateText }}</span>
       </div>
       <div class="kpi-num text-ink-950 my-1 sm:my-2">
@@ -85,7 +85,7 @@
     <!-- 3. 實領基本車資 -->
     <div class="kpi-card flex flex-col justify-between">
       <div class="flex items-center justify-between">
-        <span class="text-[11px] sm:text-xs text-ink-700">實領基本車資</span>
+        <span class="text-[11px] sm:text-xs text-ink-700 inline-flex items-center gap-1"><ico name="wallet"/>實領基本車資</span>
         <span :class="subsidy > 0 ? 'bg-ochre-200/10 text-ochre-500' : 'bg-jade-500/10 text-jade-500'" class="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded font-mono">
           {{ subsidy > 0 ? '需補發' : '已超標' }}
         </span>
@@ -102,7 +102,7 @@
     <!-- 4. 預估差額補貼款 -->
     <div class="kpi-card flex flex-col justify-between" :class="subsidy > 0 ? 'kpi-due' : 'kpi-ok'">
       <div class="flex items-center justify-between">
-        <span class="text-[11px] sm:text-xs text-ink-800 font-bold">預估差額補貼</span>
+        <span class="text-[11px] sm:text-xs text-ink-800 font-bold inline-flex items-center gap-1"><ico name="scale"/>預估差額補貼</span>
         <span :class="subsidy > 0 ? 'bg-ochre-200/20 text-ochre-500' : 'bg-jade-500/10 text-jade-700'" class="text-[10px] px-1.5 py-0.5 rounded font-bold">{{ subsidy > 0 ? '補發款' : '已達標' }}</span>
       </div>
       <div class="kpi-num my-1 sm:my-2" :class="subsidy > 0 ? 'text-ochre-500' : 'text-jade-700'">
@@ -118,7 +118,7 @@
   <!-- 進階作戰指標面板 -->
   <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 bg-ink-100/50 p-3.5 rounded-2xl text-xs">
     <div class="space-y-1">
-      <span class="text-[10px] text-ink-700">🚴 累計總里程</span>
+      <span class="text-[10px] text-ink-700 inline-flex items-center gap-1"><ico name="route"/>累計總里程</span>
       <div class="text-base sm:text-lg font-bold font-mono text-ink-900">
         {{ totalDistance.toFixed(2) }} <span class="text-[10px] font-normal text-ink-700">km</span>
       </div>
@@ -126,7 +126,7 @@
     </div>
 
     <div class="space-y-1">
-      <span class="text-[10px] text-ink-700">📈 每公里實質產值</span>
+      <span class="text-[10px] text-ink-700 inline-flex items-center gap-1"><ico name="gauge"/>每公里實質產值</span>
       <div class="text-base sm:text-lg font-bold font-mono text-teal-300">
         NT$ {{ perKmIncome.toFixed(1) }} <span class="text-[10px] font-normal text-ink-700">/ km</span>
       </div>
@@ -134,7 +134,7 @@
     </div>
 
     <div class="space-y-1">
-      <span class="text-[10px] text-ink-700">🚀 平台加成總額</span>
+      <span class="text-[10px] text-ink-700 inline-flex items-center gap-1"><ico name="flame"/>平台加成總額</span>
       <div class="text-base sm:text-lg font-bold font-mono text-ochre-500">
         NT$ {{ Math.round(totalBoostFare) }}
       </div>

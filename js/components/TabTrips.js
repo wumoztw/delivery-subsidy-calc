@@ -17,7 +17,7 @@
       <div>
         <div class="mb-1">
           <h2 class="font-bold text-sky-700 text-xs sm:text-sm flex items-center gap-1.5">
-            <span>✏️</span> 快速手動輸入
+            <ico name="edit"/> 快速手動輸入
           </h2>
         </div>
         <p class="text-[11px] text-ink-700 mb-2.5">精確自訂服務時間、行程費用、加成與疊單數</p>
@@ -32,7 +32,7 @@
       <div>
         <div class="mb-1">
           <h2 class="font-bold text-blue-700 text-xs sm:text-sm flex items-center gap-1.5">
-            <span>📋</span> 剪貼簿 / 原況文字秒貼
+            <ico name="clipboard"/> 剪貼簿 / 原況文字秒貼
           </h2>
         </div>
         <p class="text-[11px] text-ink-700 mb-2.5">長按 iPhone / Android 截圖複製文字，貼上 0.01 秒瞬間精準解析</p>
@@ -46,7 +46,7 @@
     <div class="bg-ink-0 p-4 rounded-2xl border border-ink-200 flex flex-col justify-between shadow-lg">
       <div>
         <h2 class="font-bold text-ink-900 text-xs sm:text-sm mb-1 flex items-center gap-1.5">
-          <span>📂</span> 匯入 CSV 紀錄
+          <ico name="file-spreadsheet"/> 匯入 CSV 紀錄
         </h2>
         <p class="text-[11px] text-ink-700 mb-2.5">
           支援舊紀錄、試算表、Excel 批次匯入
@@ -71,9 +71,9 @@
         </div>
         <!-- 載具快選 -->
         <div class="flex items-center gap-1 p-0.5 bg-ink-50 rounded-lg border border-ink-200 text-[10px]">
-          <button type="button" @click="setGlobalVehicleMode('walk')" :class="vehicleMode === 'walk' ? 'bg-ochre-200/20 text-ochre-500 font-bold' : 'text-ink-700'" class="px-2 py-0.5 rounded transition">🚶 步行</button>
-          <button type="button" @click="setGlobalVehicleMode('bike')" :class="vehicleMode === 'bike' ? 'bg-jade-500/20 text-jade-200 font-bold' : 'text-ink-700'" class="px-2 py-0.5 rounded transition">🚲 腳踏車</button>
-          <button type="button" @click="setGlobalVehicleMode('motorcycle')" :class="vehicleMode === 'motorcycle' ? 'bg-mist-500/20 text-mist-300 font-bold' : 'text-ink-700'" class="px-2 py-0.5 rounded transition">🛵 機車</button>
+          <button type="button" @click="setGlobalVehicleMode('walk')" :class="vehicleMode === 'walk' ? 'bg-ochre-200/20 text-ochre-500 font-bold' : 'text-ink-700'" class="px-2 py-0.5 rounded transition"><ico name="walking"/> 步行</button>
+          <button type="button" @click="setGlobalVehicleMode('bike')" :class="vehicleMode === 'bike' ? 'bg-jade-500/20 text-jade-200 font-bold' : 'text-ink-700'" class="px-2 py-0.5 rounded transition"><ico name="bike"/> 腳踏車</button>
+          <button type="button" @click="setGlobalVehicleMode('motorcycle')" :class="vehicleMode === 'motorcycle' ? 'bg-mist-500/20 text-mist-300 font-bold' : 'text-ink-700'" class="px-2 py-0.5 rounded transition"><ico name="motorcycle"/> 機車</button>
         </div>
       </div>
       <button v-if="visibleTrips.length > 0" @click="clearVisibleTrips()" class="text-xs text-crimson-500 hover:text-crimson-500 px-2.5 py-1 rounded bg-crimson-200/10 active:bg-crimson-200/20 transition self-end sm:self-auto">
@@ -108,7 +108,7 @@
         <!-- 🛵 疊單數量手動快速切換選擇器 (最多 10 疊) -->
         <div class="bg-ink-0/90 px-2.5 py-2 rounded-lg border border-ink-200 text-[11px]">
           <div class="text-ink-700 flex items-center gap-1 font-bold mb-1.5">
-            <span>🛵</span> 疊單數量：<span class="text-jade-500 font-mono">{{ t.stacks || 1 }} 單</span>
+            <span class="text-jade-500"><ico name="layers"/></span> 疊單數量：<span class="text-jade-500 font-mono">{{ t.stacks || 1 }} 單</span>
           </div>
           <div class="grid grid-cols-5 gap-1 font-mono">
             <template v-for="n in 10" :key="n">
@@ -157,7 +157,7 @@
         <div class="bg-ink-0/90 rounded-xl p-2.5 border border-ink-200 space-y-1.5 text-xs">
           <div class="flex items-center justify-between text-[11px] font-bold text-ink-800 border-b border-ink-200/80 pb-1">
             <span class="flex items-center gap-1 text-jade-200">
-              <span>💰</span> 您的費用明細
+              <ico name="banknote"/> 您的費用明細
             </span>
             <span class="text-jade-500 font-mono font-bold">
               本趟總計: NT$ {{ ((t.basePay || 0) + (t.tips || 0) + (t.incentives || 0)) }}
@@ -170,7 +170,7 @@
               <span class="text-ink-900 font-mono font-bold">NT$ {{ t.baseFare || 0 }}</span>
             </div>
             <div class="flex items-center justify-between text-ink-700">
-              <span>基本報酬加成:</span>
+              <span class="inline-flex items-center gap-1"><ico name="flame"/>基本報酬加成:</span>
               <span class="text-ochre-500 font-mono font-bold">+NT$ {{ t.boostFare || 0 }}</span>
             </div>
             <div class="flex items-center justify-between text-ink-700">
@@ -178,7 +178,7 @@
               <span class="text-jade-200 font-mono font-bold">NT$ {{ t.basePay || 0 }}</span>
             </div>
             <div class="flex items-center justify-between text-ink-700">
-              <span>顧客小費:</span>
+              <span class="inline-flex items-center gap-1"><ico name="heart-handshake"/>顧客小費:</span>
               <span :class="(t.tips > 0) ? 'text-jade-500 font-bold' : 'text-ink-600'" class="font-mono">
                 {{ t.tips > 0 ? '+NT$ ' + t.tips : '無 ($0)' }}
               </span>
@@ -190,16 +190,16 @@
           </div>
 
           <div class="flex items-center justify-between pt-1 border-t border-ink-200/50 text-[10px] text-ink-700">
-            <span v-if="t.merchant" class="truncate max-w-[150px]">🏪 {{ t.merchant }}</span>
+            <span v-if="t.merchant" class="truncate max-w-[150px]"><ico name="store"/> {{ t.merchant }}</span>
             <span v-else class="text-ink-500">無商家備註</span>
-            <span class="text-mist-400 font-mono">🌟 {{ t.points || Math.max(2, (t.stacks || 1) * 2) }} 點</span>
+            <span class="text-mist-400 font-mono"><ico name="sparkle"/> {{ t.points || Math.max(2, (t.stacks || 1) * 2) }} 點</span>
           </div>
         </div>
 
         <!-- 專法法定保底與補貼推算 (單趟即時精算) -->
         <div class="flex items-center justify-between text-[11px] p-2 rounded-xl bg-ink-50/90 border border-jade-500/30 text-ink-800">
           <div class="flex items-center gap-1.5">
-            <span class="text-jade-500 font-bold">⚖️ 專法保底應得:</span>
+            <span class="text-jade-500 font-bold"><ico name="scale"/> 專法保底應得:</span>
             <span class="font-mono font-bold text-jade-200">NT$ {{ tripLegal(t) }}</span>
             <span class="text-[10px] text-ink-600">({{ (getTripStatutoryMins(t)).toFixed(1) }}分)</span>
           </div>
@@ -232,7 +232,7 @@
             <th class="p-3">行程費用合計</th>
             <th class="p-3">顧客小費</th>
             <th class="p-3 text-jade-200">您的費用明細 (本趟總計)</th>
-            <th class="p-3 text-ochre-500">⚖️ 專法保底 / 預估補貼</th>
+            <th class="p-3 text-ochre-500"><ico name="scale"/> 專法保底 / 預估補貼</th>
             <th class="p-3">戰力評級</th>
             <th class="p-3 text-right">操作</th>
           </tr>

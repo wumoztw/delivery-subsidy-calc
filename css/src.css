@@ -261,3 +261,7 @@ input, button, select { touch-action: manipulation; }
   body.print-statement .statement-sheet { border: 0 !important; }
   body.print-statement tr { break-inside: avoid; }
 }
+
+/* 內嵌向量圖示（<ico>）：跟隨文字大小與顏色 */
+.ico { width: 1.1em; height: 1.1em; flex-shrink: 0; display: inline-block; vertical-align: -0.15em; }
+.ico-lg { width: 1.25rem; height: 1.25rem; }
