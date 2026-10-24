@@ -78,6 +78,8 @@ def summarize(articles, api_key):
               "temperature": 0.2, "max_tokens": 2048},
         timeout=90,
     )
+    if not r.ok:
+        print(f"API Error [{r.status_code}] for model {MODEL}: {r.text}", file=sys.stderr)
     r.raise_for_status()
     text = r.json()["choices"][0]["message"]["content"]
     m = re.search(r"\[.*\]", text, re.S)
