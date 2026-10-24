@@ -5,12 +5,15 @@
   C['daily-news'] = {
     name: 'DailyNews',
     setup() {
-      const { ref, onMounted, inject } = root.Vue;
+      const { ref, watch, onMounted, inject } = root.Vue;
       const dsc = inject('dsc');
       const items = ref([]);
       const updatedAt = ref('');
       const status = ref('loading'); // loading | ok | error
+      let busy = false;
       const load = async () => {
+        if (busy) return;
+        busy = true;
         status.value = 'loading';
         try {
           const res = await fetch('data/daily_news.json', { cache: 'no-cache' });
@@ -21,13 +24,18 @@
           status.value = items.value.length ? 'ok' : 'error';
         } catch (e) {
           status.value = 'error';
+        } finally {
+          busy = false;
         }
       };
       onMounted(load);
-      return { activeTab: dsc.activeTab, items, updatedAt, status, load };
+      watch(dsc.activeTab, (tab) => {
+        if (tab === 'news' && items.value.length === 0) load();
+      });
+      return { items, updatedAt, status, load };
     },
     template: `
-<section v-show="activeTab === 'news'" class="bg-white/80 ring-1 ring-ink-200/60 shadow-sm rounded-2xl px-4 py-3 sm:px-5 sm:py-4">
+<section class="bg-white/80 ring-1 ring-ink-200/60 shadow-sm rounded-2xl px-4 py-3 sm:px-5 sm:py-4">
   <div class="flex items-center justify-between mb-2.5">
     <h2 class="font-display font-bold text-ink-900 text-sm inline-flex items-center gap-1.5"><ico name="newspaper"/>每日外送焦點情報（Uber &amp; Foodpanda）</h2>
     <span v-if="updatedAt" class="text-[10px] font-mono text-ink-600">{{ updatedAt }}</span>
