@@ -20,6 +20,8 @@
     sparkle: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 17l.7 1.8 1.8.7-1.8.7L19 22l-.7-1.8-1.8-.7 1.8-.7z"/>',
     target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
     zap: '<path d="M13 3L5 13.5h6L10 21l8-10.5h-6z"/>',
+    newspaper: '<path d="M4 5h12a1 1 0 011 1v13H6a2 2 0 01-2-2z"/><path d="M17 9h3v8a2 2 0 01-2 2M7.5 9h6M7.5 13h6M7.5 16h3"/>',
+    'external-link': '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5"/>',
     'alert-triangle': '<path d="M12 4l9.5 16.5h-19z"/><path d="M12 10v4.5M12 17.5v.01"/>',
     edit: '<path d="M4 20h4L19 9a2.8 2.8 0 00-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
     clipboard: '<rect x="5" y="4.5" width="14" height="16.5" rx="2"/><path d="M9 4.5V4a1 1 0 011-1h4a1 1 0 011 1v.5M9 12h6M9 16h4"/>',

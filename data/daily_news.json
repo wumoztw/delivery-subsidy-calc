@@ -1,0 +1,41 @@
+{
+  "updatedAt": "2026-10-24T06:00:00+08:00",
+  "source": "fallback",
+  "items": [
+    {
+      "title": "Uber 擴大外送訂閱方案，主打免運費與會員專屬優惠",
+      "summary": ["Uber One 會員可享特定門檻以上免外送費", "平台藉會員制提高用戶黏著度與訂單頻率", "外送員需留意訂單結構與單量變化"],
+      "url": "https://news.google.com/search?q=Uber+delivery",
+      "tag": "平台政策",
+      "date": "2026-10-24"
+    },
+    {
+      "title": "Delivery Hero 公布財報，持續聚焦獲利與市場整併",
+      "summary": ["集團強調調整後 EBITDA 持續改善", "部分市場縮減補貼以換取獲利", "foodpanda 品牌營運策略受到關注"],
+      "url": "https://news.google.com/search?q=Delivery+Hero",
+      "tag": "國際動態",
+      "date": "2026-10-23"
+    },
+    {
+      "title": "歐洲多國推動平台工作者保障新規，外送員身分認定成焦點",
+      "summary": ["歐盟平台工作指令推動僱傭關係推定", "平台需對演算法派單提高透明度", "可作為各國勞權討論的參考"],
+      "url": "https://news.google.com/search?q=platform+workers+directive+delivery",
+      "tag": "勞權爭議",
+      "date": "2026-10-22"
+    },
+    {
+      "title": "Foodpanda 調整外送員獎勵機制，尖峰時段加成有變",
+      "summary": ["尖峰加成改以時段與區域動態調整", "部分任務獎金門檻提高", "建議外送員留意 App 公告"],
+      "url": "https://news.google.com/search?q=Foodpanda+rider",
+      "tag": "平台政策",
+      "date": "2026-10-21"
+    },
+    {
+      "title": "全球外送平台試行無人機與機器人配送，長期衝擊待觀察",
+      "summary": ["多家平台在特定城市測試自動化配送", "短期仍以小範圍試點為主", "對人力外送的長期影響尚不明朗"],
+      "url": "https://news.google.com/search?q=delivery+robots+drones+Uber+Eats",
+      "tag": "國際動態",
+      "date": "2026-10-20"
+    }
+  ]
+}
