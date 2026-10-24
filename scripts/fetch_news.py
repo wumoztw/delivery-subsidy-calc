@@ -20,7 +20,7 @@ OUT = ROOT / "data" / "daily_news.json"
 QUERY = '(Uber OR Foodpanda OR "Delivery Hero") delivery'
 RSS_URL = "https://news.google.com/rss/search?q={}&hl=en-US&gl=US&ceid=US:en"
 NIM_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
-MODEL = "meta/llama-3.3-70b-instruct"
+MODEL = "nvidia/llama-3.1-nemotron-70b-instruct"
 MAX_ITEMS = 15
 PICK = 5
 TZ = timezone(timedelta(hours=8))
