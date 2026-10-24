@@ -7,14 +7,16 @@
  * - Google Fonts：快取優先（字型檔不會變）
  * 改動 APP_SHELL 清單或想強制全部重抓時，把 CACHE_VERSION 加一。
  */
-const CACHE_VERSION = 'dsc-v16';
+const CACHE_VERSION = 'dsc-v17';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
   './icons/icon.svg',
   './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/icon-512.png',
+  './robots.txt',
+  './sitemap.xml'
 ];
 
 self.addEventListener('install', (event) => {

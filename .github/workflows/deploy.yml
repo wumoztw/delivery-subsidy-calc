@@ -42,7 +42,7 @@ jobs:
       - name: 只打包網站需要的檔案
         run: |
           mkdir -p _site
-          cp -r index.html manifest.webmanifest sw.js css js vendor icons data _site/
+          cp -r index.html manifest.webmanifest sw.js css js vendor icons data robots.txt sitemap.xml _site/
           rm -f _site/css/src.css
       - uses: actions/upload-pages-artifact@v3
         with:

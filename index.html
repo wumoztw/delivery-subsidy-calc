@@ -4,6 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>外送專法與疊單收益精算系統 | Uber Eats 實質時薪與差額補貼精算</title>
+  <!-- ═══ SEO / 社群分享 ═══ -->
+  <link rel="canonical" href="https://wumoztw.github.io/delivery-subsidy-calc/">
+  <meta name="description" content="專為台灣外送員打造的外送專法與實質時薪差額補貼精算系統。支援 Uber Eats 與 Foodpanda 雙週帳期保底換算、雙單疊單工時放大、三種載具成本分析、三合一社群戰報生成與每日全球外送焦點情報，100% 本機離線運算保護隱私。">
+  <meta name="keywords" content="外送專法,外送員保底,Uber Eats計算機,Foodpanda薪資,疊單計算,差額補貼,實質時薪,外送新聞,外送工時">
+  <meta name="author" content="wumoztw">
+  <meta name="robots" content="index, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://wumoztw.github.io/delivery-subsidy-calc/">
+  <meta property="og:title" content="外送專法與疊單收益精算系統 | Uber Eats 實質時薪與差額補貼精算">
+  <meta property="og:description" content="專為台灣外送夥伴打造：法定保底自動精算、雙單工時放大模擬、三合一社團戰報生成與每日全球外送情報（Gemini 3.1 Flash Lite 繁中摘要）。">
+  <meta property="og:image" content="https://wumoztw.github.io/delivery-subsidy-calc/icons/icon-512.png">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:site_name" content="外送專法與疊單收益精算系統">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="外送專法與疊單收益精算系統 | Uber Eats 實質時薪與差額補貼精算">
+  <meta name="twitter:description" content="台灣外送專法實質時薪、保底差額與疊單收益精算系統，資料 100% 存在本機。">
+  <meta name="twitter:image" content="https://wumoztw.github.io/delivery-subsidy-calc/icons/icon-512.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "外送專法與疊單收益精算系統",
+    "alternateName": "Delivery Subsidy Calculator",
+    "url": "https://wumoztw.github.io/delivery-subsidy-calc/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "inLanguage": "zh-TW",
+    "description": "專為台灣外送員打造的外送專法與實質時薪差額補貼精算系統，支援 Uber Eats 與 Foodpanda 雙週帳期保底換算、疊單工時放大與全球外送焦點情報。",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "TWD"
+    }
+  }
+  </script>
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -21,36 +56,36 @@
   <!-- 3. 非同步載入 JetBrains Mono 降低阻塞 -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" onload="this.rel='stylesheet'">
   <!-- 樣式：Tailwind CLI 建置後的精簡 CSS（npm run build:css） -->
-  <link rel="stylesheet" href="css/app.css?v=20261024d">
+  <link rel="stylesheet" href="css/app.css?v=20261024e">
   <!-- 執行期函式庫改為本地 vendor，離線（PWA）也能開 -->
-  <script src="vendor/vue.global.prod.js?v=20261024d"></script>
-  <script src="vendor/papaparse.min.js?v=20261024d"></script>
+  <script src="vendor/vue.global.prod.js?v=20261024e"></script>
+  <script src="vendor/papaparse.min.js?v=20261024e"></script>
   <!-- 核心模組（順序有依賴：config → calc → cycle/parser/report → app） -->
-  <script src="js/config.js?v=20261024d"></script>
-  <script src="js/calc.js?v=20261024d"></script>
-  <script src="js/cycle.js?v=20261024d"></script>
-  <script src="js/parser.js?v=20261024d"></script>
-  <script src="js/report.js?v=20261024d"></script>
-  <script src="js/tone.js?v=20261024d"></script>
-  <script src="js/statement.js?v=20261024d"></script>
+  <script src="js/config.js?v=20261024e"></script>
+  <script src="js/calc.js?v=20261024e"></script>
+  <script src="js/cycle.js?v=20261024e"></script>
+  <script src="js/parser.js?v=20261024e"></script>
+  <script src="js/report.js?v=20261024e"></script>
+  <script src="js/tone.js?v=20261024e"></script>
+  <script src="js/statement.js?v=20261024e"></script>
   <!-- 畫面元件（在 app.js 之前載入，由 app.js 統一註冊） -->
-  <script src="js/icons.js?v=20261024d"></script>
-  <script src="js/components/AppHeader.js?v=20261024d"></script>
-  <script src="js/components/RateReminder.js?v=20261024d"></script>
-  <script src="js/components/TabDashboard.js?v=20261024d"></script>
-  <script src="js/components/DailyNews.js?v=20261024d"></script>
-  <script src="js/components/TabTrips.js?v=20261024d"></script>
-  <script src="js/components/SimPanel.js?v=20261024d"></script>
-  <script src="js/components/VehicleMatrix.js?v=20261024d"></script>
-  <script src="js/components/SingleOrderPlan.js?v=20261024d"></script>
-  <script src="js/components/VehicleHandbook.js?v=20261024d"></script>
-  <script src="js/components/WatchVsBill.js?v=20261024d"></script>
-  <script src="js/components/TabTactics.js?v=20261024d"></script>
-  <script src="js/components/TabRules.js?v=20261024d"></script>
-  <script src="js/components/MobileStatusBar.js?v=20261024d"></script>
-  <script src="js/components/PasteModal.js?v=20261024d"></script>
-  <script src="js/components/ManualModal.js?v=20261024d"></script>
-  <script src="js/components/StatementModal.js?v=20261024d"></script>
+  <script src="js/icons.js?v=20261024e"></script>
+  <script src="js/components/AppHeader.js?v=20261024e"></script>
+  <script src="js/components/RateReminder.js?v=20261024e"></script>
+  <script src="js/components/TabDashboard.js?v=20261024e"></script>
+  <script src="js/components/DailyNews.js?v=20261024e"></script>
+  <script src="js/components/TabTrips.js?v=20261024e"></script>
+  <script src="js/components/SimPanel.js?v=20261024e"></script>
+  <script src="js/components/VehicleMatrix.js?v=20261024e"></script>
+  <script src="js/components/SingleOrderPlan.js?v=20261024e"></script>
+  <script src="js/components/VehicleHandbook.js?v=20261024e"></script>
+  <script src="js/components/WatchVsBill.js?v=20261024e"></script>
+  <script src="js/components/TabTactics.js?v=20261024e"></script>
+  <script src="js/components/TabRules.js?v=20261024e"></script>
+  <script src="js/components/MobileStatusBar.js?v=20261024e"></script>
+  <script src="js/components/PasteModal.js?v=20261024e"></script>
+  <script src="js/components/ManualModal.js?v=20261024e"></script>
+  <script src="js/components/StatementModal.js?v=20261024e"></script>
 </head>
 <body class="bg-ink-50 text-ink-950 min-h-screen font-sans antialiased selection:bg-jade-500 selection:text-white pb-24 sm:pb-8">
   <div id="app" v-cloak class="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-6">
@@ -105,6 +140,6 @@
         + '<pre style="white-space:pre-wrap;font-size:.75rem;color:#be123c;margin-top:1rem">' + String(msg).replace(/</g, '&lt;') + '</pre></div>';
     };
   </script>
-  <script src="js/app.js?v=20261024d"></script>
+  <script src="js/app.js?v=20261024e"></script>
 </body>
 </html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wumoztw.github.io/delivery-subsidy-calc/sitemap.xml
