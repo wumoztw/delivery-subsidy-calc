@@ -36,9 +36,21 @@
     },
     template: `
 <section class="bg-white/80 ring-1 ring-ink-200/60 shadow-sm rounded-2xl px-4 py-3 sm:px-5 sm:py-4">
-  <div class="flex items-center justify-between mb-2.5">
-    <h2 class="font-display font-bold text-ink-900 text-sm inline-flex items-center gap-1.5"><ico name="newspaper"/>每日外送焦點情報（Uber &amp; Foodpanda）</h2>
-    <span v-if="updatedAt" class="text-[10px] font-mono text-ink-600">{{ updatedAt }}</span>
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 mb-3 pb-2.5 border-b border-ink-200/60">
+    <div class="flex items-center gap-2">
+      <span class="w-7 h-7 rounded-lg bg-jade-0 text-jade-700 flex items-center justify-center shrink-0 border border-jade-500/20">
+        <ico name="newspaper" class="w-4 h-4"/>
+      </span>
+      <div>
+        <h2 class="font-display font-bold text-ink-950 text-sm sm:text-base leading-tight">每日外送焦點情報</h2>
+        <p class="text-[10px] text-ink-600 leading-normal">Uber &amp; Foodpanda 全球動態與勞權轉譯</p>
+      </div>
+    </div>
+    <div v-if="updatedAt" class="flex items-center gap-1.5 self-start sm:self-auto pl-9 sm:pl-0">
+      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-ink-100 text-ink-700 text-[10px] font-mono shrink-0 whitespace-nowrap border border-ink-200">
+        <ico name="calendar" class="w-3 h-3 text-ink-500"/> 更新於 {{ updatedAt }}
+      </span>
+    </div>
   </div>
   <p v-if="status === 'loading'" class="text-[11px] text-ink-700">載入今日情報中…</p>
   <div v-else-if="status === 'error'" class="flex items-center justify-between gap-2 text-[11px] text-ink-700">
