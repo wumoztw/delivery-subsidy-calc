@@ -58,7 +58,10 @@
     <!-- 跨年度費率提醒 -->
     <rate-reminder></rate-reminder>
     <tab-dashboard></tab-dashboard>
-    <daily-news></daily-news>
+    <!-- 全球外送情報子頁面 -->
+    <section v-show="activeTab === 'news'" class="space-y-4">
+      <daily-news></daily-news>
+    </section>
     <tab-trips></tab-trips>
     <tab-tactics></tab-tactics>
     <tab-rules></tab-rules>

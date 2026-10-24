@@ -131,6 +131,9 @@
     <button @click="activeTab = 'rules'" :class="activeTab === 'rules' ? 'tab-on' : 'tab-off'" class="index-tab">
       <svg class="tab-ico" viewBox="0 0 24 24"><path d="M4 5h6a2 2 0 012 2v12a2 2 0 00-2-2H4zM20 5h-6a2 2 0 00-2 2v12a2 2 0 012-2h6z"/></svg> 專法準則
     </button>
+    <button @click="activeTab = 'news'" :class="activeTab === 'news' ? 'tab-on' : 'tab-off'" class="index-tab">
+      <ico name="newspaper" class="tab-ico"/> 全球外送情報
+    </button>
   </nav>
 </div>
 `
