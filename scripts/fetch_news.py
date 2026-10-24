@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""抓取 Uber / Foodpanda / Delivery Hero 新聞，經 NVIDIA NIM 整理成 zh-TW，輸出 data/daily_news.json。
+"""抓取 Uber / Foodpanda / Delivery Hero 新聞，經 Google Gemini 整理成 zh-TW，輸出 data/daily_news.json。
 
 任何失敗都不會中斷：保留既有檔案（不存在則寫入預設備援資料）。
 """
@@ -19,8 +19,8 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "data" / "daily_news.json"
 QUERY = '(Uber OR Foodpanda OR "Delivery Hero") delivery'
 RSS_URL = "https://news.google.com/rss/search?q={}&hl=en-US&gl=US&ceid=US:en"
-NIM_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
-MODEL = "nvidia/llama-3.1-nemotron-70b-instruct"
+GEMINI_MODEL = "gemini-3.1-flash-lite"
+GEMINI_ENDPOINT = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
 MAX_ITEMS = 15
 PICK = 5
 TZ = timezone(timedelta(hours=8))
@@ -71,17 +71,19 @@ def summarize(articles, api_key):
         '"url": 原文網址（必須與列表一致）, "tag": 標籤（如 平台政策/國際動態/勞權爭議）, "date": "YYYY-MM-DD"}。\n'
         "不得輸出 JSON 以外的文字。\n\n" + listing
     )
-    r = requests.post(
-        NIM_URL,
-        headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
-        json={"model": MODEL, "messages": [{"role": "user", "content": prompt}],
-              "temperature": 0.2, "max_tokens": 2048},
-        timeout=90,
-    )
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {
+            "responseMimeType": "application/json",
+            "temperature": 0.2,
+        },
+    }
+    r = requests.post(f"{GEMINI_ENDPOINT}?key={api_key}", json=payload,
+                      headers={"Content-Type": "application/json"}, timeout=60)
     if not r.ok:
-        print(f"API Error [{r.status_code}] for model {MODEL}: {r.text}", file=sys.stderr)
+        print(f"Gemini API Error [{r.status_code}]: {r.text}", file=sys.stderr)
     r.raise_for_status()
-    text = r.json()["choices"][0]["message"]["content"]
+    text = r.json()["candidates"][0]["content"]["parts"][0]["text"]
     m = re.search(r"\[.*\]", text, re.S)
     data = json.loads(m.group(0) if m else text)
     valid = {a["url"]: a for a in articles}
@@ -111,16 +113,16 @@ def write(payload):
 
 
 def main():
-    api_key = os.environ.get("NVIDIA_API_KEY", "").strip()
+    api_key = os.environ.get("GEMINI_API_KEY", "").strip()
     try:
         if not api_key:
-            raise RuntimeError("未設定 NVIDIA_API_KEY")
+            raise RuntimeError("未設定 GEMINI_API_KEY")
         articles = fetch_rss()
         if not articles:
             raise RuntimeError("RSS 無結果")
         items = summarize(articles, api_key)
         write({"updatedAt": datetime.now(TZ).isoformat(timespec="seconds"),
-               "source": "nvidia-nim", "items": items})
+               "source": "gemini-flash-lite", "items": items})
         print(f"OK: 已寫入 {len(items)} 則新聞")
     except Exception as e:  # 不中斷：保留舊檔
         print(f"WARN: {type(e).__name__}: {e}", file=sys.stderr)
