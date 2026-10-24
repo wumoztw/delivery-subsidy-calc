@@ -4,7 +4,31 @@
   const C = (root.DSCComponents = root.DSCComponents || {});
   C['app-header'] = {
     name: 'AppHeader',
-    setup() { return root.Vue.inject('dsc'); },
+    setup() {
+      const { ref, watch, onMounted, onBeforeUnmount, nextTick } = root.Vue;
+      const dsc = root.Vue.inject('dsc');
+      const tabsContainer = ref(null);
+      const canScrollRight = ref(true);
+      const checkScroll = () => {
+        const el = tabsContainer.value;
+        if (el) canScrollRight.value = el.scrollLeft + el.clientWidth < el.scrollWidth - 10;
+      };
+      const scrollRight = () => {
+        const el = tabsContainer.value;
+        if (el) el.scrollBy({ left: 120, behavior: 'smooth' });
+      };
+      watch(dsc.activeTab, () => nextTick(() => {
+        const el = tabsContainer.value;
+        const on = el && el.querySelector('.tab-on');
+        if (on) on.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+      }));
+      onMounted(() => {
+        checkScroll();
+        root.addEventListener('resize', checkScroll);
+      });
+      onBeforeUnmount(() => root.removeEventListener('resize', checkScroll));
+      return Object.assign({}, dsc, { tabsContainer, canScrollRight, checkScroll, scrollRight });
+    },
     template: `
 <!-- 頂部導航列與系統狀態 -->
 <header class="contour-bg relative overflow-hidden bg-ink-0 border border-ink-200 rounded-2xl p-3.5 sm:p-5 flex flex-col gap-3.5">
@@ -117,9 +141,10 @@
   請先 <button @click="exportCSV" class="underline font-bold text-ochre-700">匯出 CSV</button> 進行備份。
 </div>
 
-<!-- 主選單分頁切換 -->
-<div class="overflow-x-auto no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0">
-  <nav class="flex border-b border-ink-300 gap-1 sm:gap-2 text-xs sm:text-sm font-medium min-w-max">
+<!-- 主選單分頁切換（含手機端右滑引導提示） -->
+<div class="relative -mx-3 px-3 sm:mx-0 sm:px-0">
+  <div ref="tabsContainer" @scroll="checkScroll" class="overflow-x-auto no-scrollbar scroll-smooth">
+  <nav class="flex border-b border-ink-300 gap-1 sm:gap-2 text-xs sm:text-sm font-medium min-w-max pr-6 sm:pr-0">
     <button @click="activeTab = 'dashboard'" :class="activeTab === 'dashboard' ? 'tab-on' : 'tab-off'" class="index-tab">
       <svg class="tab-ico" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="1.5"/><path d="M4 11h16M9 7V5h6v2"/></svg> 結算儀表板
     </button>
@@ -137,6 +162,13 @@
       <svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h12a1 1 0 011 1v13H6a2 2 0 01-2-2z"/><path d="M17 9h3v8a2 2 0 01-2 2M7.5 9h6M7.5 13h6M7.5 16h3"/></svg> 全球外送情報
     </button>
   </nav>
+  </div>
+  <!-- 右側漸層遮罩與提示箭頭（手機端且未滑到底時顯示） -->
+  <div v-show="canScrollRight" @click="scrollRight" class="sm:hidden absolute right-0 top-0 bottom-0 w-10 pointer-events-none flex items-center justify-end pr-1 bg-gradient-to-l from-ink-50 via-ink-50/80 to-transparent transition-opacity">
+    <div class="pointer-events-auto bg-white/90 border border-ink-200/80 rounded-full w-5 h-5 shadow-xs flex items-center justify-center text-ink-600 animate-pulse">
+      <svg class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg>
+    </div>
+  </div>
 </div>
 `
   };

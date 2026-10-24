@@ -118,10 +118,13 @@ h1 { font-weight: 700; }
 /* 分頁：手帳索引標籤 */
 .index-tab {
   display: flex; align-items: center; gap: 0.4rem;
-  padding: 0.55rem 0.85rem; margin-bottom: -1px;
+  padding: 0.5rem 0.7rem; margin-bottom: -1px;
   border: 1px solid transparent; border-bottom: 0;
   border-radius: 10px 10px 0 0;
   transition: background-color .15s, color .15s;
+}
+@media (min-width: 640px) {
+  .index-tab { padding: 0.55rem 0.85rem; }
 }
 .tab-off { color: #6f685b; }
 .tab-off:hover { color: var(--moss-deep); background: rgba(79,118,70,.06); }
