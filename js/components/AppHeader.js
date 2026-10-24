@@ -11,7 +11,7 @@
   <div class="sky-strip" :class="'sky-' + timeOfDay.key" aria-hidden="true"></div>
   <div class="flex items-center justify-between gap-2">
     <div class="flex items-center gap-2.5 sm:gap-3">
-      <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-jade-500 text-ink-0 flex items-center justify-center shrink-0 ring-4 ring-jade-0" aria-hidden="true">
+      <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-jade-500 text-ink-0 flex items-center justify-center shrink-0 self-start sm:self-center mt-0.5 sm:mt-0 ring-4 ring-jade-0" aria-hidden="true">
         <svg class="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="8" cy="22" r="4"/><circle cx="25" cy="22" r="4"/>
           <path d="M12 22h7l3-8h-4"/><path d="M19 22l-3-7H9"/><rect x="5" y="8" width="8" height="7" rx="1"/><path d="M22 14l1.5-4H26"/>
@@ -22,10 +22,12 @@
           <h1 class="text-base sm:text-2xl font-bold text-ink-950 tracking-tight leading-tight">
             外送專法與疊單收益精算系統
           </h1>
-          <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-jade-0 text-jade-700 border border-jade-500/30 font-mono">v3.0</span>
-          <span class="sky-chip" :class="'sky-' + timeOfDay.key" :title="timeOfDay.text">{{ timeOfDay.label }}</span>
+          <div class="flex items-center gap-1 shrink-0">
+            <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-jade-0 text-jade-700 border border-jade-500/30 font-mono">v3.0</span>
+            <span class="sky-chip" :class="'sky-' + timeOfDay.key" :title="timeOfDay.text">{{ timeOfDay.label }}</span>
+          </div>
         </div>
-        <p class="text-[11px] sm:text-xs text-ink-700 mt-0.5 line-clamp-1">智慧雙單疊單工時放大 × 戰力評級 × 秒級精算 × 差額補貼</p>
+        <p class="text-[11px] sm:text-xs text-ink-700 mt-1 line-clamp-1 block">智慧雙單疊單工時放大 × 戰力評級 × 秒級精算 × 差額補貼</p>
       </div>
     </div>
   </div>
