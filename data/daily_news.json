@@ -1,56 +1,58 @@
 {
-  "updatedAt": "2026-10-24T10:29:28+08:00",
+  "updatedAt": "2026-10-24T10:36:32+08:00",
   "source": "gemini-flash-lite",
   "items": [
     {
       "title": "台灣公平會正式否決 Grab 收購 Foodpanda 台灣業務案",
       "summary": [
-        "台灣監管機構基於市場競爭考量，正式駁回 Grab 以 6 億美元收購 Foodpanda 台灣業務的計畫。",
-        "此決策避免了外送市場過度集中，對台灣外送員而言，維持了現有平台競爭格局，避免單一平台壟斷導致的薪資與獎勵機制變動。"
+        "台灣監管機構正式駁回 Grab 以 6 億美元收購 Foodpanda 台灣業務的交易。",
+        "此舉避免了市場壟斷疑慮，維持了台灣外送市場目前的競爭格局。",
+        "對於外送員而言，意味著現行兩大平台競爭的生態將持續運作。"
       ],
       "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPU3NtcUZ6MWtvTkRoTDhjc2luUUNyelJ3TmdtcjlmVzJpaDZTVzhZcENnOXpPeFRDMUZOR3N1WDZqdnhvUUNSWC1WN2dPNTVzU0RnanRucHU2ZkVUOFNTckRUc1FIVGV3NzJ6bkYyWWFmbFEzVk5GaUpqcTNqZHd6UUN4YUVFXzR5RXNuWnZ0RFcxRVhhLW8yVUg3WEV1dW5penR6dUZ3dVJTUmMxN1p4WHZTdC1sUjNrWFlWYV9yWUlxTnRUdzdV?oc=5",
       "tag": "平台政策",
       "date": "2026-10-21"
     },
     {
-      "title": "Instacart 傳出尋求出售，Uber 與 DoorDash 為潛在買家",
+      "title": "Instacart 傳出尋求出售，正與 Uber 及 DoorDash 進行談判",
       "summary": [
-        "美國外送平台 Instacart 傳出正與 Uber 及 DoorDash 接洽，探討出售公司的可能性。",
-        "若此併購案成真，將進一步整合全球外送市場版圖，可能影響未來外送平台的運作模式與勞動條件。"
+        "美國生鮮雜貨外送平台 Instacart 據傳正在評估出售選項，並已與 Uber 和 DoorDash 接觸。",
+        "此舉顯示外送產業正面臨進一步的市場整合與併購壓力。",
+        "若併購成真，將可能影響全球外送平台的運作模式與勞動市場結構。"
       ],
       "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOemRPYTk1SkNBVGNjLW5ybHNrMkVYQ2tLNjM0dTlheWNvMElkYXR1SG43R1VJajFpbXlpM0RYNHhJdkx1Qkx0a0g2aDFjVW1oSUFFOXRlVGtOa1N6ZjUxY2tDSTR2WENVc1c2RFE1NzM4YlQxVEQxWWJoc3lJWDluT0pnNWZiTk1UclU5Wks3TXdXOUZrTnF4dGNOQWdZWmM5UGpnU1l2eUxsZW03SFhEa2pBMFpaZw?oc=5",
       "tag": "國際動態",
       "date": "2026-10-24"
     },
     {
-      "title": "Uber 發布夜間工作者支援計畫，關注外送員勞動權益",
+      "title": "新興外送服務挑戰巨頭，主打「無菜單加價」模式",
       "summary": [
-        "Uber 針對夜間工作者推出支援措施，旨在改善外送員在極端工時下的工作環境。",
-        "此舉顯示大型平台開始重視外送員的工時健康與安全保障，為勞權議題帶來正面討論空間。"
-      ],
-      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE9FSGhhZS1PQ2JaalIyWmFacWZhRy1LSElYZm01Rm5iU1lBRFctMnFyN2hyMzg5Wl9fckNnTF9Gb1NLc29hSjRHaXMxVG13VmJRMjluV1BkSFVzNklM?oc=5",
-      "tag": "勞權爭議",
-      "date": "2026-10-21"
-    },
-    {
-      "title": "新興外送服務挑戰市場，主打「無菜單加價」模式",
-      "summary": [
-        "市場出現新型態外送服務，透過取消菜單加價（Menu Markups）來挑戰 Uber Eats 與 DoorDash 的市場地位。",
-        "此模式若能普及，將改變消費者與餐廳的合作關係，並可能影響外送員的接單生態與服務費結構。"
+        "市場出現新型態外送服務，試圖透過取消菜單加價（Menu Markups）來挑戰 DoorDash 與 Uber Eats 的市場地位。",
+        "此模式旨在降低消費者成本，可能對現有平台的定價策略與外送員接單生態造成影響。"
       ],
       "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxNYUstNlpNdXhuMXdsNTA4UnUxRm5oRnByaGJmd2VscGU0anJ6eHVnMnRWcGpvdWpOU1k5UkhFT2lCVVlKb3J1Q25VMzFXanhiQ1BjWjFyMXZqaURaTDNTajFFcTlFRWVacFJxeVhIamx3TFZ3TGhXSXdvb3BwempHbUlUcDJYeVlLYmdLX2R3SkFHZmdOZ1JUS1o3N3RVUQ?oc=5",
       "tag": "國際動態",
       "date": "2026-10-21"
     },
     {
-      "title": "外送便利文化引發爭議，Target 與 Uber Eats 合作遭質疑",
+      "title": "Uber 關注夜間工作者權益，推動相關支援計畫",
       "summary": [
-        "針對零售商 Target 與 Uber Eats 的快速配送合作，媒體評論指出過度追求「一小時內送達」的便利文化可能對外送員造成壓力。",
-        "此類報導反映了社會對於外送員勞動強度與極端便利服務之間平衡的關注。"
+        "Uber 針對夜間工作者（包含外送員）發布支援計畫，以應對長工時帶來的挑戰。",
+        "此舉反映平台開始重視夜間配送人員的勞動條件與身心健康議題。"
       ],
-      "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNMmFUS1lYNVhyQkRyaTRnY0kwWi1ZZzNZZDZiQVk2SS1MNkVWZzNib2ROdFNsNlZmV0hKUEFJM0wyaUIzd01ha1pmQTh6WjlITHpIYXRqRDU4c0lrMDNIV0hwMU9zanRtME1zaG5GN2dTWjdrV1BlZHJ0amU1STRzZlZaTUY4ZjA4U3UzRkMyTnp5SnE2Z2hEZzJMR2RRMWx5dG90MmxkM1BLMFBHc25TX0NGNmRDRDBZWDR0VVF5Zw?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE9FSGhhZS1PQ2JaalIyWmFacWZhRy1LSElYZm01Rm5iU1lBRFctMnFyN2hyMzg5Wl9fckNnTF9Gb1NLc29hSjRHaXMxVG13VmJRMjluV1BkSFVzNklM?oc=5",
       "tag": "勞權爭議",
-      "date": "2026-10-20"
+      "date": "2026-10-21"
+    },
+    {
+      "title": "美國發生民眾阻擋 Uber 外送機器人事件",
+      "summary": [
+        "美國一名退休教授因阻擋 Uber 的外送機器人運作而遭逮捕。",
+        "此事件凸顯自動化配送技術在進入社區時，面臨的公眾接受度與法律爭議挑戰。"
+      ],
+      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxQMHo1TDZoTVNuVy1aWU9JT3NRam03RXg0dVZoaTVuRkdrcGVhTkMybl9UbTV5YnBMSmF2ZkxuU3NWRy1tcDVBRlRSUVlwZUg1X0RHY1cwVUZmd2dsUEFWNGk3eGNJV29hOWhIdFozQUliUVkzQnpRdGhfRHNiTDhzdC1fT2FCQlo5d0RjMEp6QmJScl9O?oc=5",
+      "tag": "國際動態",
+      "date": "2026-10-17"
     }
   ]
 }
