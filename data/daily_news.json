@@ -1,61 +1,61 @@
 {
-  "updatedAt": "2026-10-26T07:59:24+08:00",
+  "updatedAt": "2026-10-27T09:19:24+08:00",
   "source": "gemini-flash-lite",
   "items": [
     {
-      "title": "台灣監管機構正式否決 Grab 收購 Foodpanda 台灣業務案",
+      "title": "台灣公平會駁回 Grab 收購 Foodpanda 台灣業務案",
       "summary": [
-        "台灣主管機關正式駁回 Grab 對 Foodpanda 台灣業務的收購申請。",
-        "此決策旨在防止市場過度集中，維護外送產業的競爭環境。",
-        "對於外送員而言，意味著短期內市場競爭格局將維持現狀，不會出現單一平台壟斷。"
+        "公平會正式否決 Grab 收購 Foodpanda 台灣業務的申請。",
+        "主要考量點在於 Uber 對 Grab 持有 13.1% 股份，合併恐造成市場壟斷。",
+        "此決策將維持台灣外送市場目前的競爭格局，避免單一平台獨大。"
       ],
       "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPTlBmUU5XUUxxZWtzRFhZQXQtNXppUjNmRUE2LXFqaU83d3NVLURmNzhyNWdvakNHQ2x6QVpRR3JuTHliS19ET2FBeDkyVmsxZ3FBWlpOVjRtbU5KVVJuR21qQzdvejd0LWFQM1ROTmhrQ2RyekVraG9LeWJKc2FZTllXd2Y0cXNZcGdRXzVnWEx4N1lHejVwSTU2T0tCalVpeXhaNVRn?oc=5",
       "tag": "平台政策",
       "date": "2026-10-26"
     },
     {
-      "title": "Instacart 傳與 Uber 及 DoorDash 洽談出售事宜",
+      "title": "DoorDash 與 Uber 傳有意收購 Instacart",
       "summary": [
-        "美國生鮮雜貨外送平台 Instacart 據傳正與 Uber 及 DoorDash 接觸，探討出售公司的可能性。",
-        "若併購成真，將進一步整合全球外送市場的資源與運力。",
-        "此舉顯示外送平台正透過大型併購來擴大市佔率與營運規模。"
+        "市場傳出 DoorDash 與 Uber 均有意收購生鮮配送平台 Instacart，交易規模估計達 170 億美元。",
+        "若收購成功，將大幅改變外送平台的市場版圖與服務範疇。",
+        "此舉顯示外送平台正積極尋求擴大市場份額與業務多樣性。"
       ],
-      "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNRHlrS3FRbzFUYVNUR3FZdGxIeDVOaDYxNFJ6OGg4V3hjQ1JMaUUxdkhzNVFobkgxM3lKMVRaYkhmbTFxaFJQcW1waWI2RS1pdWtlaDhxMDRsMk9JdUttY0p2NTk3MnJ0ZmlaNTFiQUFZTTZYbThYdWtxcm5WTERSR0RHc3ZOX1phWENWT2ROZ3RmTWZpNXFocHRpc0Vyd1VM?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxONkI1dVc1WGVsRGwyMkZtNFFfR3NpaFR2M2JTQ05POTBkZ29lSVpuelFJVWFCTC1tNEJ3Y0F6YUxHWUJkWjJqcm1KWnhNajVxNk5iUFZuck9ZV0tOVEdxYjlxcG0ycUk5UUlyU3l6bnpJY0NFMDJqcXJ4cWJGeUJRbTV5YTVtQy1CSXlTUmZn?oc=5",
       "tag": "國際動態",
+      "date": "2026-10-27"
+    },
+    {
+      "title": "Uber 面臨過失聘僱訴訟挑戰",
+      "summary": [
+        "Uber 正面臨關於「過失聘僱」的法律訴訟，引發外界對平台審核機制的關注。",
+        "此類訴訟可能影響平台對外送員的背景審查標準與法律責任認定。",
+        "對於外送員而言，平台的合規性與法律風險管理將直接影響營運環境。"
+      ],
+      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxNVEQ1cFdrTXRsRms1SmFLU1pGY1FqRXJ2RjBoT29ycjVYbDRFQW9feUFXSDc2ZTdoQUpZclRBb1ByRjNXZUsxTGxYb2FsbFk5UjFiZElocG8tSnR4UWN1WkVEU29CV0tHakw3TkpCdzBRVzBwSF9XN1l5dlpTLW5DRFE3ZFdlaFNGRWpmNGZ6UjM1U09DcllkeWlhQTVpTjVDa3FjbWxEZ2x0aUU?oc=5",
+      "tag": "勞權爭議",
       "date": "2026-10-26"
     },
     {
-      "title": "外送平台面臨新競爭者挑戰，主打「無菜單加價」模式",
+      "title": "Uber Eats 司機涉嫌重大犯罪，引發平台安全疑慮",
       "summary": [
-        "市場出現新型態外送服務，試圖透過取消菜單加價（Menu Markup）來挑戰 Uber Eats 與 DoorDash 的市場地位。",
-        "此模式若普及，可能改變消費者對外送價格的認知，進而影響平台訂單量與外送員的接單生態。",
-        "平台間的價格戰與服務模式競爭日益激烈。"
+        "美國發生一起 Uber Eats 外送員涉嫌綁架與傷害未成年人的重大刑事案件。",
+        "此事件再次凸顯外送平台在人員管理與安全保障上的挑戰。",
+        "預期平台未來將面臨更嚴格的監管壓力，可能導致外送員審核流程趨於繁瑣。"
       ],
-      "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxNYUstNlpNdXhuMXdsNTA4UnUxRm5oRnByaGJmd2VscGU0anJ6eHVnMnRWcGpvdWpOU1k5UkhFT2lCVVlKb3J1Q25VMzFXanhiQ1BjWjFyMXZqaURaTDNTajFFcTlFRWVacFJxeVhIamx3TFZ3TGhXSXdvb3BwempHbUlUcDJYeVlLYmdLX2R3SkFHZmdOZ1JUS1o3N3RVUQ?oc=5",
-      "tag": "國際動態",
-      "date": "2026-10-21"
-    },
-    {
-      "title": "Uber Eats 擴展零售外送服務，引發「便利文化」過度擴張爭議",
-      "summary": [
-        "Uber Eats 與 Target 等零售商合作，提供一小時內送達服務，引發社會對便利文化是否過度擴張的討論。",
-        "此類服務增加外送員的配送品項與工作複雜度，但也帶來更多接單機會。",
-        "外送產業正從餐飲配送延伸至全品項零售，改變了外送員的日常配送內容。"
-      ],
-      "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNMmFUS1lYNVhyQkRyaTRnY0kwWi1ZZzNZZDZiQVk2SS1MNkVWZzNib2ROdFNsNlZmV0hKUEFJM0wyaUIzd01ha1pmQTh6WjlITHpIYXRqRDU4c0lrMDNIV0hwMU9zanRtME1zaG5GN2dTWjdrV1BlZHJ0amU1STRzZlZaTUY4ZjA4U3UzRkMyTnp5SnE2Z2hEZzJMR2RRMWx5dG90MmxkM1BLMFBHc25TX0NGNmRDRDBZWDR0VVF5Zw?oc=5",
-      "tag": "平台政策",
-      "date": "2026-10-20"
-    },
-    {
-      "title": "外送機器人遭遇民眾抗議，引發自動化配送勞權討論",
-      "summary": [
-        "美國發生民眾阻擋 Uber 外送機器人的事件，反映出公眾對自動化配送技術的排斥。",
-        "自動化配送技術的發展與外送員的就業權益息息相關。",
-        "此類衝突顯示在技術轉型過程中，外送員與自動化設備的共存問題仍待解決。"
-      ],
-      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxQMHo1TDZoTVNuVy1aWU9JT3NRam03RXg0dVZoaTVuRkdrcGVhTkMybl9UbTV5YnBMSmF2ZkxuU3NWRy1tcDVBRlRSUVlwZUg1X0RHY1cwVUZmd2dsUEFWNGk3eGNJV29hOWhIdFozQUliUVkzQnpRdGhfRHNiTDhzdC1fT2FCQlo5d0RjMEp6QmJScl9O?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQQzZ2c21uM29QUGdDZEdHQTc4cG9uZ0I2VGJ0azZNSkxUVVljemNkWU5ZVjFjQU9OakgzUlFYdU1fMzdtdF9KNW50WjMwZFNwZ2ZLTV9fRlVkd285WnpmeXRTTlhMdmQxdFQ3eENLd2kxSVJTa25lV1FzMDlRbWtONHJjNU90Vm83UHc1ZUlhN2doVGVFaEZvQ0ZfMmtOcy05TkxMOEZ0bGpseU9qRnZYWVJ0VjJVX0wxUWpDdTJaRUgxdDQ?oc=5",
       "tag": "勞權爭議",
-      "date": "2026-10-20"
+      "date": "2026-10-27"
+    },
+    {
+      "title": "Uber Eats 推出升級版 Pro 獎勵計畫",
+      "summary": [
+        "Uber Eats 正在部分地區測試重新設計的「Uber Eats Pro」獎勵計畫。",
+        "該計畫旨在透過獎勵機制提升外送員的服務品質與忠誠度。",
+        "此類獎勵制度的變動，將直接影響外送員的額外收入與福利待遇。"
+      ],
+      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBVbTZMX3NaVFRiOVhWb2gzTmlzT0FQVmVuc05CQkVza2dZLWdCdU1GdHlmcExUMjdTd3Y4RHVNZVpDYnhiQTMzMF9WRUxxTDdyZ0VIbTQ3WDVyUGJRdDZzNDZ5cWE5Yzht?oc=5",
+      "tag": "平台政策",
+      "date": "2026-10-19"
     }
   ]
 }
