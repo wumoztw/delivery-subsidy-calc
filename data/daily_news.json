@@ -1,61 +1,61 @@
 {
-  "updatedAt": "2026-10-28T09:03:39+08:00",
+  "updatedAt": "2026-10-29T09:39:34+08:00",
   "source": "gemini-flash-lite",
   "items": [
     {
-      "title": "DoorDash 傳擬以 170 億美元收購 Instacart，外送市場恐面臨大洗牌",
+      "title": "台灣監管機構正式否決 Grab 收購 Foodpanda 台灣業務案",
       "summary": [
-        "在 Uber 放棄收購後，DoorDash 正與 Instacart 進行深入談判。",
-        "若收購案達成，將大幅改變外送平台的市場競爭格局與勞動環境。",
-        "此舉顯示外送平台正透過併購整合資源，以應對日益激烈的市場挑戰。"
+        "公平交易委員會基於市場競爭疑慮，正式駁回 Grab 收購 Delivery Hero 旗下 Foodpanda 台灣業務的申請。",
+        "此決策將維持台灣外送市場現有的雙雄競爭格局，避免市場過度集中。",
+        "對於外送員而言，短期內工作模式與平台選擇將維持現狀，不會發生大規模的平台整合變動。"
       ],
-      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOZUhzRFpUeURGRzFpejliOGdLdDlBSDhFaEZCS1lrRjdqbGRCQUp2MDZ3d3dSd0hCNjh0V1FiRTc4cFJxT09McXEwS1hLS2R2ZjJ0NjZLOHAtV3VKS1dDMUtrMW9jeUhCRnh3Y0lFRW1rMFRWcWVsMS1BWGhVU0dDUU02OTBCd2tHLU84SWJ5T3Noa21aWGQ2RVFVRG1WeHFPdElKdDZsQjcwM1phdnV1VlEwNVEyY1dJNmVF?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPTlBmUU5XUUxxZWtzRFhZQXQtNXppUjNmRUE2LXFqaU83d3NVLURmNzhyNWdvakNHQ2x6QVpRR3JuTHliS19ET2FBeDkyVmsxZ3FBWlpOVjRtbU5KVVJuR21qQzdvejd0LWFQM1ROTmhrQ2RyekVraG9LeWJKc2FZTllXd2Y0cXNZcGdRXzVnWEx4N1lHejVwSTU2T0tCalVpeXhaNVRn?oc=5",
+      "tag": "平台政策",
+      "date": "2026-10-29"
+    },
+    {
+      "title": "美國聯邦貿易委員會（FTC）調查外送平台「個人化定價」機制",
+      "summary": [
+        "美國監管機構正針對 Uber 等平台進行調查，釐清其是否利用演算法針對不同消費者進行個人化定價。",
+        "此類演算法可能影響訂單量與外送員的接單報酬結構。",
+        "外送員需關注平台演算法透明度議題，這與未來接單報酬的公平性息息相關。"
+      ],
+      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxNbFU0eWp2emlLbUN1N04zaGxVVnFwT2pwcUxsWk41N2tKNUJYWVhFYmY4V2dsTVMzVnk1UG5hMFE2SnpUZUdqRnJZX3h5NlRNWHhvbGQ1c195elRTMGJvY1V6aURYNHg4by1wTEZmZl9xenRCeHFrRGlHdHRrVm9odGFad0pmTFAxQm05VHQ3Yk15UkhadHItOFI2UQ?oc=5",
+      "tag": "平台政策",
+      "date": "2026-10-29"
+    },
+    {
+      "title": "Delivery Hero 財報亮眼，上調年度成長預測",
+      "summary": [
+        "受惠於「快商務」（Quick Commerce）業務的強勁成長，Delivery Hero 再次上調年度財測。",
+        "顯示外送平台正積極擴展生鮮雜貨配送，這將持續增加外送員在非餐飲類訂單的接單機會。",
+        "平台營運穩健有助於維持外送員的長期接單穩定性。"
+      ],
+      "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPTk5qaXQ0OENDUzZ4MGxteFNXQjR1UVpHc05YZm1kUFcwajUzTks4Si1ORnlCRWxhcWN2Nm1NZTllLVZiNjlBUDNFOC1oZjNqaGN6a2lXM0xGVXlBeUpOSUpIcGYza19xc3ZOX29fZ2tZYWFNTUtLY3k2NWZFWlNwNkZQTldEMjQySUVV?oc=5",
       "tag": "國際動態",
       "date": "2026-10-28"
     },
     {
-      "title": "法國 Uber 外送員透過集體行動對抗演算法，成功爭取更高報酬",
+      "title": "Uber Eats 與 Key Food 達成合作，擴大生鮮配送版圖",
       "summary": [
-        "法國外送員發展出繞過平台演算法限制的策略，以提升個人接單收益。",
-        "此案例顯示外送員正積極尋求技術與組織手段，以對抗平台單方面的薪資控制。",
-        "對全球外送員而言，這是一次透過集體智慧改善勞動條件的參考範例。"
+        "Uber Eats 宣布與連鎖超市 Key Food 合作，將配送服務擴展至超過 300 家門市。",
+        "生鮮雜貨配送已成為外送平台的重要營收來源，外送員需適應更多樣化的配送商品類型。",
+        "此類合作有助於提升外送員在離峰時段的接單量。"
       ],
-      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxQZFVCZzc1Y0swWC1NZHFSRmhLY0F5cURjdUlzdzdxNG5tbll3TVlCeW5XaEktcGdjSk80U2ZXdkFRaE1ESGtJZV9wMnZYRXM2MENlR3NvRUJRdTNCbGJqT3E5TVNuRjd6amwwbmxJN0pZSjBUcjh3SjVwSklkLXF3NVZoWjJDRGpjcWNEaEpsU29sbm9IWHh1bWZuenJlRXV5WXFNem5KdkpYbmw4?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNdk00NmNaaWgxRGhxQ0RYaUhvNkR6N0VLRmducllfSGpXWWNNN0R6ZlVFLXhRWEhRaDZaaElkWmxzWFQ5NFFSMXFKSEhKMnZhcmtEdFkxTGNuclBMaXdZV2UwXzNLajR1SmNGNVR4cGlLWVp6ZGR4UE5JdkM5NGYzUE5aS250OUM1ZUtNTQ?oc=5",
+      "tag": "國際動態",
+      "date": "2026-10-29"
+    },
+    {
+      "title": "外送平台與在地企業達成法律訴訟和解",
+      "summary": [
+        "Uber Eats 與 DoorDash 在近期的一起法律訴訟中與在地企業達成和解。",
+        "此類訴訟通常涉及平台抽成、勞動權益或市場競爭規範，對外送員的勞動條件具有間接影響。",
+        "顯示平台在擴張過程中面臨的法律與監管壓力持續增加，可能促使平台調整營運策略。"
+      ],
+      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOUU9tVndOSmZDRnltNzhxc1BBalVpdjlBSnZ2Znl1N1RqNGt5ZnBqR1lnS08zT3Z6ZDcyb2xpbGgzVVVmcTBUTDl4VVVZM1hzVVFLWDRNT2dsalFpR3QwbDdtNnRKYW94VmE0cFYxb1JfYk52OW5xa0tMaFF1Wll6LXYzUm9xMEFFMkxJZGRQb1ZDNjlOZlM0?oc=5",
       "tag": "勞權爭議",
-      "date": "2026-10-28"
-    },
-    {
-      "title": "Uber Eats 升級 Pro 獎勵計畫，將於加州部分城市先行試辦",
-      "summary": [
-        "Uber Eats 正在重新設計其 Pro 獎勵計畫，旨在優化外送員的福利與激勵機制。",
-        "該計畫將優先在加州特定城市推行，未來可能影響全球平台的獎勵政策方向。",
-        "外送員需持續關注平台政策變動，以確保自身權益與獎勵資格。"
-      ],
-      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBVbTZMX3NaVFRiOVhWb2gzTmlzT0FQVmVuc05CQkVza2dZLWdCdU1GdHlmcExUMjdTd3Y4RHVNZVpDYnhiQTMzMF9WRUxxTDdyZ0VIbTQ3WDVyUGJRdDZzNDZ5cWE5Yzht?oc=5",
-      "tag": "平台政策",
-      "date": "2026-10-19"
-    },
-    {
-      "title": "Uber Eats 與 Key Food 合作擴大生鮮配送，外送員接單類型更多元",
-      "summary": [
-        "Uber Eats 與 Key Food 達成合作，將生鮮雜貨配送服務擴展至更多地區。",
-        "此類合作增加外送員接單的多元性，但也對配送效率與裝備提出更高要求。",
-        "生鮮配送已成為外送平台爭奪市場份額的關鍵戰場。"
-      ],
-      "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxONTltbVZDWC1UanRJc3BkWnlUZnBqajdpWEJkNndNQWlzX2c0M1R2dGtST0ZkOWVyNGZ6eUNsYXVJNXNjWVIwd0tZVTlKWHg2aXNBb29nOVM2NUJKemZnbnRwNjlEMEVhNkhiZXg0c1VqYkV0Slk0WTJ0R0tqaXo4YXVrZndNX3hHV19F?oc=5",
-      "tag": "平台政策",
-      "date": "2026-10-27"
-    },
-    {
-      "title": "巴爾的摩發生外送員重大犯罪事件，引發平台安全審查討論",
-      "summary": [
-        "一名 Uber Eats 外送員因涉及嚴重暴力犯罪遭逮捕，引發社會對外送員背景審查的關注。",
-        "此事件可能促使平台加強對外送員的監管與安全驗證機制。",
-        "對於外送員群體而言，此類負面新聞可能導致平台對從業人員的審核標準趨於嚴格。"
-      ],
-      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQQzZ2c21uM29QUGdDZEdHQTc4cG9uZ0I2VGJ0azZNSkxUVVljemNkWU5ZVjFjQU9OakgzUlFYdU1fMzdtdF9KNW50WjMwZFNwZ2ZLTV9fRlVkd285WnpmeXRTTlhMdmQxdFQ3eENLd2kxSVJTa25lV1FzMDlRbWtONHJjNU90Vm83UHc1ZUlhN2doVGVFaEZvQ0ZfMmtOcy05TkxMOEZ0bGpseU9qRnZYWVJ0VjJVX0wxUWpDdTJaRUgxdDQ?oc=5",
-      "tag": "勞權爭議",
-      "date": "2026-10-27"
+      "date": "2026-10-29"
     }
   ]
 }
