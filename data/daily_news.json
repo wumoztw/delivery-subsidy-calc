@@ -1,59 +1,54 @@
 {
-  "updatedAt": "2026-10-29T09:39:34+08:00",
+  "updatedAt": "2026-10-30T09:45:04+08:00",
   "source": "gemini-flash-lite",
   "items": [
     {
-      "title": "台灣監管機構正式否決 Grab 收購 Foodpanda 台灣業務案",
+      "title": "Amazon、Uber 與 Instacart 聯手提告，試圖阻擋紐約市外送員停權保護法案",
       "summary": [
-        "公平交易委員會基於市場競爭疑慮，正式駁回 Grab 收購 Delivery Hero 旗下 Foodpanda 台灣業務的申請。",
-        "此決策將維持台灣外送市場現有的雙雄競爭格局，避免市場過度集中。",
-        "對於外送員而言，短期內工作模式與平台選擇將維持現狀，不會發生大規模的平台整合變動。"
+        "紐約市針對外送平台制定了限制隨意停權外送員的法規，引發大型平台業者聯合提告。",
+        "平台業者主張該法案限制了其管理帳號的權限，此案對全球外送員的帳號權益保障具有指標性意義。"
       ],
-      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPTlBmUU5XUUxxZWtzRFhZQXQtNXppUjNmRUE2LXFqaU83d3NVLURmNzhyNWdvakNHQ2x6QVpRR3JuTHliS19ET2FBeDkyVmsxZ3FBWlpOVjRtbU5KVVJuR21qQzdvejd0LWFQM1ROTmhrQ2RyekVraG9LeWJKc2FZTllXd2Y0cXNZcGdRXzVnWEx4N1lHejVwSTU2T0tCalVpeXhaNVRn?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxORWFmbWxXRlNlc0lOdXFiT0hjeFpCRl82S193aUNROHZxeWZkZDdTN0ZfMG44TnRsaGxHNTNWc0hhM3VqMEI1UzZBLURaczJOYU1oUzN0WTY1WUdiQ1ZRdFVrcVR5SkYwelE3ei1xOHZkM0pnalVIME4wal9IUDAtSkdrNWpHZkMtd1JlRzhsYUloZVQ5SFVZZGl3aTdObVd6VGlIOFhBNWkxbkpwZ094NjQzamg4Zm40bTJidVVFNWFiQmsy?oc=5",
+      "tag": "勞權爭議",
+      "date": "2026-10-30"
+    },
+    {
+      "title": "DoorDash 市佔率持續領先，Uber Eats 用戶成長面臨挑戰",
+      "summary": [
+        "最新市場數據顯示，美國消費者使用 Uber Eats 的頻率下降，DoorDash 在市佔率競爭中取得優勢。",
+        "外送平台間的激烈競爭可能影響未來的接單量與平台補貼政策。"
+      ],
+      "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxNMjA5cXFvSlFNR0hpVm5RYUdFNlhTbS1wVENEMUJYaFM0eWVLYWVTRzhRZGg1aUJmSDdCT1FnamFCcHRXREptLTgxMkgyN1JTWW14U3VPOHN4S0NVMkRjdlhWS2JHekpKMG9OMUt0bEVKUnUwYW9BMkRyeExqbVMzaHRkZ2RZTEdNMm0xZFZuWXZSTkNQVHdWWWs3aHBTUQ?oc=5",
+      "tag": "平台政策",
+      "date": "2026-10-30"
+    },
+    {
+      "title": "費城研擬對外送機器人與無人駕駛計程車課稅",
+      "summary": [
+        "費城議會正考慮針對自動化外送機器人及無人駕駛計程車徵收新稅。",
+        "此舉反映出地方政府對於自動化技術取代人力，以及對城市交通影響的擔憂。"
+      ],
+      "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQcnk4Wkt4cTdwalIyUDFFX0tHRElLaVd0X1Q2SVRCaEhIMDhiYklCRWE4eDRvYjBzNllsaHhTT3FTTlM2RWFGQlNZQUw3MjBpSzBKSmhlb3JBczFzYWpIbkJmSXdSQUdzRWxkTk53U3hQY21UR01sSVBLalFKRGFDRTZtWU9IeEIteWRfSjlwNHpuMG9KUzl1dDVUT3dVRVBm?oc=5",
+      "tag": "國際動態",
+      "date": "2026-10-30"
+    },
+    {
+      "title": "DoorDash 擬以 170 億美元收購 Instacart，外送產業進入整併潮",
+      "summary": [
+        "外送巨頭 DoorDash 宣布收購 Instacart，此舉將重塑外送產業版圖。",
+        "產業整併可能導致市場壟斷，進而影響外送員的薪資結構與接單生態。"
+      ],
+      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNYThUYXVMMVpLamxpV3Q3cVNxUmZTRlE3QmRNNXpWTHpsakNQRC1mUDJtV3dBRWhOVHh0X3RrLVc0OXA1Mm10Ql9RWmlnRDBLc0U5aVZJUVJTZHhHYTdPQ3lvdkx6ZFRydUdQbS02U2lCbC1CNG54NC16SEZTeUJZQWU3V1hBR2VBTXVrakk4OFBZVGk1LWUta2pyVURfeXBueGZLRDBYZndRZ0RrU29EU0t0eXk3cC1kczVHOGhmU0RCZw?oc=5",
       "tag": "平台政策",
       "date": "2026-10-29"
     },
     {
-      "title": "美國聯邦貿易委員會（FTC）調查外送平台「個人化定價」機制",
+      "title": "賓州外送車禍訴訟達成和解，外送平台責任歸屬受關注",
       "summary": [
-        "美國監管機構正針對 Uber 等平台進行調查，釐清其是否利用演算法針對不同消費者進行個人化定價。",
-        "此類演算法可能影響訂單量與外送員的接單報酬結構。",
-        "外送員需關注平台演算法透明度議題，這與未來接單報酬的公平性息息相關。"
+        "針對外送員車禍引發的法律訴訟，Uber Eats 與 DoorDash 與當地達成和解。",
+        "此案凸顯了外送平台在交通事故中的法律責任，對於外送員的保險與安全保障具有參考價值。"
       ],
-      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxNbFU0eWp2emlLbUN1N04zaGxVVnFwT2pwcUxsWk41N2tKNUJYWVhFYmY4V2dsTVMzVnk1UG5hMFE2SnpUZUdqRnJZX3h5NlRNWHhvbGQ1c195elRTMGJvY1V6aURYNHg4by1wTEZmZl9xenRCeHFrRGlHdHRrVm9odGFad0pmTFAxQm05VHQ3Yk15UkhadHItOFI2UQ?oc=5",
-      "tag": "平台政策",
-      "date": "2026-10-29"
-    },
-    {
-      "title": "Delivery Hero 財報亮眼，上調年度成長預測",
-      "summary": [
-        "受惠於「快商務」（Quick Commerce）業務的強勁成長，Delivery Hero 再次上調年度財測。",
-        "顯示外送平台正積極擴展生鮮雜貨配送，這將持續增加外送員在非餐飲類訂單的接單機會。",
-        "平台營運穩健有助於維持外送員的長期接單穩定性。"
-      ],
-      "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPTk5qaXQ0OENDUzZ4MGxteFNXQjR1UVpHc05YZm1kUFcwajUzTks4Si1ORnlCRWxhcWN2Nm1NZTllLVZiNjlBUDNFOC1oZjNqaGN6a2lXM0xGVXlBeUpOSUpIcGYza19xc3ZOX29fZ2tZYWFNTUtLY3k2NWZFWlNwNkZQTldEMjQySUVV?oc=5",
-      "tag": "國際動態",
-      "date": "2026-10-28"
-    },
-    {
-      "title": "Uber Eats 與 Key Food 達成合作，擴大生鮮配送版圖",
-      "summary": [
-        "Uber Eats 宣布與連鎖超市 Key Food 合作，將配送服務擴展至超過 300 家門市。",
-        "生鮮雜貨配送已成為外送平台的重要營收來源，外送員需適應更多樣化的配送商品類型。",
-        "此類合作有助於提升外送員在離峰時段的接單量。"
-      ],
-      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNdk00NmNaaWgxRGhxQ0RYaUhvNkR6N0VLRmducllfSGpXWWNNN0R6ZlVFLXhRWEhRaDZaaElkWmxzWFQ5NFFSMXFKSEhKMnZhcmtEdFkxTGNuclBMaXdZV2UwXzNLajR1SmNGNVR4cGlLWVp6ZGR4UE5JdkM5NGYzUE5aS250OUM1ZUtNTQ?oc=5",
-      "tag": "國際動態",
-      "date": "2026-10-29"
-    },
-    {
-      "title": "外送平台與在地企業達成法律訴訟和解",
-      "summary": [
-        "Uber Eats 與 DoorDash 在近期的一起法律訴訟中與在地企業達成和解。",
-        "此類訴訟通常涉及平台抽成、勞動權益或市場競爭規範，對外送員的勞動條件具有間接影響。",
-        "顯示平台在擴張過程中面臨的法律與監管壓力持續增加，可能促使平台調整營運策略。"
-      ],
-      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOUU9tVndOSmZDRnltNzhxc1BBalVpdjlBSnZ2Znl1N1RqNGt5ZnBqR1lnS08zT3Z6ZDcyb2xpbGgzVVVmcTBUTDl4VVVZM1hzVVFLWDRNT2dsalFpR3QwbDdtNnRKYW94VmE0cFYxb1JfYk52OW5xa0tMaFF1Wll6LXYzUm9xMEFFMkxJZGRQb1ZDNjlOZlM0?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPX2JZQTlrcXVlUzZCM1ozSHM1VTFPejIwSV9Ic1JtZktVYWFKdzc3RlkwRWFBZ1F5MjNhWVdJQlN3SlhwRkotclJxZmNiRnhWbWJwTEZkTVZURE00RzlvWGZycm8zWlpyTUNMVGVsZThjRTFCVDRGZ3FGemF2RE5lT0RVVllYSDFKcmZsalE4cUNyTzV0dnM4QWhvTlZJQzRnWTByRHJvZEhhXzMy?oc=5",
       "tag": "勞權爭議",
       "date": "2026-10-29"
     }
