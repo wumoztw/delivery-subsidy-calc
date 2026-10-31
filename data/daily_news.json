@@ -1,56 +1,61 @@
 {
-  "updatedAt": "2026-10-30T09:45:04+08:00",
+  "updatedAt": "2026-10-31T09:28:50+08:00",
   "source": "gemini-flash-lite",
   "items": [
     {
-      "title": "Amazon、Uber 與 Instacart 聯手提告，試圖阻擋紐約市外送員停權保護法案",
+      "title": "亞馬遜、Uber 與 Instacart 聯手訴訟，試圖阻擋紐約市外送員權益法案",
       "summary": [
-        "紐約市針對外送平台制定了限制隨意停權外送員的法規，引發大型平台業者聯合提告。",
-        "平台業者主張該法案限制了其管理帳號的權限，此案對全球外送員的帳號權益保障具有指標性意義。"
+        "紐約市針對外送平台制定了新的勞工權益保障法規，包含帳號停權相關規範。",
+        "三大外送平台業者聯合向聯邦法院提起訴訟，試圖阻止該法案生效。",
+        "此案反映了平台業者與地方政府在勞工權益保障與平台管理權限上的持續角力。"
       ],
       "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxORWFmbWxXRlNlc0lOdXFiT0hjeFpCRl82S193aUNROHZxeWZkZDdTN0ZfMG44TnRsaGxHNTNWc0hhM3VqMEI1UzZBLURaczJOYU1oUzN0WTY1WUdiQ1ZRdFVrcVR5SkYwelE3ei1xOHZkM0pnalVIME4wal9IUDAtSkdrNWpHZkMtd1JlRzhsYUloZVQ5SFVZZGl3aTdObVd6VGlIOFhBNWkxbkpwZ094NjQzamg4Zm40bTJidVVFNWFiQmsy?oc=5",
       "tag": "勞權爭議",
       "date": "2026-10-30"
     },
     {
-      "title": "DoorDash 市佔率持續領先，Uber Eats 用戶成長面臨挑戰",
+      "title": "DoorDash 擬收購 Instacart，挑戰 Uber 在廣告業務的市場地位",
       "summary": [
-        "最新市場數據顯示，美國消費者使用 Uber Eats 的頻率下降，DoorDash 在市佔率競爭中取得優勢。",
-        "外送平台間的激烈競爭可能影響未來的接單量與平台補貼政策。"
+        "DoorDash 計劃收購 Instacart，此舉將直接威脅 Uber 目前價值 20 億美元的廣告業務。",
+        "外送平台正積極透過廣告與多元化服務來爭奪市場份額。",
+        "市場競爭加劇，可能進一步影響各平台對外送員的獎勵機制與營運策略。"
       ],
-      "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxNMjA5cXFvSlFNR0hpVm5RYUdFNlhTbS1wVENEMUJYaFM0eWVLYWVTRzhRZGg1aUJmSDdCT1FnamFCcHRXREptLTgxMkgyN1JTWW14U3VPOHN4S0NVMkRjdlhWS2JHekpKMG9OMUt0bEVKUnUwYW9BMkRyeExqbVMzaHRkZ2RZTEdNMm0xZFZuWXZSTkNQVHdWWWs3aHBTUQ?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPZVpicVMwSUMyQm9ENXBNd1RDQmNvZFZGdkhqZEx6X2JXWHczbnpGY0NJT252RVVHMlFxQWdncXpGME00bEdjeklZZmJkYlUwX04xcHE2U3pjQVlzR2gyQlR1aklDcWVxNU5rMnNLS2xXMDY2TEdUTXN1ZFVVQUJOQzI4emxZbjhveGVDYkw0Sm9Nc1pkNVlBZm5HRnBRdw?oc=5",
       "tag": "平台政策",
-      "date": "2026-10-30"
+      "date": "2026-10-31"
     },
     {
-      "title": "費城研擬對外送機器人與無人駕駛計程車課稅",
+      "title": "美國費城研擬針對外送機器人與無人駕駛計程車課稅",
       "summary": [
-        "費城議會正考慮針對自動化外送機器人及無人駕駛計程車徵收新稅。",
-        "此舉反映出地方政府對於自動化技術取代人力，以及對城市交通影響的擔憂。"
+        "費城市政府正考慮對自動化外送機器人及無人駕駛車輛徵收新稅。",
+        "此舉顯示地方政府開始關注自動化技術對城市交通與勞動力市場的影響。",
+        "若法案通過，可能影響平台業者部署自動化配送服務的成本與速度。"
       ],
       "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQcnk4Wkt4cTdwalIyUDFFX0tHRElLaVd0X1Q2SVRCaEhIMDhiYklCRWE4eDRvYjBzNllsaHhTT3FTTlM2RWFGQlNZQUw3MjBpSzBKSmhlb3JBczFzYWpIbkJmSXdSQUdzRWxkTk53U3hQY21UR01sSVBLalFKRGFDRTZtWU9IeEIteWRfSjlwNHpuMG9KUzl1dDVUT3dVRVBm?oc=5",
       "tag": "國際動態",
       "date": "2026-10-30"
     },
     {
-      "title": "DoorDash 擬以 170 億美元收購 Instacart，外送產業進入整併潮",
+      "title": "Uber Eats 擴大合作版圖，與 Key Food 超市達成配送協議",
       "summary": [
-        "外送巨頭 DoorDash 宣布收購 Instacart，此舉將重塑外送產業版圖。",
-        "產業整併可能導致市場壟斷，進而影響外送員的薪資結構與接單生態。"
+        "Uber Eats 宣布與 Key Food 超市合作，將配送服務擴展至超過 300 家門市。",
+        "平台持續強化生鮮雜貨配送業務，以提升用戶黏著度。",
+        "對外送員而言，這意味著未來將有更多非餐飲類的配送訂單需求。"
       ],
-      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNYThUYXVMMVpLamxpV3Q3cVNxUmZTRlE3QmRNNXpWTHpsakNQRC1mUDJtV3dBRWhOVHh0X3RrLVc0OXA1Mm10Ql9RWmlnRDBLc0U5aVZJUVJTZHhHYTdPQ3lvdkx6ZFRydUdQbS02U2lCbC1CNG54NC16SEZTeUJZQWU3V1hBR2VBTXVrakk4OFBZVGk1LWUta2pyVURfeXBueGZLRDBYZndRZ0RrU29EU0t0eXk3cC1kczVHOGhmU0RCZw?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNdk00NmNaaWgxRGhxQ0RYaUhvNkR6N0VLRmducllfSGpXWWNNN0R6ZlVFLXhRWEhRaDZaaElkWmxzWFQ5NFFSMXFKSEhKMnZhcmtEdFkxTGNuclBMaXdZV2UwXzNLajR1SmNGNVR4cGlLWVp6ZGR4UE5JdkM5NGYzUE5aS250OUM1ZUtNTQ?oc=5",
       "tag": "平台政策",
       "date": "2026-10-29"
     },
     {
-      "title": "賓州外送車禍訴訟達成和解，外送平台責任歸屬受關注",
+      "title": "外送平台競爭白熱化：DoorDash 市佔率領先，Uber Eats 用戶流失",
       "summary": [
-        "針對外送員車禍引發的法律訴訟，Uber Eats 與 DoorDash 與當地達成和解。",
-        "此案凸顯了外送平台在交通事故中的法律責任，對於外送員的保險與安全保障具有參考價值。"
+        "最新數據顯示，美國市場中 DoorDash 的市佔率持續領先，Uber Eats 的用戶活躍度有所下滑。",
+        "平台間的激烈競爭導致市場版圖變動，可能影響外送員的接單量與收入穩定性。",
+        "投資人對 Uber 的表現持保留態度，反映出外送產業成長放緩的挑戰。"
       ],
-      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPX2JZQTlrcXVlUzZCM1ozSHM1VTFPejIwSV9Ic1JtZktVYWFKdzc3RlkwRWFBZ1F5MjNhWVdJQlN3SlhwRkotclJxZmNiRnhWbWJwTEZkTVZURE00RzlvWGZycm8zWlpyTUNMVGVsZThjRTFCVDRGZ3FGemF2RE5lT0RVVllYSDFKcmZsalE4cUNyTzV0dnM4QWhvTlZJQzRnWTByRHJvZEhhXzMy?oc=5",
-      "tag": "勞權爭議",
-      "date": "2026-10-29"
+      "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxNMjA5cXFvSlFNR0hpVm5RYUdFNlhTbS1wVENEMUJYaFM0eWVLYWVTRzhRZGg1aUJmSDdCT1FnamFCcHRXREptLTgxMkgyN1JTWW14U3VPOHN4S0NVMkRjdlhWS2JHekpKMG9OMUt0bEVKUnUwYW9BMkRyeExqbVMzaHRkZ2RZTEdNMm0xZFZuWXZSTkNQVHdWWWs3aHBTUQ?oc=5",
+      "tag": "國際動態",
+      "date": "2026-10-30"
     }
   ]
 }
