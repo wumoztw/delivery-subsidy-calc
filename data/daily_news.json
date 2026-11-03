@@ -1,56 +1,61 @@
 {
-  "updatedAt": "2026-11-02T09:23:58+08:00",
+  "updatedAt": "2026-11-03T11:23:39+08:00",
   "source": "gemini-flash-lite",
   "items": [
     {
-      "title": "亞馬遜、Uber 與 Instacart 聯手提告，試圖阻擋紐約市外送員停權法案",
+      "title": "Uber、Amazon 與 Instacart 聯合提告，試圖阻擋紐約市外送員權益法案",
       "summary": [
-        "外送平台業者向聯邦法院提起訴訟，挑戰紐約市針對外送員停權保護的相關法規。",
-        "此舉反映了平台與地方政府在勞工權益與平台管理權限上的持續角力。"
+        "紐約市針對外送員權益制定新法，引發大型外送平台業者聯合採取法律行動。",
+        "業者主要反對關於外送員帳號停權（deactivation）的相關規範，認為該法案限制了平台的營運彈性。",
+        "此案反映了全球外送平台與地方政府在勞工權益保障與平台管理權之間的持續角力。"
       ],
-      "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxORWFmbWxXRlNlc0lOdXFiT0hjeFpCRl82S193aUNROHZxeWZkZDdTN0ZfMG44TnRsaGxHNTNWc0hhM3VqMEI1UzZBLURaczJOYU1oUzN0WTY1WUdiQ1ZRdFVrcVR5SkYwelE3ei1xOHZkM0pnalVIME4wal9IUDAtSkdrNWpHZkMtd1JlRzhsYUloZVQ5SFVZZGl3aTdObVd6VGlIOFhBNWkxbkpwZ094NjQzamg4Zm40bTJidVVFNWFiQmsy?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNYVNab000OGM2ZHRoZ2RMMTZLTy1SY1N0U1M1QzRnT2VCVVNCRUJaemp4Y29RUGxRWVpheWxsbGhtbFZldjBXOFdmaHlGUFJjb1ZTTHlsN1ZBeFJGR0ktcGdXbXhvMmRYZ3o1TzZROXp2NHpJa1FWdm9SWFpLTnVRMWVRR29OX0FLTS1tNg?oc=5",
       "tag": "勞權爭議",
-      "date": "2026-10-30"
+      "date": "2026-11-03"
     },
     {
-      "title": "費城擬對自動駕駛車與外送機器人課稅",
+      "title": "多倫多外送員發起大規模抗議，要求改善「無法生存」的低薪困境",
       "summary": [
-        "費城市議會正研擬針對無人駕駛車輛及外送機器人徵收新稅。",
-        "此政策若通過，將影響自動化配送技術在城市中的營運成本與擴張速度。"
+        "數百名外送員走上街頭，抗議平台薪資結構不合理，導致外送員難以維持基本生活。",
+        "抗議者要求平台提供更公平的報酬，並強調外送員應獲得應有的尊嚴與勞動保障。",
+        "此類抗議活動凸顯了零工經濟下，外送員對於薪資透明度與收入穩定性的高度訴求。"
+      ],
+      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOMG1VNU9HRUoxSGFRNUtoLWUyWjVSU2JDZTNHZTdnU1hJSVJBTVFHWGVjTzJuYUZFeUZOY0MtY1VtcEJFWU5MVzNHZlhnQ1lQX0U4OWFYT0RSRmlUaTdmTEJKdmJXbDI0eDAzLXhzQTRicWF4MGgxV2U0cHEycVlHbEhkZzBZcXBtbFdSRXRfNFRtTExrVDJZa1EtUEg0dWhEWjBibVlCY3Z3RW8?oc=5",
+      "tag": "勞權爭議",
+      "date": "2026-11-03"
+    },
+    {
+      "title": "外送機器人引發爭議：費城考慮開徵「機器人稅」並面臨民眾抗議",
+      "summary": [
+        "費城政府正研擬針對外送機器人及無人駕駛計程車開徵新稅，以應對自動化帶來的城市管理挑戰。",
+        "外送機器人的普及引發部分民眾反彈，甚至出現民眾阻擋機器人運作的抗議行為。",
+        "自動化配送技術在提升效率的同時，也面臨公共空間使用權與勞工就業機會的社會壓力。"
       ],
       "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQcnk4Wkt4cTdwalIyUDFFX0tHRElLaVd0X1Q2SVRCaEhIMDhiYklCRWE4eDRvYjBzNllsaHhTT3FTTlM2RWFGQlNZQUw3MjBpSzBKSmhlb3JBczFzYWpIbkJmSXdSQUdzRWxkTk53U3hQY21UR01sSVBLalFKRGFDRTZtWU9IeEIteWRfSjlwNHpuMG9KUzl1dDVUT3dVRVBm?oc=5",
       "tag": "平台政策",
       "date": "2026-10-30"
     },
     {
-      "title": "78 歲退休教授因阻擋外送機器人遭逮捕，誓言將持續抗爭",
+      "title": "DoorDash 擬收購 Instacart，外送產業版圖面臨重大重組",
       "summary": [
-        "一名退休教授因在街頭阻擋外送機器人行進而遭警方逮捕。",
-        "此事件凸顯了社區居民對自動化配送技術在公共空間運作的擔憂與反彈。"
+        "DoorDash 提出收購 Instacart 的計畫，若成真將對 Uber Eats 及 Amazon 等競爭對手造成巨大壓力。",
+        "此舉顯示外送平台正透過併購整合資源，以在競爭激烈的「快商務」（quick commerce）市場中擴大市佔率。",
+        "產業整合可能導致市場定價權改變，進而影響外送員的接單環境與獎勵機制。"
       ],
-      "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxOOUFiWTVGLWpmcnZKZHV4WVY2X0JnRlF0aGlzYXRHZXBUOFFpV3ZCNk9kVEhkTUxFMERHclZIR1pDbmhJcXhSSWtCZS1uUEFIdkZWOXlGc1dHMldOMVdBZWljbk51c3FXdDhsQlg4My1hR3BhRlFVYmJJZHdKUy1kOGs4b1VXa0YtY2RadHg0VVNESi1hMjZMRU5OM1EyRW9kR245SDdISmtIMVdzbnliZ1ZZNHFpTWFxRTVNVzBmNjU0Q3VJUmM0eHVwTUQ?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMi5gFBVV95cUxQNEw5QUgzaWJRc0kxLUkzSGZkRTUzLThULWZ1d1BlNlUwLUVhYWpYNGFsbkh1TkpWMlV1UlYxLXhxUWltTjNoLUpWMlViMUZsU3VIbHc5T3hVZ1ZFNDJOLU52VDNjWnhkeUM3dC0ySDhacVFLX1hvM00teWs4U296Qm9pY1J4RENRQmtLZlZ0aXZTR2N4ams3amtHdzNLY2hfSWY0UzBoVHVHRkExcy1UQkJ0WHlablZJWnNFbDNUSklNQXctRXNQb0VUOHpQaWtXd0p4Wjd1V1BId00xdlZYSko2QTcyQQ?oc=5",
       "tag": "國際動態",
-      "date": "2026-11-01"
+      "date": "2026-11-02"
     },
     {
-      "title": "DoorDash 擬收購 Instacart，挑戰 Uber 的廣告業務版圖",
+      "title": "Uber Eats 擴大與 Costco 合作，外送服務範疇持續延伸",
       "summary": [
-        "DoorDash 傳出收購 Instacart 的意圖，旨在擴大市場份額並與 Uber 的廣告業務競爭。",
-        "外送平台正從單純的配送服務轉向數據與廣告變現的商業模式。"
+        "Uber Eats 與 Costco 的合作擴張，旨在透過零售配送增加訂單量與營收。",
+        "此類合作模式將改變外送員的配送內容，從單純的餐飲外送轉向更多元的零售商品配送。",
+        "對於外送員而言，這意味著配送需求將更多樣化，但也可能帶來配送難度與體積重量的挑戰。"
       ],
-      "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPZVpicVMwSUMyQm9ENXBNd1RDQmNvZFZGdkhqZEx6X2JXWHczbnpGY0NJT252RVVHMlFxQWdncXpGME00bEdjeklZZmJkYlUwX04xcHE2U3pjQVlzR2gyQlR1aklDcWVxNU5rMnNLS2xXMDY2TEdUTXN1ZFVVQUJOQzI4emxZbjhveGVDYkw0Sm9Nc1pkNVlBZm5HRnBRdw?oc=5",
-      "tag": "國際動態",
-      "date": "2026-10-31"
-    },
-    {
-      "title": "Uber Eats 重新設計外送員獎勵計畫，將於加州部分城市先行試辦",
-      "summary": [
-        "Uber Eats 宣布更新其外送員獎勵計畫（Uber Eats Pro），旨在提升外送員的福利與激勵機制。",
-        "此計畫將優先在加州特定城市進行測試，未來可能影響全球外送員的獎勵結構。"
-      ],
-      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBVbTZMX3NaVFRiOVhWb2gzTmlzT0FQVmVuc05CQkVza2dZLWdCdU1GdHlmcExUMjdTd3Y4RHVNZVpDYnhiQTMzMF9WRUxxTDdyZ0VIbTQ3WDVyUGJRdDZzNDZ5cWE5Yzht?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMi6AFBVV95cUxPOEpOWGRRTzZKekNGN3hvcWdCOGJnTEItRUwtZWdoR0I4Q1FBUURFb0lBQzRodkVJSThDWUhoRTNIMlVaSGdBV29tOURpVlR2RThZTzl2eTdYM3hVZTAxM2t0WXEwcDV6alhtUXgtdmlsaUNEUFZVUTJIRnkxUm9ZV0dqODdWRDFkRVhIZWJHUTJoaUtOZ0xVdmJrMFZ6ek9fM2djUDdzaFNydVR3OHZ0bWFuZy16cGhGWGcwYnp5TXhjVHhnZDd4QXFpOWR6VnhoUjIyZ2FuMjliMVQwaGFMVzdMS0dURndW?oc=5",
       "tag": "平台政策",
-      "date": "2026-10-19"
+      "date": "2026-11-03"
     }
   ]
 }
