@@ -1,59 +1,54 @@
 {
-  "updatedAt": "2026-11-03T11:23:39+08:00",
+  "updatedAt": "2026-11-04T10:02:21+08:00",
   "source": "gemini-flash-lite",
   "items": [
     {
-      "title": "Uber、Amazon 與 Instacart 聯合提告，試圖阻擋紐約市外送員權益法案",
+      "title": "Uber、Amazon 與 Instacart 聯手提告，試圖阻擋紐約市外送員權益法案",
       "summary": [
-        "紐約市針對外送員權益制定新法，引發大型外送平台業者聯合採取法律行動。",
-        "業者主要反對關於外送員帳號停權（deactivation）的相關規範，認為該法案限制了平台的營運彈性。",
-        "此案反映了全球外送平台與地方政府在勞工權益保障與平台管理權之間的持續角力。"
+        "Uber 等大型外送平台對紐約市法規提出法律挑戰，試圖阻止針對外送員帳號停權的相關規範。",
+        "此案反映了平台與地方政府在勞工權益保障與平台管理權限之間的持續拉鋸。"
       ],
-      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNYVNab000OGM2ZHRoZ2RMMTZLTy1SY1N0U1M1QzRnT2VCVVNCRUJaemp4Y29RUGxRWVpheWxsbGhtbFZldjBXOFdmaHlGUFJjb1ZTTHlsN1ZBeFJGR0ktcGdXbXhvMmRYZ3o1TzZROXp2NHpJa1FWdm9SWFpLTnVRMWVRR29OX0FLTS1tNg?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxORWFmbWxXRlNlc0lOdXFiT0hjeFpCRl82S193aUNROHZxeWZkZDdTN0ZfMG44TnRsaGxHNTNWc0hhM3VqMEI1UzZBLURaczJOYU1oUzN0WTY1WUdiQ1ZRdFVrcVR5SkYwelE3ei1xOHZkM0pnalVIME4wal9IUDAtSkdrNWpHZkMtd1JlRzhsYUloZVQ5SFVZZGl3aTdObVd6VGlIOFhBNWkxbkpwZ094NjQzamg4Zm40bTJidVVFNWFiQmsy?oc=5",
       "tag": "勞權爭議",
-      "date": "2026-11-03"
-    },
-    {
-      "title": "多倫多外送員發起大規模抗議，要求改善「無法生存」的低薪困境",
-      "summary": [
-        "數百名外送員走上街頭，抗議平台薪資結構不合理，導致外送員難以維持基本生活。",
-        "抗議者要求平台提供更公平的報酬，並強調外送員應獲得應有的尊嚴與勞動保障。",
-        "此類抗議活動凸顯了零工經濟下，外送員對於薪資透明度與收入穩定性的高度訴求。"
-      ],
-      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOMG1VNU9HRUoxSGFRNUtoLWUyWjVSU2JDZTNHZTdnU1hJSVJBTVFHWGVjTzJuYUZFeUZOY0MtY1VtcEJFWU5MVzNHZlhnQ1lQX0U4OWFYT0RSRmlUaTdmTEJKdmJXbDI0eDAzLXhzQTRicWF4MGgxV2U0cHEycVlHbEhkZzBZcXBtbFdSRXRfNFRtTExrVDJZa1EtUEg0dWhEWjBibVlCY3Z3RW8?oc=5",
-      "tag": "勞權爭議",
-      "date": "2026-11-03"
-    },
-    {
-      "title": "外送機器人引發爭議：費城考慮開徵「機器人稅」並面臨民眾抗議",
-      "summary": [
-        "費城政府正研擬針對外送機器人及無人駕駛計程車開徵新稅，以應對自動化帶來的城市管理挑戰。",
-        "外送機器人的普及引發部分民眾反彈，甚至出現民眾阻擋機器人運作的抗議行為。",
-        "自動化配送技術在提升效率的同時，也面臨公共空間使用權與勞工就業機會的社會壓力。"
-      ],
-      "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQcnk4Wkt4cTdwalIyUDFFX0tHRElLaVd0X1Q2SVRCaEhIMDhiYklCRWE4eDRvYjBzNllsaHhTT3FTTlM2RWFGQlNZQUw3MjBpSzBKSmhlb3JBczFzYWpIbkJmSXdSQUdzRWxkTk53U3hQY21UR01sSVBLalFKRGFDRTZtWU9IeEIteWRfSjlwNHpuMG9KUzl1dDVUT3dVRVBm?oc=5",
-      "tag": "平台政策",
       "date": "2026-10-30"
     },
     {
-      "title": "DoorDash 擬收購 Instacart，外送產業版圖面臨重大重組",
+      "title": "外送機器人引發爭議：費城民眾因阻擋機器人遭捕，議員提議課徵機器人稅",
       "summary": [
-        "DoorDash 提出收購 Instacart 的計畫，若成真將對 Uber Eats 及 Amazon 等競爭對手造成巨大壓力。",
-        "此舉顯示外送平台正透過併購整合資源，以在競爭激烈的「快商務」（quick commerce）市場中擴大市佔率。",
-        "產業整合可能導致市場定價權改變，進而影響外送員的接單環境與獎勵機制。"
+        "美國費城發生民眾因阻擋外送機器人而遭逮捕的事件，引發社會對自動化配送的討論。",
+        "當地議員正研擬針對機器人外送服務課稅，可能影響未來自動化配送的營運成本與普及速度。"
+      ],
+      "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxONXFQVnFacDQxamludlVIaWpiMVZGNWo4NEYxZ045amxRaC1OaDdwZno1V2ZPeVJOSGpFOGl3Vi1ndzAzck15NERNSUNLT2RfTXk3S3JyQnBFSGMxcF9FbHl0cEI1d1hUaDZkS0RhNzd2VUo3bmhTS3FaTnZXSURIMS02dTV0Zw?oc=5",
+      "tag": "平台政策",
+      "date": "2026-11-03"
+    },
+    {
+      "title": "Uber Eats 因未經授權使用食物照片，面臨攝影師版權侵權訴訟",
+      "summary": [
+        "Uber Eats 因在平台上使用未經授權的食物攝影作品，遭攝影師提起版權侵權訴訟。",
+        "法院裁定 Uber Eats 無法完全規避此類法律責任，外送平台在內容素材的使用規範上將面臨更嚴格的審視。"
+      ],
+      "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOZEZyZlNWeHBUMHE0Sjd3XzZhV2pOOHBNQXFSQXBqdmFkcjNVTkpsakVudFN5UmhFQzlwUnplZWhNYlVHZzM0eHhid24xLUhYRXlQMXIycktwNnFkVnlJS2NOdE9pWm8yVzIxbUkzQmdVMnVGX0cxNzdRd3N0Y0FXX1R3UkZtTmRsdHhvREV1cWk0b1pOMnRKLV9Yd2w2cC1xQ3c?oc=5",
+      "tag": "平台政策",
+      "date": "2026-11-03"
+    },
+    {
+      "title": "DoorDash 擬收購 Instacart，恐將重塑全球即時外送市場競爭格局",
+      "summary": [
+        "DoorDash 傳出收購 Instacart 的計畫，若成真將對 Uber Eats 及 Amazon 等競爭對手造成重大影響。",
+        "市場整合可能導致外送平台生態改變，進而影響外送員的接單環境與平台補貼政策。"
       ],
       "url": "https://news.google.com/rss/articles/CBMi5gFBVV95cUxQNEw5QUgzaWJRc0kxLUkzSGZkRTUzLThULWZ1d1BlNlUwLUVhYWpYNGFsbkh1TkpWMlV1UlYxLXhxUWltTjNoLUpWMlViMUZsU3VIbHc5T3hVZ1ZFNDJOLU52VDNjWnhkeUM3dC0ySDhacVFLX1hvM00teWs4U296Qm9pY1J4RENRQmtLZlZ0aXZTR2N4ams3amtHdzNLY2hfSWY0UzBoVHVHRkExcy1UQkJ0WHlablZJWnNFbDNUSklNQXctRXNQb0VUOHpQaWtXd0p4Wjd1V1BId00xdlZYSko2QTcyQQ?oc=5",
       "tag": "國際動態",
       "date": "2026-11-02"
     },
     {
-      "title": "Uber Eats 擴大與 Costco 合作，外送服務範疇持續延伸",
+      "title": "Uber Eats 隱藏訂閱陷阱：消費者投訴「免費外送」竟暗藏每月扣款",
       "summary": [
-        "Uber Eats 與 Costco 的合作擴張，旨在透過零售配送增加訂單量與營收。",
-        "此類合作模式將改變外送員的配送內容，從單純的餐飲外送轉向更多元的零售商品配送。",
-        "對於外送員而言，這意味著配送需求將更多樣化，但也可能帶來配送難度與體積重量的挑戰。"
+        "有消費者反映 Uber Eats 以「免費外送」為誘餌，實則綁定每月 10 美元的訂閱服務。",
+        "此類行銷手法引發消費者不滿，也提醒外送員需留意平台在推廣活動時可能引發的客訴與品牌形象問題。"
       ],
-      "url": "https://news.google.com/rss/articles/CBMi6AFBVV95cUxPOEpOWGRRTzZKekNGN3hvcWdCOGJnTEItRUwtZWdoR0I4Q1FBUURFb0lBQzRodkVJSThDWUhoRTNIMlVaSGdBV29tOURpVlR2RThZTzl2eTdYM3hVZTAxM2t0WXEwcDV6alhtUXgtdmlsaUNEUFZVUTJIRnkxUm9ZV0dqODdWRDFkRVhIZWJHUTJoaUtOZ0xVdmJrMFZ6ek9fM2djUDdzaFNydVR3OHZ0bWFuZy16cGhGWGcwYnp5TXhjVHhnZDd4QXFpOWR6VnhoUjIyZ2FuMjliMVQwaGFMVzdMS0dURndW?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOS25ITmE4MDluZE5aOHQ0X19SeVM0eEpVblE4VTV2Y3ZXdUNRVmlUVTA5VF9UVDhtOHlRSjFDdHo1WVdsZ3poY3pVUzF1Mjc2Nm95U0Y3cENaWF9iNkV3WW5MS1RpQ2lHVVFXMnNNaXpWSWY5MEdGWWtnem1hWUlaWWNyT05kUDZmemFNOHFrVHpsaW1z?oc=5",
       "tag": "平台政策",
       "date": "2026-11-03"
     }
