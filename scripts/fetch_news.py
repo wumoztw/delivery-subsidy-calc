@@ -17,8 +17,10 @@ import requests
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "data" / "daily_news.json"
-QUERY = '(Uber OR Foodpanda OR "Delivery Hero") delivery'
-RSS_URL = "https://news.google.com/rss/search?q={}&hl=en-US&gl=US&ceid=US:en"
+QUERY_GLOBAL = '(Uber OR Foodpanda OR "Delivery Hero" OR DoorDash OR Deliveroo) (delivery OR "gig worker" OR rider OR courier)'
+RSS_URL_GLOBAL = "https://news.google.com/rss/search?q={}&hl=en-US&gl=US&ceid=US:en"
+QUERY_TW = '外送員 OR 外送專法 OR "Uber Eats" OR Foodpanda'
+RSS_URL_TW = "https://news.google.com/rss/search?q={}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant"
 GEMINI_MODEL = "gemini-3.1-flash-lite"
 GEMINI_ENDPOINT = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
 MAX_ITEMS = 30
@@ -40,8 +42,8 @@ FALLBACK = {
 }
 
 
-def fetch_rss():
-    r = requests.get(RSS_URL.format(quote(QUERY)), timeout=20,
+def fetch_feed(url_tpl, query, limit):
+    r = requests.get(url_tpl.format(quote(query)), timeout=20,
                      headers={"User-Agent": "Mozilla/5.0 delivery-subsidy-calc"})
     r.raise_for_status()
     items = []
@@ -55,8 +57,30 @@ def fetch_rss():
             date = ""
         if title and link:
             items.append({"title": title, "url": link, "date": date})
-        if len(items) >= MAX_ITEMS:
+        if len(items) >= limit:
             break
+    return items
+
+
+def fetch_rss():
+    half = MAX_ITEMS // 2
+    feeds = [("台灣", RSS_URL_TW, QUERY_TW), ("國際", RSS_URL_GLOBAL, QUERY_GLOBAL)]
+    items, seen_urls, seen_titles, errors = [], set(), set(), 0
+    for name, url_tpl, query in feeds:
+        try:
+            fetched = fetch_feed(url_tpl, query, half)
+        except Exception as e:
+            errors += 1
+            print(f"WARN: {name} RSS 抓取失敗: {type(e).__name__}: {e}", file=sys.stderr)
+            continue
+        for a in fetched:
+            if a["url"] in seen_urls or a["title"] in seen_titles:
+                continue
+            seen_urls.add(a["url"])
+            seen_titles.add(a["title"])
+            items.append(a)
+    if errors == len(feeds):
+        raise RuntimeError("台灣與國際 RSS 皆抓取失敗")
     return items
 
 
@@ -65,7 +89,7 @@ def summarize(articles, api_key):
         f"{i}. [{a['date']}] {a['title']} | {a['url']}" for i, a in enumerate(articles, 1)
     )
     prompt = (
-        f"以下是最新外送產業新聞列表。請挑選 {PICK} 則對台灣外送員最具參考價值的新聞，"
+        f"以下是最新外送產業新聞列表，包含台灣在地與國際新聞。請均衡挑選 {PICK} 則對台灣外送員最具參考價值的新聞（台灣與國際兼顧），"
         "在地化翻譯並整理為台灣繁體中文（zh-TW）。\n"
         '只輸出 JSON 陣列，每個元素格式：{"title": 繁中標題, "summary": [2-3 點重點條列字串], '
         '"url": 原文網址（必須與列表一致）, "tag": 標籤（如 平台政策/國際動態/勞權爭議）, "date": "YYYY-MM-DD"}。\n'
