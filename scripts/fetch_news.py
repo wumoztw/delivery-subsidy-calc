@@ -21,8 +21,8 @@ QUERY = '(Uber OR Foodpanda OR "Delivery Hero") delivery'
 RSS_URL = "https://news.google.com/rss/search?q={}&hl=en-US&gl=US&ceid=US:en"
 GEMINI_MODEL = "gemini-3.1-flash-lite"
 GEMINI_ENDPOINT = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
-MAX_ITEMS = 15
-PICK = 5
+MAX_ITEMS = 30
+PICK = 10
 TZ = timezone(timedelta(hours=8))
 
 FALLBACK = {

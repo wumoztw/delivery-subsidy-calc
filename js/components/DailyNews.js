@@ -5,10 +5,12 @@
   C['daily-news'] = {
     name: 'DailyNews',
     setup() {
-      const { ref, watch, onMounted, inject } = root.Vue;
+      const { ref, computed, watch, onMounted, inject } = root.Vue;
       const dsc = inject('dsc');
       const items = ref([]);
       const updatedAt = ref('');
+      const expanded = ref(false);
+      const LIMIT = 5;
       const status = ref('loading'); // loading | ok | error
       let busy = false;
       const load = async () => {
@@ -32,7 +34,8 @@
       watch(dsc.activeTab, (tab) => {
         if (tab === 'news' && items.value.length === 0) load();
       });
-      return { items, updatedAt, status, load };
+      const visibleItems = computed(() => (expanded.value ? items.value : items.value.slice(0, LIMIT)));
+      return { items, updatedAt, status, load, expanded, visibleItems, LIMIT };
     },
     template: `
 <section class="bg-white/80 ring-1 ring-ink-200/60 shadow-sm rounded-2xl px-4 py-3 sm:px-5 sm:py-4">
@@ -58,7 +61,7 @@
     <button type="button" @click="load" class="seg-btn">重試</button>
   </div>
   <ul v-else class="space-y-3">
-    <li v-for="(n, i) in items" :key="i" class="border-t border-ink-200/60 pt-3 first:border-0 first:pt-0">
+    <li v-for="(n, i) in visibleItems" :key="i" class="border-t border-ink-200/60 pt-3 first:border-0 first:pt-0">
       <div class="flex items-start gap-2">
         <span class="text-[10px] px-1.5 py-0.5 rounded bg-ink-200 text-ink-800 flex-shrink-0">{{ n.tag }}</span>
         <h3 class="text-xs sm:text-sm font-bold text-ink-900">{{ n.title }}</h3>
@@ -69,6 +72,9 @@
       <a :href="n.url" target="_blank" rel="noopener noreferrer" class="mt-1.5 inline-flex items-center gap-1 text-[11px] text-mist-400 hover:underline">閱讀原文<ico name="external-link"/></a>
     </li>
   </ul>
+  <div v-if="status === 'ok' && items.length > LIMIT" class="mt-3 pt-2.5 border-t border-ink-200/60 text-center">
+    <button type="button" @click="expanded = !expanded" class="seg-btn">{{ expanded ? '收合部分情報' : '展開更多情報（共 ' + items.length + ' 則）' }}</button>
+  </div>
 </section>
 `
   };
