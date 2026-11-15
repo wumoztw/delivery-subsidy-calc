@@ -3,11 +3,12 @@
  * - 頁面本身（HTML）：網路優先，斷線才用快取 → 永遠拿到最新的 index.html
  * - 帶 ?v= 的檔案（css/js/vendor）：依完整網址快取。版本號一變就是新網址，
  *   新頁面只會配到同版本的 js，不會再出現「新頁面配舊 app.js」而載入失敗
+ * - /data/*.json（每日情報等）：網路優先，斷線才用快取
  * - 其他本站檔案（圖示、manifest）：先給快取、背景更新
  * - Google Fonts：快取優先（字型檔不會變）
  * 改動 APP_SHELL 清單或想強制全部重抓時，把 CACHE_VERSION 加一。
  */
-const CACHE_VERSION = 'dsc-v18';
+const CACHE_VERSION = 'dsc-v19';
 const APP_SHELL = [
   './',
   './index.html',
@@ -57,6 +58,7 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
 
   const isPage = request.mode === 'navigate' || url.pathname.endsWith('/') || url.pathname.endsWith('.html');
+  const isDataJson = url.pathname.includes('/data/') && url.pathname.endsWith('.json');
   const isVersioned = url.searchParams.has('v');
 
   event.respondWith(
@@ -69,6 +71,16 @@ self.addEventListener('fetch', (event) => {
           return res;
         } catch (e) {
           return (await cache.match('./index.html')) || Response.error();
+        }
+      }
+      // 1b. 資料 JSON：網路優先，成功就更新快取，失敗退回快取
+      if (isDataJson) {
+        try {
+          const res = await fetch(request, { cache: 'no-cache' });
+          if (res.ok) cache.put(request, res.clone());
+          return res;
+        } catch (e) {
+          return (await cache.match(request)) || Response.error();
         }
       }
       // 2. 帶版本號的檔案：完整網址比對，不忽略 ?v=

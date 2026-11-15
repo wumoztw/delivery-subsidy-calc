@@ -1,4 +1,4 @@
-/* 每日外送焦點情報（Uber & Foodpanda）：讀取 data/daily_news.json（由 GitHub Actions 每日更新）。 */
+/* 每日外送焦點情報（台灣 + 全球外送新聞）：讀取 data/daily_news.json（由 GitHub Actions 每日更新）。 */
 (function (root) {
   'use strict';
   const C = (root.DSCComponents = root.DSCComponents || {});
@@ -10,6 +10,7 @@
       const items = ref([]);
       const updatedAt = ref('');
       const expanded = ref(false);
+      const sectionRef = ref(null);
       const LIMIT = 5;
       const status = ref('loading'); // loading | ok | error
       let busy = false;
@@ -35,10 +36,13 @@
         if (tab === 'news' && items.value.length === 0) load();
       });
       const visibleItems = computed(() => (expanded.value ? items.value : items.value.slice(0, LIMIT)));
-      return { items, updatedAt, status, load, expanded, visibleItems, LIMIT };
+      watch(expanded, (v) => {
+        if (!v) root.Vue.nextTick(() => sectionRef.value?.scrollIntoView({ block: 'nearest' }));
+      });
+      return { sectionRef, items, updatedAt, status, load, expanded, visibleItems, LIMIT };
     },
     template: `
-<section class="bg-white/80 ring-1 ring-ink-200/60 shadow-sm rounded-2xl px-4 py-3 sm:px-5 sm:py-4">
+<section ref="sectionRef" class="bg-white/80 ring-1 ring-ink-200/60 shadow-sm rounded-2xl px-4 py-3 sm:px-5 sm:py-4">
   <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 mb-3 pb-2.5 border-b border-ink-200/60">
     <div class="flex items-center gap-2">
       <span class="w-7 h-7 rounded-lg bg-jade-0 text-jade-700 flex items-center justify-center shrink-0 border border-jade-500/20">
@@ -60,7 +64,7 @@
     <span>今日情報暫時無法取得（離線或來源異常），稍後再試。</span>
     <button type="button" @click="load" class="seg-btn">重試</button>
   </div>
-  <ul v-else class="space-y-3">
+  <ul v-else id="daily-news-list" class="space-y-3">
     <li v-for="(n, i) in visibleItems" :key="i" class="border-t border-ink-200/60 pt-3 first:border-0 first:pt-0">
       <div class="flex items-start gap-2">
         <span class="text-[10px] px-1.5 py-0.5 rounded bg-ink-200 text-ink-800 flex-shrink-0">{{ n.tag }}</span>
@@ -73,7 +77,7 @@
     </li>
   </ul>
   <div v-if="status === 'ok' && items.length > LIMIT" class="mt-3 pt-2.5 border-t border-ink-200/60 text-center">
-    <button type="button" @click="expanded = !expanded" class="seg-btn">{{ expanded ? '收合部分情報' : '展開更多情報（共 ' + items.length + ' 則）' }}</button>
+    <button type="button" @click="expanded = !expanded" :aria-expanded="expanded" aria-controls="daily-news-list" class="seg-btn">{{ expanded ? '收合' : '展開更多情報（共 ' + items.length + ' 則）' }}</button>
   </div>
 </section>
 `
